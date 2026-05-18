@@ -1,13 +1,11 @@
-package org.example.demo518;
+package org.three.dms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Demo518Application {
-
+public class dmsApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Demo518Application.class, args);
+        SpringApplication.run(dmsApplication.class, args);
     }
-
 }
