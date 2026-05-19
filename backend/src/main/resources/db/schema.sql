@@ -1,53 +1,72 @@
-create database if not exists desserts;
+create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 use desserts;
+
+drop table if exists dessert;
+drop table if exists t_user_role;
+drop table if exists purchase_record;
+drop table if exists material_inventory;
+drop table if exists category;
+drop table if exists t_user;
+drop table if exists t_role;
+drop table if exists material_information;
 
 # 甜品种类表
 create table if not exists category(
     id int auto_increment primary key comment '甜品种类ID',  -- 主键
     name varchar(100) not null comment '甜品种类名称', -- 种类名称
     description varchar(500) default '' comment '甜品种类描述' -- 甜品种类描述
-) comment '甜品种类表';
+) engine=InnoDB default charset=utf8mb4  comment '甜品种类表';
 
 # 甜品表
 create table if not exists dessert(
     id int auto_increment primary key comment '甜品ID', -- 编号
     name varchar(100) not null comment '甜品名称', -- 名称
-    photoUrl varchar(500) default '' comment '甜品图片url', -- 图片地址
-    price double comment '甜品价格', -- 价格
+    photo_url varchar(500) default '' comment '甜品图片url', -- 图片地址
+    price decimal(10 , 2) comment '甜品价格', -- 价格
     description varchar(500) default '' comment '甜品描述', -- 甜品描述
     release_date date comment '甜品发布时间', -- 发布时间
-    cat_id int references category(id)
-) comment '甜品表';
-
-# 员工信息表
-CREATE TABLE if not exists t_user (
-    id INT AUTO_INCREMENT PRIMARY KEY comment '员工ID',    -- 员工编号  自增长
-    name VARCHAR(100) NOT NULL comment '员工姓名',           -- 员工姓名
-    gender CHAR(1) comment '',                        -- 性别
-    phone VARCHAR(20) default '' comment '联系电话',                    -- 联系电话
-    username VARCHAR(200) NOT NULL comment '账号用户名',       -- 登录用户名
-    password VARCHAR(200) NOT NULL comment '登录密码',       -- 登录密码，经BCrypt算法加密(不显示)
-    position VARCHAR(50) comment '岗位职称名',                 -- 岗位职位
-    active INT(1) DEFAULT 0 comment '是否具有管理权限',              -- 1用户可用，0 用户不可用(不显示 ，管理员显示并进行修改)
-                                        -- 可用为可编辑，不可用为不可编辑
-    hire_date DATE comment '入职日期',                       -- 入职日期
-    shift VARCHAR(20) comment '上班班次'                   -- 上班班次
-) comment '员工信息表';
+    cat_id int not null comment '所属种类ID',
+    CONSTRAINT fk_dessert_category FOREIGN KEY (cat_id) REFERENCES category(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) engine=InnoDB default charset=utf8mb4 comment '甜品表';
 
 # 职称信息表
 create table if not exists t_role(
     id int auto_increment primary key comment '职称ID', -- 编号
     role varchar(200) comment '职称名称', -- 角色名
-    role_permissions VARCHAR(20) comment '职称权限'                     -- 角色权限 仅 老板 店长 为管理员
-) comment '职称信息表';
+    role_permissions varchar(20) comment '职称权限'                     -- 角色权限 仅 老板 店长 为管理员
+) engine=InnoDB default charset=utf8mb4 comment '职称信息表';
+
+
+# 员工信息表
+CREATE table if not exists t_user (
+    id INT AUTO_INCREMENT PRIMARY KEY comment '员工ID',    -- 员工编号  自增长
+    name VARCHAR(100) NOT NULL comment '员工姓名',           -- 员工姓名
+    gender CHAR(1) comment '性别：M-男，F-女',                        -- 性别
+    phone VARCHAR(20) default '' comment '联系电话',                    -- 联系电话
+    username VARCHAR(200) NOT NULL comment '账号用户名',       -- 登录用户名
+    password VARCHAR(200) NOT NULL comment '登录密码',       -- 登录密码，经Bcrypt算法加密(不显示)
+    position VARCHAR(50) comment '岗位职称名',                 -- 岗位职位
+    active TINYINT(1) DEFAULT 0 comment '是否具有管理权限：1-是，0-否',              -- 1用户可用，0 用户不可用(不显示 ，管理员显示并进行修改)
+                                        -- 可用为可编辑，不可用为不可编辑
+    hire_date DATE comment '入职日期',                       -- 入职日期
+    shift VARCHAR(20) comment '上班班次',                   -- 上班班次
+    constraint uk_username unique (username)              -- 用户名唯一
+) engine=InnoDB default charset=utf8mb4 comment '员工信息表';
+
 
 # 员工职称表
 create table if not exists t_user_role(
-    id int auto_increment primary key,  -- 编号
-    user_id int references t_user(id),  -- 引用用户
-    role_id int references t_role(id)   -- 引用角色
-) comment '员工职称表';
+    id int auto_increment primary key comment '记录ID',  -- 编号
+    user_id INT NOT NULL COMMENT '员工ID',
+    role_id INT NOT NULL COMMENT '职称ID',
+    constraint fk_tur_user foreign key (user_id) references t_user(id)
+        on delete cascade on update cascade ,
+    constraint fk_tur_role foreign key (role_id) references t_role(id)
+        on delete restrict on update cascade ,
+    constraint uk_user_role UNIQUE (user_id, role_id)       -- 防止重复关联
+) engine=InnoDB default charset=utf8mb4 comment '员工职称表';
 
 # 原材料信息表
 create table if not exists material_information(
@@ -61,7 +80,7 @@ create table if not exists material_information(
     material_storage_condition varchar(255) default '' comment '存储条件',
     material_remark varchar(255) default '' comment '备注',
     primary key (material_id)
-)comment '原料信息表';
+) engine=InnoDB default charset=utf8mb4 comment '原料信息表';
 
 # 库存表
 create table if not exists material_inventory(
@@ -69,9 +88,11 @@ create table if not exists material_inventory(
     material_id int unsigned not null comment '原料ID',
     current_inventory_level decimal(10 , 2) not null default 0.00 comment '当前库存量',
     safety_stock_quantity decimal(10 , 2) not null default 0.00 comment '安全库存数量',
-    Last_purchase_time date default null comment '最后采购时间',
-    primary key (inventory_id)
-)comment '原料存储表';
+    last_purchase_time date default null comment '最后采购时间',
+    primary key (inventory_id),
+    constraint fk_inventory_material foreign key (material_id) references material_information(material_id)
+        on delete cascade on update cascade
+) engine=InnoDB default charset=utf8mb4 comment '原料存储表';
 
 # 采购信息表
 create table if not exists purchase_record (
@@ -81,14 +102,22 @@ create table if not exists purchase_record (
     material_id int unsigned not null comment '原料ID',
     purchase_quantity decimal(10 , 2) not null comment '采购数量',
     purchase_price decimal(10 , 2) not null comment '采购单价',
-    purchase_amount decimal(10 , 2) not null comment '总金额',
+    purchase_amount decimal(12 , 2) not null comment '总金额',
     supplier_name varchar(100) default '' comment '供应商名称',
     production_batch varchar(50) default '' comment '生产批次',
     production_date date default null comment '生产日期',
     payment_status tinyint unsigned not null default 0 comment '付款状态：0-未付 , 1-部分支付 ，2-已付清',
+    user_id int default null comment '采购人ID',
     procuring_entity varchar(50) default '' comment '采购人',
-    remark varchar(50) default '' comment '备注',
+    remark varchar(255) default '' comment '备注',
     create_time datetime not null default current_timestamp comment '创建时间',
-    primary key (purchase_id)
+    primary key (purchase_id),
+    constraint fk_purchase_material foreign key (material_id) references material_information(material_id)
+        on delete restrict on update cascade ,
+    constraint fk_purchase_user foreign key (user_id) references t_user(id)
+        on delete set null on update cascade
+) engine=InnoDB default charset=utf8mb4 comment '采购信息表';
 
-) comment '采购信息表';
+
+-- 创建索引
+create index index_material_id on purchase_record(material_id);
