@@ -1,4 +1,5 @@
-create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+# create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+create database if not exists dessert DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 use desserts;
 
@@ -38,7 +39,6 @@ create table if not exists t_role(
     role_permissions varchar(20) comment '职称权限'                     -- 角色权限 仅 老板 店长 为管理员
 ) engine=InnoDB default charset=utf8mb4 comment '职称信息表';
 
-
 # 员工信息表
 CREATE table if not exists t_user (
     id INT AUTO_INCREMENT PRIMARY KEY comment '员工ID',    -- 员工编号  自增长
@@ -54,7 +54,6 @@ CREATE table if not exists t_user (
     shift VARCHAR(20) comment '上班班次',                   -- 上班班次
     constraint uk_username unique (username)              -- 用户名唯一
 ) engine=InnoDB default charset=utf8mb4 comment '员工信息表';
-
 
 # 员工职称表
 create table if not exists t_user_role(
@@ -117,7 +116,6 @@ create table if not exists purchase_record (
     constraint fk_purchase_user foreign key (user_id) references t_user(id)
         on delete set null on update cascade
 ) engine=InnoDB default charset=utf8mb4 comment '采购信息表';
-
 
 -- 创建索引
 create index index_material_id on purchase_record(material_id);

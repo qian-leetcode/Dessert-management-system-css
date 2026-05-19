@@ -1,9 +1,9 @@
 <script setup>
-import Home from './views/home.vue'
+import Login from './views/Login.vue'
 </script>
 
 <template>
-  <Home></Home>
+  <Login></Login>
 </template>
 
 <style scoped>
