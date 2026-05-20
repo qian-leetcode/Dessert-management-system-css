@@ -1,5 +1,5 @@
 -- 使用数据库
-use desserts;
+use dessert;
 
 -- 1. 甜品种类 (category)
 insert into category (name, description) values

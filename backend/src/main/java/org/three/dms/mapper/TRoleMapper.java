@@ -6,4 +6,5 @@ import org.three.dms.entity.TRole;
 
 @Mapper
 public interface TRoleMapper extends BaseMapper<TRole> {
+
 }

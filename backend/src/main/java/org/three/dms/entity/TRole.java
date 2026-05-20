@@ -10,6 +10,6 @@ import lombok.Data;
 public class TRole {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String role_name;
-    private String role_permission;
+    private String role;
+    private String role_permissions;
 }

@@ -45,7 +45,6 @@ const push_from_register_data = () =>{
               @update:model-value="regVisible = $event"
               title="账号注册"
               width="500px"
-
             >
               <el-form label-width="80px">
                 <el-form-item label="账号">
@@ -62,9 +61,7 @@ const push_from_register_data = () =>{
                 <el-button @click="regVisible = false"> 取消 </el-button>
                 <el-button type="primary" @click="push_from_register_data"> 立即注册 </el-button>
               </template>
-
             </el-dialog>
-
           </el-container>
         </el-container>
         <el-button class="login-button">登录</el-button>
