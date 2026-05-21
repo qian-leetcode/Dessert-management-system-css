@@ -10,7 +10,6 @@ const routes = [
         path :'/home',
         name : 'Home',
         component: () => import( '@/views/Home.vue'),
-        redirect: '/home/home',
         children: [
             {
                 path:'/category',

@@ -13,3 +13,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    org.springframework.web: DEBUG

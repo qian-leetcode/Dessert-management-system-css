@@ -3,7 +3,8 @@ import Login from './views/Login.vue'
 </script>
 
 <template>
-  <Login></Login>
+<!--  <Login></Login>-->
+  <router-view />
 </template>
 
 <style scoped>

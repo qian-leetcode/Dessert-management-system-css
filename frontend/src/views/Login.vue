@@ -1,13 +1,15 @@
 <script setup>
-import {reactive, ref} from 'vue'
+import { onMounted, reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
+import {user_login , user_register} from "@/api/login.js";
+import {get_user_role_List , get_user_username_list} from "@/api/user.js";
+import {useLoginStore} from "@/stores/useLoginStore.js";
 
 const regVisible = ref(false)
 
 const router = useRouter()
-const loginUser = async () => {
-  await router.push('/home')
-}
+const loginStore = useLoginStore()
 
 
 const user_login_information = reactive({
@@ -15,22 +17,127 @@ const user_login_information = reactive({
   password: '',
 })
 
-// 注册
-const user_from_register = ref({
+const loginUser = async () => {
+  if (!user_login_information.username || !user_login_information.password) {
+    ElMessage.warning('请输入用户名和密码')
+    return
+  }
+  try {
+      const res = await user_login(user_login_information.username, user_login_information.password)
+      const data = res.data
+
+      // ✅ 只改这里：token 在 data.data 里面
+      if (data.data?.token) {
+        const token = data.data.token
+        loginStore.setToken(token)
+        localStorage.setItem('token', token)
+        ElMessage.success('登录成功')
+        await router.push('/home')
+      } else {
+        ElMessage.error(data.msg || '登录失败')
+      }
+    } catch (e) {
+      console.error(e)
+      ElMessage.error('登录失败，请检查网络连接')
+    }
+}
+
+
+// 注册表
+const user_from_register = reactive({
   username : '',
   password: '',
-  re_password: ''
+  re_password: '',
+  name :'',
+  gender:'',
+  phone:'',
+  position:'',
+  hire_date:'',
+  shift:''
 })
 
 const open_el_dialog = () =>{
   regVisible.value = true
 }
 
-const push_from_register_data = () =>{
+const push_from_register_data = async () => {
+  if (!user_from_register.username || !user_from_register.password) {
+    ElMessage.warning('请输入用户名和密码')
+    return
+  }
+  if (!user_from_register.re_password && user_from_register.re_password !== user_from_register.password) {
+    ElMessage.warning('请再次确认密码')
+    return
+  }
+  if (!user_from_register.name || !user_from_register.gender || !user_from_register.phone || !user_from_register.name || !user_from_register.hire_date) {
+    ElMessage.warning('请完善信息')
+    return
+  }
+  const len = username_list.length
+  const val = false;
+  for (let i = 0; i < len; i++) {
+    if (user_from_register.username && user_from_register.username === username_list[i]) {
+      val = true;
+      break;
+    }
+  }
+  if (val) {
+    ElMessage.warning(' 用户名重复');
+    return
+  }
+  try {
+    console.log(user_from_register)
+    const res = await user_register(user_from_register.username ,
+        user_from_register.password,
+        user_from_register.name,
+        user_from_register.gender,
+        user_from_register.phone,
+        user_from_register.position,
+        user_from_register.hire_date,
+        user_from_register.hire_date,)
+    if (res.code === 200) {
+      ElMessage.warning('注册成功')
+    } else {
+      ElMessage.warning('注册失败')
+      console.log(res.msg)
+    }
+  } catch (err) {
+    ElMessage.warning('注册失败')
+  }
+
   // console.log(user_from.value)
   regVisible.value = false
 }
 
+// 获取职位列表
+const role_list = ref([])
+const username_list = ref([])
+
+const fetch_user_role_list = async () => {
+  try{
+    const res = await get_user_role_List()
+    // console.log("后端返回的数据：", res.data)
+    role_list.value = res.data
+  }
+  catch(error){
+    console.error("获取列表失败",error)
+  }
+}
+
+const fetch_username_list = async () => {
+  try{
+    const res = await get_user_username_list()
+    username_list.value = res.data
+  }
+  catch(error){
+    console.error("获取列表失败",error)
+  }
+}
+
+onMounted(() => {
+  fetch_user_role_list();
+  fetch_username_list();
+})
 
 </script>
 
@@ -69,6 +176,46 @@ const push_from_register_data = () =>{
                 </el-form-item>
                 <el-form-item label="确认密码">
                   <el-input v-model="user_from_register.re_password" show-password/>
+                </el-form-item>
+                <el-form-item label="姓名">
+                  <el-input v-model="user_from_register.name" placeholder="请输入姓名" />
+                </el-form-item>
+                <el-form-item label="性别">
+                  <el-select v-model="user_from_register.gender" placeholder="请选择性别">
+                    <el-option label="男" value="男"/>
+                    <el-option label="女" value="女"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="电话">
+                  <el-input v-model="user_from_register.phone" placeholder="请输入电话号码" />
+                </el-form-item>
+                <el-form-item label="职位">
+                  <el-select v-model="user_from_register.position">
+                    <el-option
+                    v-for="item in role_list"
+                    :key ="item"
+                    :label="item"
+                    :value="item"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="入职日期">
+                  <!-- 日期选择器，默认选择日期格式 -->
+                  <el-date-picker
+                      v-model="user_from_register.hire_date"
+                      type="date"
+                      placeholder="请选择入职日期"
+                      format="YYYY-MM-DD"
+                      value-format="YYYY-MM-DD"
+                  />
+                </el-form-item>
+                <el-form-item label="班次">
+                  <el-select v-model="user_from_register.shift" placeholder="选择班次">
+                    <el-option label="早班" value="早班"></el-option>
+                    <el-option label="中班" value="中班"></el-option>
+                    <el-option label="晚班" value="晚班"></el-option>
+                    <el-option label="全天" value="全天"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-form>
               <template #footer>

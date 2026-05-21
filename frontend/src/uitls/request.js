@@ -6,9 +6,9 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(config => {
-    const loginStore = loginStore.getState();
-    if (loginStore.token) {
-        config.headers.token = loginStore.token;
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token')
+    if (token) {
+        config.headers.token = token
     }
     return config;
 })
