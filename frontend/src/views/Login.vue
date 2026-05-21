@@ -1,8 +1,21 @@
 <script setup>
-import { ref } from 'vue'
+import {reactive, ref} from 'vue'
+import {useRouter} from "vue-router";
 
 const regVisible = ref(false)
 
+const router = useRouter()
+const loginUser = async () => {
+  await router.push('/home')
+}
+
+
+const user_login_information = reactive({
+  username: '',
+  password: '',
+})
+
+// 注册
 const user_from_register = ref({
   username : '',
   password: '',
@@ -18,6 +31,7 @@ const push_from_register_data = () =>{
   regVisible.value = false
 }
 
+
 </script>
 
 <template>
@@ -30,10 +44,10 @@ const push_from_register_data = () =>{
           账号登录
         </el-container>
         <el-container>
-          <el-input type="text" name="userName" placeholder="请输入用户名" class="input"/>
+          <el-input type="text" v-model="user_login_information.username" placeholder="请输入用户名" class="input"/>
         </el-container>
         <el-container>
-          <el-input type="text" name="password" placeholder="请输入密码" class="input"/>
+          <el-input type="text" v-model="user_login_information.password" placeholder="请输入密码" class="input"/>
         </el-container>
         <el-container style="padding-top: 12px;justify-content: center; align-items: center">
           <el-checkbox name="remember" /> 记住账号
@@ -64,7 +78,7 @@ const push_from_register_data = () =>{
             </el-dialog>
           </el-container>
         </el-container>
-        <el-button class="login-button">登录</el-button>
+        <el-button class="login-button" @click="loginUser"> 登录 </el-button>
       </el-main>
       <el-footer >Copyright@2026</el-footer>
     </el-container>

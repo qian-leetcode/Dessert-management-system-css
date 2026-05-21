@@ -28,6 +28,8 @@ create table if not exists dessert(
     description varchar(500) default '' comment '甜品描述', -- 甜品描述
     release_date date comment '甜品发布时间', -- 发布时间
     cat_id int not null comment '所属种类ID',
+    dessert_status boolean default true comment '当前状态',
+    dessert_number int default 0 comment '甜品件数',
     CONSTRAINT fk_dessert_category FOREIGN KEY (cat_id) REFERENCES category(id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) engine=InnoDB default charset=utf8mb4 comment '甜品表';

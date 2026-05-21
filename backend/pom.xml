@@ -34,7 +34,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+<!--            <exclusions>-->
+<!--                &lt;!&ndash; 排除默认的 Logback &ndash;&gt;-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
+        <!-- 引入 Log4j2 的 Starter（自动管理依赖） -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -54,12 +66,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter-test</artifactId>
-            <version>3.0.5</version>
             <scope>test</scope>
         </dependency>
 
@@ -95,6 +101,7 @@
             <version>3.5.16</version>
             <scope>compile</scope>
         </dependency>
+
     </dependencies>
 
     <build>

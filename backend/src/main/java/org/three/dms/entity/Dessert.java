@@ -14,7 +14,7 @@ public class Dessert {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String dessertName;
+    private String name;
     private String photo_url;
     private String price;
     private String description;

@@ -12,16 +12,16 @@ import java.time.LocalDate;
 @TableName("t_user")
 public class User {
     @TableId(type = IdType.AUTO)
-    private Integer user_id;
+    private Integer id;
 
-    private String user_name;
-    private String user_gender;
-    private String user_phone = "";
+    private String name;
+    private String gender;
+    private String phone = "";
     private String username;
     private String password;
-    private String user_position;
-    private boolean user_active = false;
-    private LocalDate user_hire_date;
-    private String user_shift;
+    private String position;
+    private boolean active = false;
+    private LocalDate hire_date;
+    private String shift;
 
 }

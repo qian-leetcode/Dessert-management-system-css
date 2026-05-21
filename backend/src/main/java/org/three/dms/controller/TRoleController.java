@@ -10,7 +10,7 @@ import org.three.dms.service.TRoleService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/role")
 public class TRoleController {
     @Autowired
     private TRoleService tRoleService;

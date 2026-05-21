@@ -4,22 +4,22 @@ const routes = [
     {
         path: '/',
         name : 'Login',
-        component: () => import( './views/Login.vue'),
+        component: () => import( '@/views/Login.vue'),
     },
     {
         path :'/home',
         name : 'Home',
-        component: () => import( './views/Home.vue'),
-        redirect: '/home',
+        component: () => import( '@/views/Home.vue'),
+        redirect: '/home/home',
         children: [
             {
                 path:'/category',
                 name : 'Category',
-                component: () => import( './views/CategoryManagement.vue')
+                component: () => import( '@/views/CategoryManagement.vue')
             },{
                 path:'/dessert',
                 name : 'Dessert',
-                component: () => import( './views/DessertManagement.vue')
+                component: () => import( '@/views/DessertManagement.vue')
             }
         ]
     }
