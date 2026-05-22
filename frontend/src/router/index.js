@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 
+
 const routes = [
     {
         path: '/',
@@ -19,6 +20,10 @@ const routes = [
                 path:'/dessert',
                 name : 'Dessert',
                 component: () => import( '@/views/DessertManagement.vue')
+            },{
+                path:'/user_list',
+                name : 'UserList',
+                component:()=> import('@/views/user_list.vue')
             }
         ]
     }

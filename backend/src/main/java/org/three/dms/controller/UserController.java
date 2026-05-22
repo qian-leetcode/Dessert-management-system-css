@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.FlashMapManager;
 import org.three.dms.entity.User;
 import org.three.dms.service.UserService;
 
@@ -21,27 +20,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 获取用户信息列表
     @GetMapping("/list")
     public List<User> list(){
         log.info("调用/api/user/list");
         return userService.list();
     }
 
+    // 账号登录
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String,String> user){
         String username = user.get("username");
         String password = user.get("password");
         log.info("{}尝试登录",username);
-        List<User> temp_user_list = userService.list();
-        boolean val = false;
-        for (User u : temp_user_list){
-            if (u.getUsername().equals(username) && u.getPassword().equals(password)){
-                val = true;
-                break;
-            }
-        }
+        // 获取加密密码
+        String t_password = userService.get_password(username);
+        boolean val = BCrypt.checkpw(password,t_password);
         Map<String,Object> res = new HashMap<>();
         Map<String,Object> data = new HashMap<>();
+
         if(val){
             String token = java.util.UUID.randomUUID().toString().replace("-", "");
             res.put("code",200);
@@ -58,14 +55,14 @@ public class UserController {
         return res;
     }
 
+    // 进行账号注册
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody Map<String,String> user){
 
         String username = user.get("username");
         String password = user.get("password");
         String encrypted_password = BCrypt.hashpw(password,BCrypt.gensalt());
-//        userService
-//        username, password,re_password, name , gender , phone , position, hire_date
+
         User temp_user = new User();
         temp_user.setName(user.get("name"));
         temp_user.setGender(user.get("gender"));
@@ -80,7 +77,7 @@ public class UserController {
         Map<String,Object> res = new HashMap<>();
         if(pos == 1){
             res.put("code",200);
-//            data.put();
+
             res.put("msg", "用户添加成功");
             log.info("添加新用户{}",username);
         }
@@ -92,6 +89,7 @@ public class UserController {
         return res;
     }
 
+    // 获取数据库中的用户名
     @GetMapping("/username")
     public List<String> get_username(){ return userService.get_username(); }
 }

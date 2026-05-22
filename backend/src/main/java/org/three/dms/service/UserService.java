@@ -9,4 +9,6 @@ public interface UserService extends IService<User> {
     List<String> get_username ();
 
     int insert_user(User user);
+
+    String get_password (String userName);
 }

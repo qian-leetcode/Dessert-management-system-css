@@ -3,6 +3,7 @@ package org.three.dms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.three.dms.entity.User;
 
@@ -16,4 +17,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Insert("INSERT INTO t_user(name, gender, phone, username, password, position, active, hire_date, shift) " +
             "VALUES(#{name}, #{gender}, #{phone}, #{username}, #{password}, #{position}, #{active}, #{hire_date}, #{shift})")
     int insert_user(User user);
+
+    @Select("select password from t_user where username = #{userName}")
+    String get_password(@Param("userName") String userName);
 }

@@ -23,4 +23,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public int insert_user(User user){
         return userMapper.insert_user(user);
     }
+
+    @Override
+    public String get_password(String username){
+        return userMapper.get_password(username);
+    }
 }

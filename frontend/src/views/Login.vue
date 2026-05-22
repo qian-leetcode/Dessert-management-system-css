@@ -11,12 +11,13 @@ const regVisible = ref(false)
 const router = useRouter()
 const loginStore = useLoginStore()
 
-
+// 登录信息表
 const user_login_information = reactive({
   username: '',
   password: '',
 })
 
+// 登录请求
 const loginUser = async () => {
   if (!user_login_information.username || !user_login_information.password) {
     ElMessage.warning('请输入用户名和密码')
@@ -56,10 +57,12 @@ const user_from_register = reactive({
   shift:''
 })
 
+// 打开弹窗
 const open_el_dialog = () =>{
   regVisible.value = true
 }
 
+// 发送注册请求
 const push_from_register_data = async () => {
   if (!user_from_register.username || !user_from_register.password) {
     ElMessage.warning('请输入用户名和密码')
@@ -95,8 +98,13 @@ const push_from_register_data = async () => {
         user_from_register.position,
         user_from_register.hire_date,
         user_from_register.hire_date,)
-    if (res.code === 200) {
-      ElMessage.warning('注册成功')
+    // for (const v in res){
+    //   console.log(v + "-----" + res[v])
+    //   // console.log(res[v])
+    // }
+    if (res["status"]=== 200) {
+      // ElMessage.info('注册成功')
+      ElMessage.success('注册成功')
     } else {
       ElMessage.warning('注册失败')
       console.log(res.msg)
