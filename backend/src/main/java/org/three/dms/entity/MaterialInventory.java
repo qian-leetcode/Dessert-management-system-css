@@ -15,7 +15,7 @@ public class MaterialInventory {
     private Integer inventory_id;
 
     private Integer material_id;
-    private BigDecimal currentInventoryLevel;
-    private BigDecimal safetyStockQuantity;
+    private double currentInventoryLevel;
+    private double safetyStockQuantity;
     private LocalDate lastPurchaseTime;
 }

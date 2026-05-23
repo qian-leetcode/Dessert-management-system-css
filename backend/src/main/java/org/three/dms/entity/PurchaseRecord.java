@@ -28,13 +28,13 @@ public class PurchaseRecord {
     private Integer materialId;
 
     // 采购数量
-    private BigDecimal purchaseQuantity;
+    private double purchaseQuantity;
 
     // 采购单价
-    private BigDecimal purchasePrice;
+    private double purchasePrice;
 
     // 采购金额（=数量*单价）
-    private BigDecimal purchaseAmount;
+    private double purchaseAmount;
 
     // 供应商名称
     private String supplierName;

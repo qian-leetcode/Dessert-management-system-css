@@ -57,7 +57,7 @@
 <!--            <AppenderRef ref="file" />-->
 <!--            <AppenderRef ref="Console" />-->
 <!--            <AppenderRef ref="accessFile"/>-->
-            <AppenderRef ref="rollingFile"/>
+<!--            <AppenderRef ref="rollingFile"/>-->
 
         </Root>
 

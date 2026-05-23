@@ -4,13 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.three.dms.common.UserDataInfo;
 import org.three.dms.entity.User;
 import org.three.dms.service.UserService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Long.min;
 
 @Slf4j
 @RestController
@@ -77,7 +81,6 @@ public class UserController {
         Map<String,Object> res = new HashMap<>();
         if(pos == 1){
             res.put("code",200);
-
             res.put("msg", "用户添加成功");
             log.info("添加新用户{}",username);
         }
@@ -92,4 +95,42 @@ public class UserController {
     // 获取数据库中的用户名
     @GetMapping("/username")
     public List<String> get_username(){ return userService.get_username(); }
+
+    // 获取用户个人信息
+    @PostMapping("/information")
+    public UserDataInfo get_information(@RequestBody Map<String , String> mp){
+        List<User> begin_user_list = userService.list();
+        Integer page_size = Integer.valueOf(mp.get("page_size"));
+        Integer page_num = Integer.valueOf(mp.get("page_num"));
+        String name = mp.get("name");
+        String gender = mp.get("gender");
+        String phone = mp.get("phone");
+        String username = mp.get("username");
+        String position = mp.get("position");
+        String hire_date = mp.get("hire_date");
+        String shift = mp.get("shift");
+
+        UserDataInfo res = new UserDataInfo();
+        List<User> temp_user_list = new ArrayList<>();
+        for (User begin_user : begin_user_list){
+            if(begin_user.getName().contains(name) &&
+                begin_user.getGender().contains(gender) &&
+                    begin_user.getPhone().contains(phone) &&
+                    begin_user.getUsername().contains(username) &&
+                    begin_user.getPosition().contains(position) &&
+                    begin_user.getHire_date().toString().contains(hire_date) &&
+                    begin_user.getShift().contains(shift)
+            ){
+                temp_user_list.add(begin_user);
+            }
+        }
+        res.setCode(200);
+        res.setMsg("success");
+        int total = temp_user_list.size();
+        res.setTotal(total);
+        for (int i = page_size *(page_num - 1); i < min((long) page_size *(page_num - 1) + page_size , total); i++) {
+            res.add(temp_user_list.get(i));
+        }
+        return res;
+    }
 }

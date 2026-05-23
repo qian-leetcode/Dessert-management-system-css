@@ -39,8 +39,8 @@ async function fetch_data(){
     }
     const res = await get_dessert_List(params)
     dessert_form.value = res.data.rows
-    console.log(dessert_form)
-    console.log(res)
+    // console.log(dessert_form)
+    // console.log(res)
     total.value = res.data.total
   }
   catch(err){

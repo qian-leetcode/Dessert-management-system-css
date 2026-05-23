@@ -19,9 +19,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/lists")
-    public List<Category> lists() {
-        return categoryService.list();
+    @GetMapping("/list_name")
+    public List<String> get_category_name() {
+        return categoryService.get_category_name();
     }
 
     @PostMapping("/list")
@@ -31,8 +31,6 @@ public class CategoryController {
         Integer page_size=Integer.parseInt(map.get("page_size"));
         String name = map.get("name");
         String description =map.get("description");
-        System.out.println(name);
-        System.out.println(description);
         if(page_num == 0) page_num=1;
         if(page_size == 0) page_size=10;
 
@@ -43,7 +41,6 @@ public class CategoryController {
         for(int i = 0 ; i <  len; i++){
             if(categoryList.get(i).getName().contains(name) &&  categoryList.get(i).getDescription().contains(description)){
                 temp.add(categoryList.get(i));
-//                System.out.println(categoryList.get(i).getName());
             }
         }
         res.setCode(200);

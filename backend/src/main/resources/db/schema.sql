@@ -1,4 +1,6 @@
 # create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+drop database if exists  dessert;
+
 create database if not exists dessert DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 use dessert;
@@ -24,7 +26,7 @@ create table if not exists dessert(
     id int auto_increment primary key comment '甜品ID', -- 编号
     name varchar(100) not null comment '甜品名称', -- 名称
     photo_url varchar(500) default '' comment '甜品图片url', -- 图片地址
-    price decimal(10 , 2) comment '甜品价格', -- 价格
+    price double comment '甜品价格', -- 价格
     description varchar(500) default '' comment '甜品描述', -- 甜品描述
     release_date date comment '甜品发布时间', -- 发布时间
     cat_id int not null comment '所属种类ID',
@@ -87,8 +89,8 @@ create table if not exists material_information(
 create table if not exists material_inventory(
     inventory_id int unsigned not null auto_increment comment '库存ID',
     material_id int unsigned not null comment '原料ID',
-    current_inventory_level decimal(10 , 2) not null default 0.00 comment '当前库存量',
-    safety_stock_quantity decimal(10 , 2) not null default 0.00 comment '安全库存数量',
+    current_inventory_level double not null default 0.00 comment '当前库存量',
+    safety_stock_quantity double not null default 0.00 comment '安全库存数量',
     last_purchase_time date default null comment '最后采购时间',
     primary key (inventory_id),
     constraint fk_inventory_material foreign key (material_id) references material_information(material_id)
@@ -101,9 +103,9 @@ create table if not exists purchase_record (
     purchase_order_number varchar(30) not null comment '采购单号',
     purchase_date date not null comment '采购日期',
     material_id int unsigned not null comment '原料ID',
-    purchase_quantity decimal(10 , 2) not null comment '采购数量',
-    purchase_price decimal(10 , 2) not null comment '采购单价',
-    purchase_amount decimal(12 , 2) not null comment '总金额',
+    purchase_quantity double not null comment '采购数量',
+    purchase_price double not null comment '采购单价',
+    purchase_amount double not null comment '总金额',
     supplier_name varchar(100) default '' comment '供应商名称',
     production_batch varchar(50) default '' comment '生产批次',
     production_date date default null comment '生产日期',
