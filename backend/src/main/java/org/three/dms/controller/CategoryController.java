@@ -7,6 +7,7 @@ import org.three.dms.entity.Category;
 import org.three.dms.service.CategoryService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,58 @@ public class CategoryController {
         len = temp.size();
         for(int i = page_size * (page_num - 1); i < min((page_size * (page_num - 1)) + page_size , len); i++){
             res.add(temp.get(i));
+        }
+        return res;
+    }
+
+    @PostMapping("/add")
+    public Map<String , Object>  add(@RequestBody Map<String,String> map){
+         String name = map.get("name");
+         String description = map.get("description");
+         int pos = categoryService.insert_category(name, description);
+//         System.out.println(name);
+//         System.out.println(description);
+         Map<String,Object> res = new HashMap<>();
+         if(pos == 0){
+             res.put("code", 500);
+             res.put("msg", "Insertion failed");
+         }
+         else {
+             res.put("code", 200);
+             res.put("msg", "success");
+         }
+         return res;
+    }
+
+    @PostMapping("/delete")
+    public Map<String , Object>  del(Integer id){
+        Map<String,Object> res = new HashMap<>();
+        int pos = categoryService.delete_category(id);
+        if(pos == 0){
+            res.put("code", 500);
+            res.put("msg", "Deletion failed");
+        }
+        else {
+            res.put("code", 200);
+            res.put("msg", "success");
+        }
+        return res;
+    }
+
+    @PostMapping("/update")
+    public Map<String , Object>  update(@RequestBody Map<String,String> map){
+        Integer id = Integer.parseInt(map.get("id"));
+        String name = map.get("name");
+        String description = map.get("description");
+        int pos = categoryService.update_category(name , description, id);
+        Map<String,Object> res = new HashMap<>();
+        if(pos == 0){
+            res.put("code", 500);
+            res.put("msg", "update failed");
+        }
+        else {
+            res.put("code", 200);
+            res.put("msg", "success");
         }
         return res;
     }

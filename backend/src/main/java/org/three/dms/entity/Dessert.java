@@ -17,7 +17,7 @@ public class Dessert {
     private Integer id;
 
     // 甜品分类
-//    @TableField(exist = false)
+    @TableField(exist = false)
 //    @JsonProperty("dessert_category")
     private String dessert_category;
 

@@ -20,7 +20,6 @@ public class User {
     private String username;
     private String password;
     private String position;
-    private boolean active = false;
     private LocalDate hire_date;
     private String shift;
 

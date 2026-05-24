@@ -6,7 +6,9 @@ import org.three.dms.common.DessertDataInfo;
 import org.three.dms.entity.Dessert;
 import org.three.dms.service.DessertService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,4 +75,99 @@ public class DessertController {
 //        System.out.println(res);
         return res;
     }
+
+    @PostMapping("/add")
+    public Map<String, Object> add(@RequestBody Map<String, String> map){
+        // 1. 从 map 里取出所有参数
+        Integer catId = Integer.parseInt(map.get("catId"));
+        String name = map.get("name");
+        String photoUrl = map.get("photoUrl");
+        Double price = Double.parseDouble(map.get("price"));
+        String description = map.get("description");
+        LocalDate releaseDate = LocalDate.parse(map.get("releaseDate"));
+        Integer dessertStatus = Integer.parseInt(map.get("dessertStatus"));
+        Integer dessertNumber = Integer.parseInt(map.get("dessertNumber"));
+
+        // 2. 调用 Service 新增
+        int result = dessertService.insert_dessert(
+                name,
+                photoUrl,
+                price,
+                description,
+                releaseDate,
+                catId,
+                dessertStatus,
+                dessertNumber
+        );
+
+        // 3. 构造返回结果（和你上面 category 接口风格对齐）
+        Map<String, Object> response = new HashMap<>();
+        if (result > 0) {
+            response.put("code", 200);
+            response.put("msg", "新增成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "新增失败");
+        }
+        return response;
+    }
+
+    @PostMapping("/delete")
+    public Map<String, Object> delete(@RequestBody Map<String, String> map) {
+        // 1. 从map中获取参数并转换类型
+        Integer id = Integer.parseInt(map.get("id"));
+
+        // 2. 调用Service删除方法
+        int result = dessertService.delete_dessert(id);
+
+        // 3. 构造返回结果
+        Map<String, Object> response = new HashMap<>();
+        if (result > 0) {
+            response.put("code", 200);
+            response.put("msg", "删除成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "删除失败");
+        }
+        return response;
+    }
+
+    @PostMapping("/update")
+    public Map<String, Object> update(@RequestBody Map<String, String> map) {
+        // 1. 从map中获取所有参数并转换类型
+        Integer id = Integer.parseInt(map.get("id"));
+        String name = map.get("name");
+        String photoUrl = map.get("photoUrl");
+        Double price = Double.parseDouble(map.get("price"));
+        String description = map.get("description");
+        LocalDate releaseDate = LocalDate.parse(map.get("releaseDate"));
+        Integer catId = Integer.parseInt(map.get("catId"));
+        Integer dessertStatus = Integer.parseInt(map.get("dessertStatus"));
+        Integer dessertNumber = Integer.parseInt(map.get("dessertNumber"));
+
+        // 2. 调用Service修改方法
+        int result = dessertService.update_dessert(
+                id,
+                name,
+                photoUrl,
+                price,
+                description,
+                releaseDate,
+                catId,
+                dessertStatus,
+                dessertNumber
+        );
+
+        // 3. 构造返回结果
+        Map<String, Object> response = new HashMap<>();
+        if (result > 0) {
+            response.put("code", 200);
+            response.put("msg", "修改成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "修改失败");
+        }
+        return response;
+    }
+
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { get_dessert_List } from '@/api/category.js'
+import {add_dessert_list_, delete_dessert_list_, get_dessert_List_, update_dessert_list_} from '@/api/category.js'
 import {onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
 
@@ -10,7 +10,6 @@ const query_form = reactive({
 })
 
 // 查询按钮
-
 function query_form_button(){
   fetch_data()
 }
@@ -27,6 +26,7 @@ const page_num = ref(0)
 const page_size = ref(10)
 const total = ref(0)
 
+// 获取种类列表
 async function fetch_data(){
   try {
     const params = {
@@ -37,7 +37,7 @@ async function fetch_data(){
       description : query_form.description,
       total : total.value
     }
-    const res = await get_dessert_List(params)
+    const res = await get_dessert_List_(params)
     dessert_form.value = res.data.rows
     // console.log(dessert_form)
     // console.log(res)
@@ -48,7 +48,86 @@ async function fetch_data(){
   }
 }
 
-onMounted(() => fetch_data())
+const selected = ref([])
+// 新增
+const category_visible = ref(false);
+const add_category = reactive({
+  name:'',
+  description:'',
+  id:''
+})
+
+// 新增内容
+async function add_category_list(){
+  try{
+    if(add_category.name === '' || add_category.description === ''){
+      ElMessage.error("请完善信息")
+      return
+    }
+    const res = await add_dessert_list_(add_category)
+    console.log(res)
+    category_visible.value = false
+  }
+  catch(err){
+    ElMessage.error(err)
+    console.log(err)
+  }
+}
+
+// 删除分类
+async function handle_delete(id){
+  try{
+    const res = await delete_dessert_list_(id)
+    console.log(res)
+    await fetch_data()
+  }
+  catch(err){
+    ElMessage.error(err)
+  }
+
+}
+
+// 更新分类
+async function update_category_list(row){
+    category_visible.value = true
+    add_category.name = row.name
+    add_category.description = row.description
+    add_category.id = row.id
+    // category_visible.value = false
+}
+
+async function update_category(){
+  try {
+    if (!add_category.name || !add_category.description) {
+      ElMessage.error("请完善信息")
+      return
+    }
+    await update_dessert_list_(add_category)
+    ElMessage.success("修改成功")
+    category_visible.value = false
+    await fetch_data()
+  } catch (err) {
+    ElMessage.error("修改失败")
+  }
+}
+
+async function Batch_delete(){
+  try {
+    for (const value of selected.value){
+      await delete_dessert_list_(value)
+    }
+    ElMessage.success("批量删除成功")
+    selected.value = []
+    await fetch_data()
+  }
+  catch(err){
+    ElMessage.error(err)
+  }
+}
+
+onMounted(() => {
+  fetch_data();
+})
 
 </script>
 
@@ -69,18 +148,38 @@ onMounted(() => fetch_data())
   </div>
 
   <div>
-    <el-button type="danger">批量删除</el-button>
-    <el-button type="primary"> 新增 </el-button>
+    <el-button type="danger" @click="Batch_delete">批量删除</el-button>
+    <el-button type="primary" @click="category_visible = true"> 新增 </el-button>
     <!--  设置新增弹窗-->
+    <el-dialog
+      :model-value="category_visible"
+      @close="category_visible = false"
+      title="新增分类"
+      width="500px"
+    >
+      <el-form label-width="80px">
+        <el-form-item label="分类名称">
+          <el-input v-model="add_category.name" placeholder="请输入分类名称" clearable />
+        </el-form-item>
+        <el-form-item label="分类描述">
+          <el-input v-model="add_category.description" placeholder="请输入分类描述" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="category_visible = false"> 取消 </el-button>
+        <el-button type="primary" @click="add_category.id ? update_category():add_category_list()"> {{ add_category.id ? '修改' : '添加' }} </el-button>
+      </template>
+    </el-dialog>
   </div>
+
   <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v => v.id)">
     <el-table-column type="selection" width="50" />
     <el-table-column prop="name" label="分类名称" />
     <el-table-column prop="description" label="描述" />
     <el-table-column label="操作" width="150">
-      <template @default="{rows}">
-        <el-button size="small" type="primary" > 修改 </el-button>
-        <el-button size="small" type="danger" > 删除 </el-button>
+      <template #default="{ row }">
+        <el-button size="small" type="primary" @click="update_category_list(row)"> 修改 </el-button>
+        <el-button size="small" type="danger" @click="handle_delete(row.id)"> 删除 </el-button>
       </template>
     </el-table-column>
   </el-table>

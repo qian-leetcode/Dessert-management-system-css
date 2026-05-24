@@ -119,7 +119,6 @@ onMounted(() => {
       <el-table-column prop="phone" label="联系电话" />
       <el-table-column prop="username" label="用户名" />
       <el-table-column prop="position" label="岗位职称" />
-      <el-table-column prop="active" label="账号是否有管理权限" />
       <el-table-column prop="hire_date" label="入职日期"/>
       <el-table-column prop="shift" label="上班班次" />
       <el-table-column label="操作" width="150">

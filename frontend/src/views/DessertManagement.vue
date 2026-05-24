@@ -1,8 +1,8 @@
 <script setup>
 import {onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
-import {get_dessert_list_name} from "@/api/category.js";
-import {get_dessert_list} from "@/api/dessert.js";
+import {get_dessert_list_name_} from "@/api/category.js";
+import {get_dessert_list_} from "@/api/dessert.js";
 
 //功能查询
 
@@ -21,7 +21,7 @@ const category_list = ref([])
 // 获取种类名称列表
 async function fetch_category_list() {
   try{
-    const res = await get_dessert_list_name()
+    const res = await get_dessert_list_name_()
     // console.log(res)
     category_list.value = res.data
     // console.log(category_list)
@@ -32,7 +32,7 @@ async function fetch_category_list() {
 }
 
 // 页码管理
-const page_num = ref(0)
+const page_num = ref(1)
 const page_size = ref(5)
 const total =  ref(0)
 
@@ -51,7 +51,7 @@ async function query_form_dessert() {
       page_num: page_num.value,
       page_size: page_size.value,
     }
-    const res = await get_dessert_list(params)
+    const res = await get_dessert_list_(params)
     console.log(res)
     dessert_form.value = res.data.rows
     console.log(dessert_form.value)
@@ -72,6 +72,9 @@ function clear_query_form(){
   query_form.dessert_max_price  =''
 }
 
+//
+const selected = ref([])
+
 onMounted(() => {
   fetch_category_list();
   query_form_dessert();
@@ -81,36 +84,39 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-form :model="query_form">
-      <el-form-item label="分类名称">
-        <el-input v-model="query_form.dessert_name" placeholder="输入名称" clearable/>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="query_form.dessert_description" placeholder="请输入描述" clearable />
-      </el-form-item>
-      <el-form-item label="分类">
-        <el-select v-model="query_form.dessert_category" placeholder="选择分类">
-          <el-option
-              v-for="item in category_list"
-              :key="item"
-              :label="item"
-              :value="item"
-          />
-        </el-select>
-      </el-form-item>
+
+    <el-form :inline="true" :model="query_form">
+
+        <el-form-item label="分类名称">
+          <el-input v-model="query_form.dessert_name" placeholder="输入名称" clearable style="width: 250px;"/>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="query_form.dessert_description" placeholder="请输入描述" clearable style="width: 250px;"/>
+        </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="query_form.dessert_category" placeholder="选择分类" style="width: 250px;">
+            <el-option
+                v-for="item in category_list"
+                :key="item"
+                :label="item"
+                :value="item"
+            />
+          </el-select>
+        </el-form-item>
+      <br style="margin: 10px 0;">
       <el-form-item label="价格区间">
-        <el-input v-model="query_form.dessert_min_price" placeholder="最低价" />
-        ~
-        <el-input v-model="query_form.dessert_max_price" placeholder="最高价" />
+        <el-input v-model="query_form.dessert_min_price" placeholder="最低价" style="width: 150px;"/>
+        <span style="margin: 0 5px;">~</span>
+        <el-input v-model="query_form.dessert_max_price" placeholder="最高价" style="width: 150px;"/>
       </el-form-item>
       <el-form-item>
-        <el-button @click="query_form_dessert"> 查询 </el-button>
-        <el-button @click="clear_query_form"> 重置 </el-button>
+        <el-button type="primary" @click="query_form_dessert"> 查询 </el-button>
+        <el-button type="primary" @click="clear_query_form"> 重置 </el-button>
       </el-form-item>
     </el-form>
     <div>
-      <el-button>批量删除</el-button>
-      <el-button>新增</el-button>
+      <el-button type="danger">批量删除</el-button>
+      <el-button type="primary">新增</el-button>
     </div>
     <div>
       <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v=>v.id)">
@@ -127,7 +133,7 @@ onMounted(() => {
         <el-table-column prop="description" label="描述" />
         <el-table-column prop="release_date" label="发布日" />
         <el-table-column label="操作" width="150">
-          <template @default="{row}">
+          <template #default="{row}">
             <el-button size="small" type="primary" > 修改 </el-button>
             <el-button size="small" type="danger" > 删除 </el-button>
           </template>

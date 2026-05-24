@@ -74,7 +74,6 @@ public class UserController {
         temp_user.setUsername(user.get("username"));
         temp_user.setPassword(encrypted_password);
         temp_user.setPosition(user.get("position"));
-        temp_user.setActive(false);
         temp_user.setHire_date(LocalDate.parse(user.get("hire_date")));
         temp_user.setShift(user.get("shift"));
         int pos = userService.insert_user(temp_user);
@@ -132,5 +131,49 @@ public class UserController {
             res.add(temp_user_list.get(i));
         }
         return res;
+    }
+
+    // 删除用户
+    @PostMapping("/delete")
+    public Map<String, Object> deleteUser(@RequestBody Map<String, String> map) {
+        Integer id = Integer.parseInt(map.get("id"));
+        int result = userService.delete_user(id);
+
+        Map<String, Object> response = new HashMap<>();
+        if (result > 0) {
+            response.put("code", 200);
+            response.put("msg", "删除用户成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "删除用户失败");
+        }
+        return response;
+    }
+
+    // 修改用户（不修改主键）
+    @PostMapping("/update")
+    public Map<String, Object> updateUser(@RequestBody Map<String, String> map) {
+        Integer id = Integer.parseInt(map.get("id"));
+        String name = map.get("name");
+        String gender = map.get("gender");
+        String phone = map.get("phone");
+        String username = map.get("username");
+        String password = map.get("password");
+        String position = map.get("position");
+        Integer active = Integer.parseInt(map.get("active"));
+        LocalDate hireDate = LocalDate.parse(map.get("hireDate"));
+        String shift = map.get("shift");
+
+        int result = userService.update_user(id, name, gender, phone, username, password, position, active, hireDate, shift);
+
+        Map<String, Object> response = new HashMap<>();
+        if (result > 0) {
+            response.put("code", 200);
+            response.put("msg", "修改用户成功");
+        } else {
+            response.put("code", 500);
+            response.put("msg", "修改用户失败");
+        }
+        return response;
     }
 }

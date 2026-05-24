@@ -7,6 +7,7 @@ import org.three.dms.entity.User;
 import org.three.dms.mapper.UserMapper;
 import org.three.dms.service.UserService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,5 +28,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public String get_password(String username){
         return userMapper.get_password(username);
+    }
+
+    @Override
+    public int delete_user(Integer id) {
+        return userMapper.delete_user(id);
+    }
+
+    @Override
+    public int update_user(Integer id, String name, String gender, String phone, String username, String password, String position, Integer active, LocalDate hireDate, String shift) {
+        return userMapper.update_user(id, name, gender, phone, username, password, position, active, hireDate, shift);
     }
 }

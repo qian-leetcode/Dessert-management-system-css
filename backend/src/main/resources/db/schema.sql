@@ -39,8 +39,7 @@ create table if not exists dessert(
 # 职称信息表
 create table if not exists t_role(
     id int auto_increment primary key comment '职称ID', -- 编号
-    role varchar(200) comment '职称名称', -- 角色名
-    role_permissions varchar(20) comment '职称权限'                     -- 角色权限 仅 老板 店长 为管理员
+    role varchar(200) comment '职称名称' -- 角色名
 ) engine=InnoDB default charset=utf8mb4 comment '职称信息表';
 
 # 员工信息表
@@ -52,8 +51,6 @@ CREATE table if not exists t_user (
     username VARCHAR(200) NOT NULL comment '账号用户名',       -- 登录用户名
     password VARCHAR(200) NOT NULL comment '登录密码',       -- 登录密码，经Bcrypt算法加密(不显示)
     position VARCHAR(50) comment '岗位职称名',                 -- 岗位职位
-    active TINYINT(1) DEFAULT 0 comment '是否具有管理权限：1-是，0-否',              -- 1用户可用，0 用户不可用(不显示 ，管理员显示并进行修改)
-                                        -- 可用为可编辑，不可用为不可编辑
     hire_date DATE comment '入职日期',                       -- 入职日期
     shift VARCHAR(20) comment '上班班次',                   -- 上班班次
     constraint uk_username unique (username)              -- 用户名唯一
@@ -120,6 +117,6 @@ create table if not exists purchase_record (
     constraint fk_purchase_user foreign key (user_id) references t_user(id)
         on delete set null on update cascade
 ) engine=InnoDB default charset=utf8mb4 comment '采购信息表';
-
--- 创建索引
-create index index_material_id on purchase_record(material_id);
+#
+# -- 创建索引
+# create index index_material_id on purchase_record(material_id);

@@ -1,8 +1,10 @@
 package org.three.dms.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,7 +17,11 @@ public class MaterialInventory {
     private Integer inventory_id;
 
     private Integer material_id;
-    private double currentInventoryLevel;
-    private double safetyStockQuantity;
-    private LocalDate lastPurchaseTime;
+    @TableField(exist = false)
+    private String material_name;
+    private double current_inventory_level;
+    private double safety_stock_quantity;
+    private LocalDate last_purchase_time;
+
+
 }
