@@ -64,11 +64,16 @@ public class MaterialInventoryController {
     // 新增库存
     @PostMapping("/add")
     public Map<String, Object> addInventory(@RequestBody Map<String, String> map) {
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        Double currentInventoryLevel = Double.parseDouble(map.get("currentInventoryLevel"));
-        Double safetyStockQuantity = Double.parseDouble(map.get("safetyStockQuantity"));
-        LocalDate lastPurchaseTime = LocalDate.parse(map.get("lastPurchaseTime"));
-
+        System.out.println(map.size());
+        for  (Map.Entry<String, String> entry : map.entrySet()){
+            System.out.println(map.get(entry.getKey()) + " " + entry.getValue());
+        }
+        Integer materialId = Integer.parseInt(map.get("material_id"));
+        Double currentInventoryLevel = Double.parseDouble(map.get("current_inventory_level"));
+        Double safetyStockQuantity = Double.parseDouble(map.get("safety_stock_quantity"));
+//        LocalDate lastPurchaseTime = LocalDate.parse(map.get("last_purchase_time"));
+        String dateStr  = map.get("last_purchase_time");
+        LocalDate lastPurchaseTime = LocalDate.parse(dateStr.substring(0,10));
         int result = materialInventoryService.insertInventory(materialId, currentInventoryLevel, safetyStockQuantity, lastPurchaseTime);
 
         Map<String, Object> response = new HashMap<>();
@@ -84,9 +89,8 @@ public class MaterialInventoryController {
 
     // 删除库存
     @PostMapping("/delete")
-    public Map<String, Object> deleteInventory(@RequestBody Map<String, String> map) {
-        Integer inventoryId = Integer.parseInt(map.get("inventoryId"));
-        int result = materialInventoryService.deleteInventory(inventoryId);
+    public Map<String, Object> deleteInventory(Integer id) {
+        int result = materialInventoryService.deleteInventory(id);
 
         Map<String, Object> response = new HashMap<>();
         if (result > 0) {
@@ -102,11 +106,11 @@ public class MaterialInventoryController {
     // 修改库存（不修改主键）
     @PostMapping("/update")
     public Map<String, Object> updateInventory(@RequestBody Map<String, String> map) {
-        Integer inventoryId = Integer.parseInt(map.get("inventoryId"));
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        Double currentInventoryLevel = Double.parseDouble(map.get("currentInventoryLevel"));
-        Double safetyStockQuantity = Double.parseDouble(map.get("safetyStockQuantity"));
-        LocalDate lastPurchaseTime = LocalDate.parse(map.get("lastPurchaseTime"));
+        Integer inventoryId = Integer.parseInt(map.get("inventory_id"));
+        Integer materialId = Integer.parseInt(map.get("material_id"));
+        Double currentInventoryLevel = Double.parseDouble(map.get("current_inventory_level"));
+        Double safetyStockQuantity = Double.parseDouble(map.get("safety_stock_quantity"));
+        LocalDate lastPurchaseTime = LocalDate.parse(map.get("last_purchase_time"));
 
         int result = materialInventoryService.updateInventory(inventoryId, materialId, currentInventoryLevel, safetyStockQuantity, lastPurchaseTime);
 

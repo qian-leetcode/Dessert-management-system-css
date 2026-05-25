@@ -135,10 +135,8 @@ public class UserController {
 
     // 删除用户
     @PostMapping("/delete")
-    public Map<String, Object> deleteUser(@RequestBody Map<String, String> map) {
-        Integer id = Integer.parseInt(map.get("id"));
+    public Map<String, Object> deleteUser(Integer id) {
         int result = userService.delete_user(id);
-
         Map<String, Object> response = new HashMap<>();
         if (result > 0) {
             response.put("code", 200);
@@ -150,7 +148,7 @@ public class UserController {
         return response;
     }
 
-    // 修改用户（不修改主键）
+    // 修改用户
     @PostMapping("/update")
     public Map<String, Object> updateUser(@RequestBody Map<String, String> map) {
         Integer id = Integer.parseInt(map.get("id"));
@@ -159,12 +157,12 @@ public class UserController {
         String phone = map.get("phone");
         String username = map.get("username");
         String password = map.get("password");
+        String encrypted_password = BCrypt.hashpw(password,BCrypt.gensalt());
         String position = map.get("position");
-        Integer active = Integer.parseInt(map.get("active"));
-        LocalDate hireDate = LocalDate.parse(map.get("hireDate"));
+        LocalDate hireDate = LocalDate.parse(map.get("hire_date"));
         String shift = map.get("shift");
 
-        int result = userService.update_user(id, name, gender, phone, username, password, position, active, hireDate, shift);
+        int result = userService.update_user(id, name, gender, phone, username, encrypted_password, position,hireDate, shift);
 
         Map<String, Object> response = new HashMap<>();
         if (result > 0) {

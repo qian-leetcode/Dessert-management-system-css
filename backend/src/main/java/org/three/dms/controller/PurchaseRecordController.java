@@ -72,18 +72,18 @@ public class PurchaseRecordController {
     // 新增采购记录
     @PostMapping("/add")
     public Map<String, Object> addPurchaseRecord(@RequestBody Map<String, String> map) {
-        String purchaseOrderNumber = map.get("purchaseOrderNumber");
-        LocalDate purchaseDate = LocalDate.parse(map.get("purchaseDate"));
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        Double purchaseQuantity = Double.parseDouble(map.get("purchaseQuantity"));
-        Double purchasePrice = Double.parseDouble(map.get("purchasePrice"));
-        Double purchaseAmount = Double.parseDouble(map.get("purchaseAmount"));
-        String supplierName = map.get("supplierName");
-        String productionBatch = map.get("productionBatch");
-        LocalDate productionDate = LocalDate.parse(map.get("productionDate"));
-        Integer paymentStatus = Integer.parseInt(map.get("paymentStatus"));
-        Integer userId = Integer.parseInt(map.get("userId"));
-        String procuringEntity = map.get("procuringEntity");
+        String purchaseOrderNumber = map.get("purchase_order_number");
+        LocalDate purchaseDate = LocalDate.parse(map.get("purchase_date"));
+        Integer materialId = Integer.parseInt(map.get("material_id"));
+        Double purchaseQuantity = Double.parseDouble(map.get("purchase_quantity"));
+        Double purchasePrice = Double.parseDouble(map.get("purchase_price"));
+        Double purchaseAmount = Double.parseDouble(map.get("purchase_amount"));
+        String supplierName = map.get("supplier_name");
+        String productionBatch = map.get("production_batch");
+        LocalDate productionDate = LocalDate.parse(map.get("production_date"));
+        Integer paymentStatus = Integer.parseInt(map.get("payment_status"));
+        Integer userId = Integer.parseInt(map.get("user_id"));
+        String procuringEntity = map.get("procuring_entity");
         String remark = map.get("remark");
 
         int result = purchaseRecordService.insertPurchaseRecord(
@@ -104,9 +104,8 @@ public class PurchaseRecordController {
 
     // 删除采购记录
     @PostMapping("/delete")
-    public Map<String, Object> deletePurchaseRecord(@RequestBody Map<String, String> map) {
-        Integer purchaseId = Integer.parseInt(map.get("purchaseId"));
-        int result = purchaseRecordService.deletePurchaseRecord(purchaseId);
+    public Map<String, Object> deletePurchaseRecord(Integer id) {
+        int result = purchaseRecordService.deletePurchaseRecord(id);
 
         Map<String, Object> response = new HashMap<>();
         if (result > 0) {
@@ -122,19 +121,19 @@ public class PurchaseRecordController {
     // 修改采购记录（不修改主键、创建时间）
     @PostMapping("/update")
     public Map<String, Object> updatePurchaseRecord(@RequestBody Map<String, String> map) {
-        Integer purchaseId = Integer.parseInt(map.get("purchaseId"));
-        String productionBatch = map.get("productionBatch");
-        LocalDate productionDate = LocalDate.parse(map.get("productionDate"));
-        LocalDate purchaseDate = LocalDate.parse(map.get("purchaseDate"));
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        Double purchaseQuantity = Double.parseDouble(map.get("purchaseQuantity"));
-        Double purchasePrice = Double.parseDouble(map.get("purchasePrice"));
-        String supplierName = map.get("supplierName");
-        Double purchaseAmount = Double.parseDouble(map.get("purchaseAmount"));
-        String purchaseOrderNumber = map.get("purchaseOrderNumber");
-        Integer paymentStatus = Integer.parseInt(map.get("paymentStatus"));
-        Integer userId = Integer.parseInt(map.get("userId"));
-        String procuringEntity = map.get("procuringEntity");
+        Integer purchaseId = Integer.parseInt(map.get("purchase_id"));
+        String productionBatch = map.get("production_batch");
+        LocalDate productionDate = LocalDate.parse(map.get("production_date"));
+        LocalDate purchaseDate = LocalDate.parse(map.get("purchase_date"));
+        Integer materialId = Integer.parseInt(map.get("material_id"));
+        Double purchaseQuantity = Double.parseDouble(map.get("purchase_quantity"));
+        Double purchasePrice = Double.parseDouble(map.get("purchase_price"));
+        String supplierName = map.get("supplier_name");
+        Double purchaseAmount = Double.parseDouble(map.get("purchase_amount"));
+        String purchaseOrderNumber = map.get("purchase_order_number");
+        Integer paymentStatus = Integer.parseInt(map.get("payment_status"));
+        Integer userId = Integer.parseInt(map.get("user_id"));
+        String procuringEntity = map.get("procuring_entity");
         String remark = map.get("remark");
 
         int result = purchaseRecordService.updatePurchaseRecord(

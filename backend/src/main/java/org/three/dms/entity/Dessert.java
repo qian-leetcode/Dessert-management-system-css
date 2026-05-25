@@ -26,4 +26,6 @@ public class Dessert {
     private double price;
     private String description;
     private LocalDate release_date;
+    private Integer dessert_status;
+    private Integer dessert_number;
 }

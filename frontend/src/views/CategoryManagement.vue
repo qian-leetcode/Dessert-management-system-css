@@ -1,5 +1,5 @@
 <script setup>
-import {add_dessert_list_, delete_dessert_list_, get_dessert_List_, update_dessert_list_} from '@/api/category.js'
+import {add_category_list_, delete_category_list_, get_category_List_, update_category_list_} from '@/api/category.js'
 import {onMounted, reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
 
@@ -37,7 +37,7 @@ async function fetch_data(){
       description : query_form.description,
       total : total.value
     }
-    const res = await get_dessert_List_(params)
+    const res = await get_category_List_(params)
     dessert_form.value = res.data.rows
     // console.log(dessert_form)
     // console.log(res)
@@ -64,7 +64,7 @@ async function add_category_list(){
       ElMessage.error("请完善信息")
       return
     }
-    const res = await add_dessert_list_(add_category)
+    const res = await add_category_list_(add_category)
     console.log(res)
     category_visible.value = false
   }
@@ -77,7 +77,7 @@ async function add_category_list(){
 // 删除分类
 async function handle_delete(id){
   try{
-    const res = await delete_dessert_list_(id)
+    const res = await delete_category_list_(id)
     console.log(res)
     await fetch_data()
   }
@@ -96,13 +96,14 @@ async function update_category_list(row){
     // category_visible.value = false
 }
 
+// 删除种类
 async function update_category(){
   try {
     if (!add_category.name || !add_category.description) {
       ElMessage.error("请完善信息")
       return
     }
-    await update_dessert_list_(add_category)
+    await update_category_list_(add_category)
     ElMessage.success("修改成功")
     category_visible.value = false
     await fetch_data()
@@ -111,10 +112,12 @@ async function update_category(){
   }
 }
 
+
+//批量删除
 async function Batch_delete(){
   try {
     for (const value of selected.value){
-      await delete_dessert_list_(value)
+      await delete_category_list_(value)
     }
     ElMessage.success("批量删除成功")
     selected.value = []

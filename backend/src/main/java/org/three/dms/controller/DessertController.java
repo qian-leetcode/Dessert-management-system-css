@@ -7,6 +7,8 @@ import org.three.dms.entity.Dessert;
 import org.three.dms.service.DessertService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,15 +80,19 @@ public class DessertController {
 
     @PostMapping("/add")
     public Map<String, Object> add(@RequestBody Map<String, String> map){
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.println(map.get(entry.getKey()) +" " +entry.getValue());
+        }
         // 1. 从 map 里取出所有参数
-        Integer catId = Integer.parseInt(map.get("catId"));
+        Integer catId = Integer.parseInt(map.get("cat_id"));
         String name = map.get("name");
-        String photoUrl = map.get("photoUrl");
+        String photoUrl = map.get("photo_url");
         Double price = Double.parseDouble(map.get("price"));
         String description = map.get("description");
-        LocalDate releaseDate = LocalDate.parse(map.get("releaseDate"));
-        Integer dessertStatus = Integer.parseInt(map.get("dessertStatus"));
-        Integer dessertNumber = Integer.parseInt(map.get("dessertNumber"));
+        // 解析带 Z 的国际标准时间
+        LocalDate releaseDate = OffsetDateTime.parse(map.get("release_date")).toLocalDate();
+        Integer dessertStatus = Integer.parseInt(map.get("dessert_status"));
+        Integer dessertNumber = Integer.parseInt(map.get("dessert_number"));
 
         // 2. 调用 Service 新增
         int result = dessertService.insert_dessert(
@@ -113,9 +119,7 @@ public class DessertController {
     }
 
     @PostMapping("/delete")
-    public Map<String, Object> delete(@RequestBody Map<String, String> map) {
-        // 1. 从map中获取参数并转换类型
-        Integer id = Integer.parseInt(map.get("id"));
+    public Map<String, Object> delete(Integer id) {
 
         // 2. 调用Service删除方法
         int result = dessertService.delete_dessert(id);
@@ -137,13 +141,13 @@ public class DessertController {
         // 1. 从map中获取所有参数并转换类型
         Integer id = Integer.parseInt(map.get("id"));
         String name = map.get("name");
-        String photoUrl = map.get("photoUrl");
+        String photoUrl = map.get("photo_url");
         Double price = Double.parseDouble(map.get("price"));
         String description = map.get("description");
-        LocalDate releaseDate = LocalDate.parse(map.get("releaseDate"));
-        Integer catId = Integer.parseInt(map.get("catId"));
-        Integer dessertStatus = Integer.parseInt(map.get("dessertStatus"));
-        Integer dessertNumber = Integer.parseInt(map.get("dessertNumber"));
+        LocalDate releaseDate = LocalDate.parse(map.get("release_date"));
+        Integer catId = Integer.parseInt(map.get("cat_id"));
+        Integer dessertStatus = Integer.parseInt(map.get("dessert_status"));
+        Integer dessertNumber = Integer.parseInt(map.get("dessert_number"));
 
         // 2. 调用Service修改方法
         int result = dessertService.update_dessert(

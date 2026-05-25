@@ -27,7 +27,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     // 修改用户（不修改主键）
     @Update("UPDATE t_user SET name=#{name}, gender=#{gender}, phone=#{phone}, username=#{username}, " +
-            "password=#{password}, position=#{position}, active=#{active}, hire_date=#{hireDate}, shift=#{shift} WHERE id=#{id}")
+            "password=#{password}, position=#{position},  hire_date=#{hireDate}, shift=#{shift} WHERE id=#{id}")
     int update_user(
             @Param("id") Integer id,
             @Param("name") String name,
@@ -36,7 +36,6 @@ public interface UserMapper extends BaseMapper<User> {
             @Param("username") String username,
             @Param("password") String password,
             @Param("position") String position,
-            @Param("active") Integer active,
             @Param("hireDate") LocalDate hireDate,
             @Param("shift") String shift
     );

@@ -25,6 +25,11 @@ public class CategoryController {
         return categoryService.get_category_name();
     }
 
+    @GetMapping("/lists")
+    public List<Category> get_category_lists() {
+        return categoryService.list();
+    }
+
     @PostMapping("/list")
     public CategoryDataInfo list(@RequestBody Map<String,String> map){
         // 预处理

@@ -17,5 +17,5 @@ public interface UserService extends IService<User> {
     int delete_user(Integer id);
 
     // 修改
-    int update_user(Integer id, String name, String gender, String phone, String username, String password, String position, Integer active, LocalDate hireDate, String shift);
+    int update_user(Integer id, String name, String gender, String phone, String username, String password, String position, LocalDate hireDate, String shift);
 }

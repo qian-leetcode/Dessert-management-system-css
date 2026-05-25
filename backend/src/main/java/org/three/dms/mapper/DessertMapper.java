@@ -11,7 +11,7 @@ import java.util.List;
 public interface DessertMapper extends BaseMapper<Dessert> {
 
     @Select("SELECT d.id, d.name , d.photo_url, d.price, d.description, d.release_date, " +
-            "       c.name as dessert_category " +
+            "       c.name as dessert_category , d.dessert_status , d.dessert_number " +
             "FROM dessert d " +
             "LEFT JOIN category c ON d.cat_id = c.id")
     List<Dessert> selectDessertWithCategory();

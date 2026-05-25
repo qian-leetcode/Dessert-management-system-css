@@ -55,7 +55,7 @@ public class PurchaseRecord {
     private Integer payment_status;
 
     // 操作人ID
-    private Integer user_id;
+    private String procuring_entity;
 
 
     // 备注

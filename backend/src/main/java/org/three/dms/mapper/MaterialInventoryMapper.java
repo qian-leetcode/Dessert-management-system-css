@@ -12,7 +12,7 @@ public interface MaterialInventoryMapper extends BaseMapper<MaterialInventory> {
     @Select("SELECT q.inventory_id , q.material_id , q.current_inventory_level,q.safety_stock_quantity ,q.last_purchase_time ," +
             "m.material_name " +
             "from material_inventory q " +
-            "LEFT JOIN material_information m on m.material_id = q.inventory_id")
+            "LEFT JOIN material_information m on m.material_id = q.material_id")
     List<MaterialInventory> selectByMaterial();
 
     // 新增库存记录

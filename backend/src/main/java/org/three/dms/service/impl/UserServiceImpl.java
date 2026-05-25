@@ -36,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public int update_user(Integer id, String name, String gender, String phone, String username, String password, String position, Integer active, LocalDate hireDate, String shift) {
-        return userMapper.update_user(id, name, gender, phone, username, password, position, active, hireDate, shift);
+    public int update_user(Integer id, String name, String gender, String phone, String username, String password, String position, LocalDate hireDate, String shift) {
+        return userMapper.update_user(id, name, gender, phone, username, password, position, hireDate, shift);
     }
 }

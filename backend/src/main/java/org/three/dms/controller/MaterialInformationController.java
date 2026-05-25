@@ -66,14 +66,14 @@ public class MaterialInformationController {
     // 新增物料
     @PostMapping("/add")
     public Map<String, Object> addMaterial(@RequestBody Map<String, String> map) {
-        String materialCode = map.get("materialCode");
-        String materialName = map.get("materialName");
-        String materialCategory = map.get("materialCategory");
-        String materialSpecification = map.get("materialSpecification");
-        String materialUnit = map.get("materialUnit");
-        Integer materialShelfLifeDays = Integer.parseInt(map.get("materialShelfLifeDays"));
-        String materialStorageCondition = map.get("materialStorageCondition");
-        String materialRemark = map.get("materialRemark");
+        String materialCode = map.get("material_code");
+        String materialName = map.get("material_name");
+        String materialCategory = map.get("material_category");
+        String materialSpecification = map.get("material_specification");
+        String materialUnit = map.get("material_unit");
+        Integer materialShelfLifeDays = Integer.parseInt(map.get("material_shelf_life_days"));
+        String materialStorageCondition = map.get("material_storage_condition");
+        String materialRemark = map.get("material_remark");
 
         int result = materialInformationService.insertMaterial(
                 materialCode, materialName, materialCategory, materialSpecification,
@@ -93,9 +93,9 @@ public class MaterialInformationController {
 
     // 删除物料
     @PostMapping("/delete")
-    public Map<String, Object> deleteMaterial(@RequestBody Map<String, String> map) {
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        int result = materialInformationService.deleteMaterial(materialId);
+    public Map<String, Object> deleteMaterial(Integer id) {
+        System.out.println(id);
+        int result = materialInformationService.deleteMaterial(id);
 
         Map<String, Object> response = new HashMap<>();
         if (result > 0) {
