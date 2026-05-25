@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {add_material_list_, delete_material_list_, get_query_list, update_material_list_} from "@/api/material.js";
 import {ElMessage} from "element-plus";
 
@@ -67,6 +67,18 @@ const add_material_form = reactive({
   material_storage_condition: '',
   material_remark: ''
 })
+
+async function clear_add_material_form() {
+  add_material_form.id= '', // 修改时必须用
+      add_material_form.material_code= '',
+      add_material_form.material_name= '',
+      add_material_form.material_category= '',
+      add_material_form.material_specification= '',
+      add_material_form.material_unit= '',
+      add_material_form.material_shelf_life_days= '',
+      add_material_form.material_storage_condition= '',
+      add_material_form.material_remark= ''
+}
 
 // 新增
 async function add_material_information(){
@@ -145,6 +157,13 @@ async function Batch_delete(){
   }
 }
 
+watch(material_visible, (newVal, oldVal) => {
+  console.log("变量变了！新值：", newVal)
+  if(newVal === false) {
+    clear_add_material_form()
+  }
+})
+
 onMounted(() => {
   get_material_form();
 })
@@ -165,7 +184,7 @@ onMounted(() => {
         <el-input v-model="query_material_form.material_category" placeholder="请输入原材料的种类"  style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="原材料的保质期">
-        <el-input v-model="query_material_form.material_shelf_life_days" placeholder="请输入保质期时间(天)" style="width: 250px;" clearable/>
+        <el-input type="number" v-model="query_material_form.material_shelf_life_days" placeholder="请输入保质期时间(天)" style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="原材料的存储条件">
         <el-input v-model="query_material_form.material_storage_condition" placeholder="请输入存储条件" style="width: 250px;" clearable/>

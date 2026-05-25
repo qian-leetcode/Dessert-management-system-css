@@ -1,6 +1,6 @@
 <script setup>
 import {add_category_list_, delete_category_list_, get_category_List_, update_category_list_} from '@/api/category.js'
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 
 // 种类查询表
@@ -56,6 +56,12 @@ const add_category = reactive({
   description:'',
   id:''
 })
+
+async function clear_add_category(){
+  add_category.name = ''
+  add_category.description = ''
+  add_category.id= ''
+}
 
 // 新增内容
 async function add_category_list(){
@@ -127,6 +133,15 @@ async function Batch_delete(){
     ElMessage.error(err)
   }
 }
+
+
+watch(category_visible, (newVal, oldVal) => {
+  console.log("变量变了！新值：", newVal)
+  if(newVal === false) {
+    clear_add_category()
+  }
+})
+
 
 onMounted(() => {
   fetch_data();

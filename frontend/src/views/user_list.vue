@@ -1,6 +1,6 @@
 <script setup>
 // 员工查询表
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {
   delete_user_information_,
   get_user_information_list,
@@ -71,6 +71,19 @@ const user_from_register = reactive({
   hire_date:'',
   shift:''
 })
+
+async function clear_user_from_register(){
+  user_from_register.id=''
+  user_from_register.username = ''
+  user_from_register.password= ''
+  user_from_register.re_password= ''
+  user_from_register.name =''
+  user_from_register.gender=''
+  user_from_register.phone=''
+  user_from_register.position=''
+  user_from_register.hire_date=''
+  user_from_register.shift=''
+}
 
 // 名称表
 const username_list = ref([])
@@ -188,6 +201,13 @@ async function update_user(){
   }
 }
 
+watch(regVisible, (newVal, oldVal) => {
+  console.log("变量变了！新值：", newVal)
+  if(newVal === false) {
+    clear_user_from_register()
+  }
+})
+
 
 onMounted(() => {
   get_role_list();
@@ -209,7 +229,7 @@ onMounted(() => {
         </el-select>
       </el-form-item>
       <el-form-item label="联系电话">
-         <el-input v-model="user_list.phone" placeholder="请输入联系电话" clearable style="width: 250px;"/>
+         <el-input type="number" v-model="user_list.phone" placeholder="请输入联系电话" clearable style="width: 250px;"/>
       </el-form-item>
       <el-form-item label="用户名">
         <el-input v-model="user_list.username" placeholder="请输入用户名" clearable style="width: 250px;"/>
@@ -279,7 +299,7 @@ onMounted(() => {
           </el-select>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input v-model="user_from_register.phone" placeholder="请输入电话号码" />
+          <el-input type="number" v-model="user_from_register.phone" placeholder="请输入电话号码" />
         </el-form-item>
         <el-form-item label="职位">
           <el-select v-model="user_from_register.position">

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import {get_category_list_name_, get_category_lists} from "@/api/category.js";
 import {add_dessert_list_, delete_dessert_list_, get_dessert_list_, update_dessert_list_} from "@/api/dessert.js";
@@ -87,6 +87,18 @@ const add_dessert_form = reactive({
   dessert_status:'',
   dessert_number:''
 })
+
+async function clear_add_dessert_form(){
+  add_dessert_form.id = ''
+  add_dessert_form.name = ''
+  add_dessert_form.photo_url = ''
+  add_dessert_form.price = ''
+  add_dessert_form.description = ''
+  add_dessert_form.release_date = ''
+  add_dessert_form.cat_id = ''
+  add_dessert_form.dessert_status = ''
+  add_dessert_form.dessert_number = ''
+}
 
 //添加
 async function add_dessert_information(){
@@ -182,6 +194,14 @@ async function Batch_delete(){
   }
 }
 
+watch(dessert_visible, (newVal, oldVal) => {
+  console.log("变量变了！新值：", newVal)
+  if(newVal === false) {
+    clear_add_dessert_form()
+  }
+})
+
+
 onMounted(() => {
   fetch_category_list();
   query_form_dessert();
@@ -212,9 +232,9 @@ onMounted(() => {
         </el-form-item>
       <br style="margin: 10px 0;">
       <el-form-item label="价格区间">
-        <el-input v-model="query_form.dessert_min_price" placeholder="最低价" style="width: 150px;"/>
+        <el-input type="number" v-model="query_form.dessert_min_price" placeholder="最低价" style="width: 150px;"/>
         <span style="margin: 0 5px;">~</span>
-        <el-input v-model="query_form.dessert_max_price" placeholder="最高价" style="width: 150px;"/>
+        <el-input type="number" v-model="query_form.dessert_max_price" placeholder="最高价" style="width: 150px;"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="query_form_dessert"> 查询 </el-button>

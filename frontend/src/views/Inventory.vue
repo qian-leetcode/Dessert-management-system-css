@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {
   add_inventory_information_,
   delete_inventory_information_, get_inventory_information, update_inventory_information_
@@ -73,6 +73,14 @@ const add_inventory_form = reactive({
   last_purchase_time: ''
 })
 
+async function clear_add_inventory_form() {
+  add_inventory_form.inventory_id = ''
+  add_inventory_form.material_id = ''
+  add_inventory_form.current_inventory_level = ''
+  add_inventory_form.safety_stock_quantity = ''
+  add_inventory_form.last_purchase_time = ''
+}
+
 // 添加
 async function add_inventory_information(){
   try {
@@ -140,6 +148,13 @@ async function batch_delete() {
     console.log(error);
   }
 }
+
+watch(inventory_visible, (newVal, oldVal) => {
+  console.log("变量变了！新值：", newVal)
+  if(newVal === false) {
+    clear_add_inventory_form()
+  }
+})
 
 onMounted(() => {
   query_inventory_information();
