@@ -40,7 +40,7 @@ insert into t_role (role, role_permissions) values
                                                 ('后厨', '普通'),
                                                 ('服务员', '普通'),
                                                 ('保洁', '普通');
-
+-- bug1 删除active
 -- 4. 员工信息 (t_user) -- 必须提供 name 字段，其他可选
 insert into t_user (name, gender, phone, username, password, position, active, hire_date, shift) values
                                                                                                      ('张三', 'M', '13800138001', 'admin', '12345', '老板', 1, '2023-01-01', '全天'),

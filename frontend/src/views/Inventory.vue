@@ -16,7 +16,7 @@ const query_inventory_form = reactive({
   inventory_id: "",
   material_id: "",
   latest_purchase_date: "",
-
+  material_name: "",
 })
 
 // 获取原料相关信息
@@ -42,7 +42,7 @@ async function query_inventory_information() {
     page_size: page_size.value,
     page_num: page_num.value,
     inventory_id: query_inventory_form.inventory_id,
-    material_id: query_inventory_form.material_id,
+    material_name: query_inventory_form.material_name,
     latest_purchase_date: query_inventory_form.latest_purchase_date,
   }
   // console.log(params.page_num)
@@ -59,6 +59,7 @@ async function clear_inventory_information() {
   query_inventory_form.inventory_id = "";
   query_inventory_form.material_id = "";
   query_inventory_form.latest_purchase_date = "";
+  query_inventory_form.material_name = "";
 }
 
 // 库存弹窗显示
@@ -114,23 +115,24 @@ async function update_inventory_information(row){
 async function update_inventory(){
   try {
     await update_inventory_information_(add_inventory_form)
-    await query_inventory_information();
+
     inventory_visible = false
   }
   catch (error) {
     console.log(error);
   }
+  await query_inventory_information();
 }
 
 // 删除
 async function delete_inventory(id) {
   try {
     await delete_inventory_information_(id);
-    await query_inventory_information()
   }
   catch (error) {
     console.log(error);
   }
+  await query_inventory_information()
 }
 
 // 批量删除
@@ -139,14 +141,14 @@ const selected = ref([])
 async function batch_delete() {
   try {
     for (const value of selected.value){
-      await delete_inventory(value)
+      await delete_inventory_information_(value)
     }
     selected.value = []
-    await query_inventory_information();
   }
   catch (error) {
     console.log(error);
   }
+  await query_inventory_information();
 }
 
 watch(inventory_visible, (newVal, oldVal) => {
@@ -169,8 +171,16 @@ onMounted(() => {
 <!--      <el-form-item label="库存ID" >-->
 <!--        <el-input v-model="query_inventory_form.inventory_id" placeholder="请输入库存ID" style="width: 250px;" clearable/>-->
 <!--      </el-form-item>-->
-      <el-form-item label="原料ID" >
-        <el-input v-model="query_inventory_form.material_id" placeholder="请输入原料ID" style="width: 250px;" clearable/>
+      <el-form-item label="原料" >
+<!--        <el-input v-model="query_inventory_form.material_id" placeholder="请输入原料ID" style="width: 250px;" clearable/>-->
+        <el-select v-model="query_inventory_form.material_name" placeholder="请选择原材料" style="width: 250px;">
+          <el-option
+              v-for="item in material_category"
+              :key="item.material_name"
+              :label="item.material_name"
+              :value="item.material_name"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="最后采购时间">
         <!-- 日期选择器，默认选择日期格式 -->
@@ -236,7 +246,7 @@ onMounted(() => {
         </el-form-item>
 
         <!-- 最后采购时间 -->
-        <el-form-item label="最后采购时间">
+        <el-form-item label="最后采购时间" required>
           <el-date-picker
               v-model="add_inventory_form.last_purchase_time"
               type="date"

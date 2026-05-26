@@ -1,5 +1,6 @@
 package org.three.dms.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/role")
 @CrossOrigin(origins = "*")
 public class TRoleController {
-    @Autowired
+    @Resource
     private TRoleService tRoleService;
 
     @GetMapping("/list")

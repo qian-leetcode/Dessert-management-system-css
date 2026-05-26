@@ -135,11 +135,11 @@ async function update_material(){
 async function delete_material_form(id){
   try {
     await delete_material_list_(id)
-    await get_material_form();
   }
   catch(err){
     console.log(err)
   }
+  await get_material_form();
 }
 
 const selected = ref([])
@@ -150,15 +150,16 @@ async function Batch_delete(){
     for (const value of selected.value){
       await delete_material_list_(value)
     }
-    await get_material_form();
+
   }
   catch(err){
     console.log(err)
   }
+  await get_material_form();
 }
 
 watch(material_visible, (newVal, oldVal) => {
-  console.log("变量变了！新值：", newVal)
+  // console.log("变量变了！新值：", newVal)
   if(newVal === false) {
     clear_add_material_form()
   }
@@ -239,7 +240,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 物料规格 -->
-          <el-form-item label="物料规格">
+          <el-form-item label="物料规格" required>
             <el-input
                 v-model="add_material_form.material_specification"
                 placeholder="请输入物料规格"
@@ -257,7 +258,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 保质期天数 -->
-          <el-form-item label="保质期(天)" required>
+          <el-form-item label="保质期(天)"required>
             <el-input
                 v-model.number="add_material_form.material_shelf_life_days"
                 type="number"
@@ -267,7 +268,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 储存条件 -->
-          <el-form-item label="储存条件">
+          <el-form-item label="储存条件" required>
             <el-input
                 v-model="add_material_form.material_storage_condition"
                 placeholder="常温/冷藏/冷冻等"
@@ -276,7 +277,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 备注 -->
-          <el-form-item label="备注">
+          <el-form-item label="备注" required>
             <el-input
                 v-model="add_material_form.material_remark"
                 type="textarea"

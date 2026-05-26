@@ -110,7 +110,7 @@ create table if not exists purchase_record (
     user_id int default null comment '采购人ID',
     procuring_entity varchar(50) default '' comment '采购人',
     remark varchar(255) default '' comment '备注',
-    create_time datetime not null default current_timestamp comment '创建时间',
+    create_time date not null default current_timestamp comment '创建时间',
     primary key (purchase_id),
     constraint fk_purchase_material foreign key (material_id) references material_information(material_id)
         on delete restrict on update cascade ,

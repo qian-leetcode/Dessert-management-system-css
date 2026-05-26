@@ -21,6 +21,16 @@ const user_list = reactive({
   shift:""
 })
 
+async function clear_user_list(){
+  user_list.name = ''
+  user_list.gender = ''
+  user_list.phone = ''
+  user_list.username = ''
+  user_list.position = ''
+  user_list.hire_date = ''
+  user_list.shift = ''
+}
+
 // 职业列表
 const role_list = ref([]);
 
@@ -72,6 +82,7 @@ const user_from_register = reactive({
   shift:''
 })
 
+// 清空注册表
 async function clear_user_from_register(){
   user_from_register.id=''
   user_from_register.username = ''
@@ -258,14 +269,14 @@ onMounted(() => {
       <el-form-item label="上班班次">
         <el-select v-model="user_list.shift" style="width: 250px;" placeholder="请选择上班班次">
           <el-option label="早班" value="早班" />
-          <el-option label="中班" value="早班" />
+          <el-option label="中班" value="中班" />
           <el-option label="晚班" value="晚班" />
           <el-option label="全天" value="全天" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click=""> 查询 </el-button>
-        <el-button type="primary" @click=""> 重置 </el-button>
+        <el-button type="primary" @click="get_information_list"> 查询 </el-button>
+        <el-button type="primary" @click="clear_user_list"> 重置 </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -279,30 +290,30 @@ onMounted(() => {
         title="账号注册"
         width="500px"
     >
-      <el-form label-width="80px">
-        <el-form-item label="账号">
-          <el-input v-model="user_from_register.username" />
+      <el-form label-width="120px">
+        <el-form-item label="账号" required>
+          <el-input v-model="user_from_register.username" placeholder="请输入用户名"/>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="user_from_register.password" show-password/>
+        <el-form-item label="密码" required>
+          <el-input v-model="user_from_register.password" placeholder="请输入密码" show-password/>
         </el-form-item>
-        <el-form-item label="确认密码">
-          <el-input v-model="user_from_register.re_password" show-password/>
+        <el-form-item label="确认密码" required>
+          <el-input v-model="user_from_register.re_password" placeholder="再次确认密码" show-password/>
         </el-form-item>
-        <el-form-item label="姓名">
+        <el-form-item label="姓名" required>
           <el-input v-model="user_from_register.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别">
+        <el-form-item label="性别" required>
           <el-select v-model="user_from_register.gender" placeholder="请选择性别">
             <el-option label="男" value="男"/>
             <el-option label="女" value="女"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item label="电话" required>
           <el-input type="number" v-model="user_from_register.phone" placeholder="请输入电话号码" />
         </el-form-item>
-        <el-form-item label="职位">
-          <el-select v-model="user_from_register.position">
+        <el-form-item label="职位" required>
+          <el-select v-model="user_from_register.position" placeholder="请选择职位">
             <el-option
                 v-for="item in role_list"
                 :key ="item"
@@ -311,7 +322,7 @@ onMounted(() => {
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="入职日期">
+        <el-form-item label="入职日期" required>
           <!-- 日期选择器，默认选择日期格式 -->
           <el-date-picker
               v-model="user_from_register.hire_date"
@@ -321,7 +332,7 @@ onMounted(() => {
               value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="班次">
+        <el-form-item label="班次" required>
           <el-select v-model="user_from_register.shift" placeholder="选择班次">
             <el-option label="早班" value="早班"></el-option>
             <el-option label="中班" value="中班"></el-option>

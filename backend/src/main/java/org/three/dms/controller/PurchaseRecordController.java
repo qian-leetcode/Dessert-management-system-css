@@ -1,5 +1,6 @@
 package org.three.dms.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.three.dms.common.PurchaseRecordDataInfo;
@@ -7,10 +8,7 @@ import org.three.dms.entity.PurchaseRecord;
 import org.three.dms.service.PurchaseRecordService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Long.min;
 
@@ -18,7 +16,7 @@ import static java.lang.Long.min;
 @RequestMapping("/api/purchase_record")
 @CrossOrigin(origins = "*")
 public class PurchaseRecordController {
-    @Autowired
+    @Resource
     private PurchaseRecordService purchaseRecordService;
 
     @GetMapping("/list")
@@ -28,6 +26,7 @@ public class PurchaseRecordController {
 
     @PostMapping("/purchase_record_list")
     public PurchaseRecordDataInfo purchase_record_list(@RequestBody Map<String,Object> map){
+        PurchaseRecordDataInfo res = new PurchaseRecordDataInfo();
         // 从 map 中获取分页参数和查询条件
         Integer page_num = (Integer) map.get("page_num");
         Integer page_size = (Integer) map.get("page_size");
@@ -41,6 +40,7 @@ public class PurchaseRecordController {
         String payment_status = (String) map.get("payment_status");
         String remark = (String) map.get("remark");
         String create_time = (String) map.get("create_time");
+        String user_name = (String) map.get("user_name");
         List<PurchaseRecord> begin_record_list = purchaseRecordService.findAllPurchaseRecords();
         List<PurchaseRecord> end_record_list = new ArrayList<>();
         for (PurchaseRecord record : begin_record_list) {
@@ -53,12 +53,12 @@ public class PurchaseRecordController {
                             record.getProduction_date().toString().contains(production_date) &&
                             record.getPayment_status().toString().contains(payment_status) &&
                             record.getRemark().contains(remark) &&
-                            record.getCreate_time().toString().contains(create_time)
+                            record.getCreate_time().toString().contains(create_time) &&
+                            record.getProcuring_name().contains(user_name)
             ) {
-                end_record_list.add(record);
+                    end_record_list.add(record);
             }
         }
-        PurchaseRecordDataInfo res = new PurchaseRecordDataInfo();
         res.setTotal(end_record_list.size());
         int total = end_record_list.size();
         for (int i = page_size *(page_num - 1); i < min((long) page_size *(page_num - 1) + page_size , total); i++) {
@@ -72,6 +72,14 @@ public class PurchaseRecordController {
     // 新增采购记录
     @PostMapping("/add")
     public Map<String, Object> addPurchaseRecord(@RequestBody Map<String, String> map) {
+        Map<String, Object> response = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()){
+            if(entry.getValue() == null || entry.getValue().equals("")){
+                response.put("code", 500);
+                response.put("msg", "新增采购记录失败");
+                return response;
+            }
+        }
         String purchaseOrderNumber = map.get("purchase_order_number");
         LocalDate purchaseDate = LocalDate.parse(map.get("purchase_date"));
         Integer materialId = Integer.parseInt(map.get("material_id"));
@@ -83,15 +91,14 @@ public class PurchaseRecordController {
         LocalDate productionDate = LocalDate.parse(map.get("production_date"));
         Integer paymentStatus = Integer.parseInt(map.get("payment_status"));
         Integer userId = Integer.parseInt(map.get("user_id"));
-        String procuringEntity = map.get("procuring_entity");
-        String remark = map.get("remark");
 
+        String remark = map.get("remark");
+        LocalDate createTime = LocalDate.parse(map.get("create_time"));
         int result = purchaseRecordService.insertPurchaseRecord(
                 purchaseOrderNumber, purchaseDate, materialId, purchaseQuantity, purchasePrice, purchaseAmount,
-                supplierName, productionBatch, productionDate, paymentStatus, userId, procuringEntity, remark
+                supplierName, productionBatch, productionDate, paymentStatus, userId,  remark , createTime
         );
 
-        Map<String, Object> response = new HashMap<>();
         if (result > 0) {
             response.put("code", 200);
             response.put("msg", "新增采购记录成功");
@@ -133,12 +140,11 @@ public class PurchaseRecordController {
         String purchaseOrderNumber = map.get("purchase_order_number");
         Integer paymentStatus = Integer.parseInt(map.get("payment_status"));
         Integer userId = Integer.parseInt(map.get("user_id"));
-        String procuringEntity = map.get("procuring_entity");
         String remark = map.get("remark");
 
         int result = purchaseRecordService.updatePurchaseRecord(
                 purchaseId, purchaseOrderNumber, purchaseDate, materialId, purchaseQuantity, purchasePrice, purchaseAmount,
-                supplierName, productionBatch, productionDate, paymentStatus, userId, procuringEntity, remark
+                supplierName, productionBatch, productionDate, paymentStatus, userId,remark
         );
 
         Map<String, Object> response = new HashMap<>();

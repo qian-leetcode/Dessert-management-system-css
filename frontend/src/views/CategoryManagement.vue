@@ -175,11 +175,11 @@ onMounted(() => {
       title="新增分类"
       width="500px"
     >
-      <el-form label-width="80px">
-        <el-form-item label="分类名称">
+      <el-form label-width="120px">
+        <el-form-item label="分类名称" required>
           <el-input v-model="add_category.name" placeholder="请输入分类名称" clearable />
         </el-form-item>
-        <el-form-item label="分类描述">
+        <el-form-item label="分类描述" required>
           <el-input v-model="add_category.description" placeholder="请输入分类描述" clearable />
         </el-form-item>
       </el-form>

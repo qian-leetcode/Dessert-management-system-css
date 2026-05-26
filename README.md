@@ -8,10 +8,8 @@
 
 
 #### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 打开终端 输入 cd fronted
+2. 下载前端依赖-运行 npm install 
 
 #### 使用说明
 

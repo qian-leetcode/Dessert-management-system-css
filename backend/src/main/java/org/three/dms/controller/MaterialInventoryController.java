@@ -31,20 +31,15 @@ public class MaterialInventoryController {
 
     @PostMapping("/get_inventory_information")
     public InventoryDataInfo getInventoryInformation(@RequestBody Map<String, String> map){
-        System.out.println(map.size());
-        for (Map.Entry<String, String> entry : map.entrySet()){
-            System.out.println(map.get(entry.getKey()) + " " + entry.getValue());
-        }
-        String inventory_id = map.get("inventory_id");
-        String material_id = map.get("material_id");
+//        String inventory_id = map.get("inventory_id");
+        String material_name = map.get("material_name");
         String latest_purchase_date = map.get("latest_purchase_date");
         Integer page_num = Integer.valueOf(map.get("page_num"));
         Integer page_size = Integer.valueOf(map.get("page_size"));
         List<MaterialInventory> begin_inventory_list = materialInventoryService.selectByMaterial();
         List<MaterialInventory> end_inventory_list = new ArrayList<>();
         for (MaterialInventory inventory:begin_inventory_list){
-            if(inventory.getMaterial_id().toString().contains(material_id) &&
-                inventory.getInventory_id().toString().contains(inventory_id) &&
+            if(inventory.getMaterial_name().contains(material_name) &&
                     inventory.getLast_purchase_time().toString().contains(latest_purchase_date)
             ){
                 end_inventory_list.add(inventory);

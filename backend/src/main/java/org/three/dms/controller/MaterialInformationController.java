@@ -1,6 +1,7 @@
 package org.three.dms.controller;
 
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import static java.lang.Long.min;
 @RequestMapping("/api/material_information")
 @CrossOrigin(origins = "*")
 public class MaterialInformationController {
-    @Autowired
+    @Resource
     private MaterialInformationService materialInformationService;
 
     @GetMapping("/list")
@@ -94,16 +95,21 @@ public class MaterialInformationController {
     // 删除物料
     @PostMapping("/delete")
     public Map<String, Object> deleteMaterial(Integer id) {
-        System.out.println(id);
-        int result = materialInformationService.deleteMaterial(id);
-
         Map<String, Object> response = new HashMap<>();
-        if (result > 0) {
-            response.put("code", 200);
-            response.put("msg", "删除物料成功");
-        } else {
+        try{
+            int result = materialInformationService.deleteMaterial(id);
+            if (result > 0) {
+                response.put("code", 200);
+                response.put("msg", "删除物料成功");
+            } else {
+                response.put("code", 500);
+                response.put("msg", "删除物料失败");
+            }
+        }
+        catch (Exception e){
             response.put("code", 500);
             response.put("msg", "删除物料失败");
+            response.put("exception", e);
         }
         return response;
     }

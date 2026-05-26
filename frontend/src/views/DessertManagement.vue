@@ -224,9 +224,9 @@ onMounted(() => {
           <el-select v-model="query_form.dessert_category" placeholder="选择分类" style="width: 250px;">
             <el-option
                 v-for="item in category_cat_id"
-                :key="item.id"
+                :key="item.name"
                 :label="item.name"
-                :value="item.id"
+                :value="item.name"
             />
           </el-select>
         </el-form-item>
@@ -265,7 +265,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 图片地址 -->
-          <el-form-item label="图片地址">
+          <el-form-item label="图片地址" required>
             <el-input
                 v-model="add_dessert_form.photo_url"
                 placeholder="请输入图片URL"
@@ -284,7 +284,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 描述 -->
-          <el-form-item label="描述">
+          <el-form-item label="描述" required>
             <el-input
                 v-model="add_dessert_form.description"
                 type="textarea"
@@ -295,7 +295,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 上架日期 -->
-          <el-form-item label="上架日期">
+          <el-form-item label="上架日期" required>
             <el-date-picker
                 v-model="add_dessert_form.release_date"
                 type="date"
@@ -322,7 +322,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 状态 -->
-          <el-form-item label="状态">
+          <el-form-item label="状态" required>
             <el-radio-group v-model="add_dessert_form.dessert_status">
               <el-radio :value="1">上架</el-radio>
               <el-radio :value="0">下架</el-radio>
@@ -330,7 +330,7 @@ onMounted(() => {
           </el-form-item>
 
           <!-- 库存数量 -->
-          <el-form-item label="库存数量">
+          <el-form-item label="库存数量" required>
             <el-input
                 v-model.number="add_dessert_form.dessert_number"
                 type="number"

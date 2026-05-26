@@ -13,7 +13,7 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             "p.purchase_id, p.purchase_order_number, p.purchase_date, p.material_id, m.material_name as material_name, " +
             "p.purchase_quantity, p.purchase_price, p.purchase_amount, p.supplier_name, " +
             "p.production_batch, p.production_date, p.payment_status, u.name as procuring_name , " +
-            "p.remark, p.create_time " +
+            "p.remark, p.create_time ,p.user_id " +
             "FROM purchase_record p " +
             "LEFT JOIN material_information m  on m.material_id = p.material_id " +
             "LEFT JOIN t_user u on p.user_id = u.id")
@@ -26,9 +26,9 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
     // 新增采购记录（create_time 数据库自动赋值，不用传）
     @Insert("INSERT INTO purchase_record(" +
             "purchase_order_number, purchase_date, material_id, purchase_quantity, purchase_price, purchase_amount, " +
-            "supplier_name, production_batch, production_date, payment_status, user_id, procuring_entity, remark) " +
+            "supplier_name, production_batch, production_date, payment_status, user_id, procuring_entity, remark , creat_time) " +
             "VALUES(#{purchaseOrderNumber}, #{purchaseDate}, #{materialId}, #{purchaseQuantity}, #{purchasePrice}, #{purchaseAmount}, " +
-            "#{supplierName}, #{productionBatch}, #{productionDate}, #{paymentStatus}, #{userId}, #{procuringEntity}, #{remark})")
+            "#{supplierName}, #{productionBatch}, #{productionDate}, #{paymentStatus}, #{userId},  #{remark} , #{creat_time})")
     int insertPurchaseRecord(
             @Param("purchaseOrderNumber") String purchaseOrderNumber,
             @Param("purchaseDate") LocalDate purchaseDate,
@@ -41,8 +41,8 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             @Param("productionDate") LocalDate productionDate,
             @Param("paymentStatus") Integer paymentStatus,
             @Param("userId") Integer userId,
-            @Param("procuringEntity") String procuringEntity,
-            @Param("remark") String remark
+            @Param("remark") String remark,
+            @Param("creat_time") LocalDate create_time
     );
 
     // 删除采购记录（按主键purchase_id）
@@ -54,7 +54,7 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             "purchase_order_number = #{purchaseOrderNumber}, purchase_date = #{purchaseDate}, material_id = #{materialId}, " +
             "purchase_quantity = #{purchaseQuantity}, purchase_price = #{purchasePrice}, purchase_amount = #{purchaseAmount}, " +
             "supplier_name = #{supplierName}, production_batch = #{productionBatch}, production_date = #{productionDate}, " +
-            "payment_status = #{paymentStatus}, user_id = #{userId}, procuring_entity = #{procuringEntity}, remark = #{remark} " +
+            "payment_status = #{paymentStatus}, user_id = #{userId}, remark = #{remark} " +
             "WHERE purchase_id = #{purchaseId}")
     int updatePurchaseRecord(
             @Param("purchaseId") Integer purchaseId,
@@ -69,7 +69,6 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             @Param("productionDate") LocalDate productionDate,
             @Param("paymentStatus") Integer paymentStatus,
             @Param("userId") Integer userId,
-            @Param("procuringEntity") String procuringEntity,
             @Param("remark") String remark
     );
 

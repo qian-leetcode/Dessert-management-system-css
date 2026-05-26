@@ -1,5 +1,6 @@
 package org.three.dms.controller;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import static java.lang.Long.min;
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "*")
 public class UserController {
-    @Autowired
+    @Resource
     private UserService userService;
 
     // 获取用户信息列表

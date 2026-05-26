@@ -25,6 +25,7 @@ const query_record_form = reactive({
   procuring_entity: '',
   remark: '',
   create_time: '',
+  user_name: '',
 })
 
 const purchase_record_information_form = ref([])
@@ -33,21 +34,23 @@ async function get_purchase_record_information_form() {
   const params = {
     page_size: page_size.value,
     page_num: page_num.value,
-    purchase_order_number: '',
-    purchase_date: '',
-    material_id: '',
-    supplier_name: '',
-    production_batch: '',
-    production_date: '',
-    payment_status: '',
-    remark: '',
-    create_time: '',
-    procuring_entity:''
+    purchase_order_number: query_record_form.purchase_order_number,
+    purchase_date: query_record_form.purchase_date,
+    material_id: query_record_form.material_id,
+    supplier_name: query_record_form.supplier_name,
+    production_batch: query_record_form.production_batch,
+    production_date: query_record_form.production_date,
+    payment_status: query_record_form.payment_status,
+    remark: query_record_form.remark,
+    create_time: query_record_form.create_time,
+    procuring_entity:query_record_form.procuring_entity,
+    user_name:query_record_form.user_name,
   }
+  console.log(params)
   const res = await get_purchase_record_form(params);
-  console.log(res)
+  // console.log(res)
   purchase_record_information_form.value = res.data.rows
-  // console.log(purchase_record_information_form.value)
+  // console.log(purchase_record_information_form)
   total.value = res.data.total
 }
 
@@ -63,6 +66,7 @@ function clear_query_record_form() {
   query_record_form.remark = ''
   query_record_form.create_time = ''
   query_record_form.procuring_entity= ''
+  query_record_form.user_name = ''
 }
 
 // 采购弹窗
@@ -83,7 +87,8 @@ const add_purchase_form = reactive({
   payment_status: 0,
   user_id: '',
   procuring_entity: '',
-  remark: ''
+  remark: '',
+  create_time:''
 })
 
 // 清空采购表
@@ -102,11 +107,12 @@ async function clear_add_purchase_form() {
   add_purchase_form.user_id= '',
   add_purchase_form.procuring_entity= '',
   add_purchase_form.remark= ''
+  add_purchase_form.create_time = ''
 }
 
 
 watch(purchase_visible, (newVal, oldVal) => {
-  console.log("变量变了！新值：", newVal)
+  // console.log("变量变了！新值：", newVal)
   if(newVal === false) {
     clear_add_purchase_form();
   }
@@ -128,9 +134,10 @@ async function add_purchase_information(){
       payment_status: add_purchase_form.payment_status,
       user_id: add_purchase_form.user_id,
       procuring_entity: add_purchase_form.procuring_entity,
-      remark: add_purchase_form.remark
+      remark: add_purchase_form.remark,
+      create_time : add_purchase_form.create_time,
     }
-    console.log(add_purchase_form)
+    // console.log(add_purchase_form)
     await add_purchase_record_form_(add_purchase_form)
     await get_purchase_record_information_form();
     purchase_visible.value = false
@@ -143,6 +150,7 @@ async function add_purchase_information(){
 // 修改
 async function update_purchase_information(row) {
   purchase_visible.value = true
+  // console.log(row)
   add_purchase_form.purchase_id = row.purchase_id
   add_purchase_form.purchase_order_number = row.purchase_order_number
   add_purchase_form.purchase_date = row.purchase_date
@@ -157,6 +165,7 @@ async function update_purchase_information(row) {
   add_purchase_form.user_id = row.user_id
   add_purchase_form.procuring_entity = row.procuring_entity
   add_purchase_form.remark = row.remark
+  add_purchase_form.create_time = row.create_time
 }
 
 //修改
@@ -175,11 +184,12 @@ async function update_purchase() {
 async function delete_purchase(id) {
   try {
     await delete_purchase_record_form_(id)
-    await get_purchase_record_information_form()
+
   }
   catch (error) {
     console.log(error);
   }
+  await get_purchase_record_information_form()
 }
 
 const selected = ref([])
@@ -188,14 +198,14 @@ const selected = ref([])
 async function batch_delete() {
   try {
     for (const value of selected.value) {
-      await batch_delete(value)
+      await delete_purchase_record_form_(value)
     }
     selected.value = []
-    await get_purchase_record_information_form()
   }
   catch (error) {
     console.log(error);
   }
+  await get_purchase_record_information_form()
 }
 
 // 原料id
@@ -204,7 +214,7 @@ async function get_material_list_id() {
   try {
     const res = await get_material_list_()
     material_list_.value = res.data
-    console.log(material_list_)
+    // console.log(material_list_)
   }
   catch (error) {
     console.log(error);
@@ -250,7 +260,7 @@ onMounted(() => {
             style="width: 250px;"
         />
       </el-form-item>
-      <el-form-item label="原材料ID">
+      <el-form-item label="原材料ID" >
         <el-input v-model="query_record_form.material_id" placeholder="请输入原材料ID" style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="供应商名称">
@@ -260,19 +270,47 @@ onMounted(() => {
         <el-input v-model="query_record_form.production_batch" placeholder="请输入生产批次" style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="生产日期">
-        <el-input v-model="query_record_form.production_date" placeholder="请选择生产日期" style="width: 250px;" clearable/>
+        <!-- 日期选择器，默认选择日期格式 -->
+        <el-date-picker
+            v-model="query_record_form.purchase_date"
+            type="date"
+            placeholder="请选择生产日期"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            style="width: 250px;"
+        />
+<!--        <el-input v-model="query_record_form.production_date" placeholder="请选择生产日期" style="width: 250px;" clearable/>-->
       </el-form-item>
       <el-form-item label="付款状态">
         <el-input v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;" clearable/>
       </el-form-item>
-      <el-form-item label="采购单位">
-        <el-input v-model="query_record_form.procuring_entity" placeholder="请输入采购单位" style="width: 250px;" clearable/>
+<!--      <el-form-item label="采购单位">-->
+<!--        <el-input v-model="query_record_form.procuring_entity" placeholder="请输入采购单位" style="width: 250px;" clearable/>-->
+<!--      </el-form-item>-->
+      <el-form-item label="采购人">
+          <el-select v-model="query_record_form.user_name" placeholder="选择采购人" style="width: 250px;">
+            <el-option
+                v-for="item in user_list_"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name"
+            />
+          </el-select>
       </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="query_record_form.remark" placeholder="输入额外的备注" style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="创建时间">
-        <el-input v-model="query_record_form.create_time" placeholder="请选择创建时间" style="width: 250px;" clearable/>
+        <!-- 日期选择器，默认选择日期格式 -->
+        <el-date-picker
+            v-model="query_record_form.purchase_date"
+            type="date"
+            placeholder="请选择创建时间"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            style="width: 250px;"
+        />
+<!--        <el-input v-model="query_record_form.create_time" placeholder="请选择创建时间" style="width: 250px;" clearable/>-->
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="get_purchase_record_information_form"> 查询 </el-button>
@@ -367,7 +405,7 @@ onMounted(() => {
         </el-form-item>
 
         <!-- 生产批次 -->
-        <el-form-item label="生产批次">
+        <el-form-item label="生产批次" required>
           <el-input
               v-model="add_purchase_form.production_batch"
               placeholder="请输入生产批次"
@@ -376,7 +414,7 @@ onMounted(() => {
         </el-form-item>
 
         <!-- 生产日期 -->
-        <el-form-item label="生产日期">
+        <el-form-item label="生产日期" required>
           <el-date-picker
               v-model="add_purchase_form.production_date"
               type="date"
@@ -390,46 +428,57 @@ onMounted(() => {
         <!-- 支付状态 -->
         <el-form-item label="支付状态" required>
           <el-radio-group v-model="add_purchase_form.payment_status">
-            <el-radio :value="1">已支付</el-radio>
+            <el-radio :value="2">已支付</el-radio>
+            <el-radio :value="1">部分支付</el-radio>
             <el-radio :value="0">未支付</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <!-- 用户ID/采购人ID -->
-        <el-form-item label="采购人ID" required>
+        <el-form-item label="采购人" required>
 <!--          <el-input-->
 <!--              v-model.number="add_purchase_form.user_id"-->
 <!--              type="number"-->
 <!--              placeholder="请输入采购人ID"-->
 <!--              clearable-->
 <!--          />-->
-          <el-select v-model="add_purchase_form.user_id">
+          <el-select v-model="add_purchase_form.user_id" placeholder="选择采购人">
             <el-option
                 v-for="item in user_list_"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="String(item.id)"
             />
           </el-select>
         </el-form-item>
 
         <!-- 采购单位 -->
-        <el-form-item label="采购单位">
+        <el-form-item label="采购单位" required>
           <el-input
-              v-model="add_purchase_form.procuring_entity"
+              v-model="add_purchase_form.supplier_name"
               placeholder="请输入采购单位"
               clearable
           />
         </el-form-item>
 
         <!-- 备注 -->
-        <el-form-item label="备注">
+        <el-form-item label="备注" required>
           <el-input
               v-model="add_purchase_form.remark"
               type="textarea"
               :rows="3"
               placeholder="请输入备注信息"
               clearable
+          />
+        </el-form-item>
+        <el-form-item label="创建时间" required>
+          <el-date-picker
+              v-model="add_purchase_form.create_time"
+              type="date"
+              placeholder="选择创建时间"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+              style="width: 100%"
           />
         </el-form-item>
       </el-form>
@@ -458,8 +507,22 @@ onMounted(() => {
       <el-table-column prop="supplier_name" label="供应商名称" />
       <el-table-column prop="production_batch" label="生产批次号" />
       <el-table-column prop="production_date" label="生产日期" />
-      <el-table-column prop="payment_status" label="付款状态" />
+      <el-table-column label="付款状态" width="100px">
+        <template #default="scope">
+          <el-tag
+              :type="
+              scope.row.payment_status == 1 ? 'warning' :
+              scope.row.payment_status == 2 ? 'success' : 'danger'
+      "
+          >
+            <template v-if="scope.row.payment_status == 1">部分支付</template>
+            <template v-else-if="scope.row.payment_status == 2">已支付</template>
+            <template v-else>未支付</template>
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="procuring_name" label="采购人" />
+
       <el-table-column prop="remark" label="备注" />
       <el-table-column prop="create_time" label="创建时间" />
 
