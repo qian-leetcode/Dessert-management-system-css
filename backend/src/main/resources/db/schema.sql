@@ -1,9 +1,9 @@
 # create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-drop database if exists  dessert;
+drop database if exists  dessert2;
 
-create database if not exists dessert DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+create database if not exists dessert2 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-use dessert;
+use dessert2;
 
 drop table if exists dessert;
 drop table if exists t_user_role;
@@ -30,7 +30,7 @@ create table if not exists dessert(
     description varchar(500) default '' comment '甜品描述', -- 甜品描述
     release_date date comment '甜品发布时间', -- 发布时间
     cat_id int not null comment '所属种类ID',
-    dessert_status boolean default true comment '当前状态',
+    dessert_status tinyint(1) default 1 comment '当前状态：1-在售，0-下架',
     dessert_number int default 0 comment '甜品件数',
     CONSTRAINT fk_dessert_category FOREIGN KEY (cat_id) REFERENCES category(id)
         ON DELETE RESTRICT ON UPDATE CASCADE
@@ -39,7 +39,8 @@ create table if not exists dessert(
 # 职称信息表
 create table if not exists t_role(
     id int auto_increment primary key comment '职称ID', -- 编号
-    role varchar(200) comment '职称名称' -- 角色名
+    role varchar(200) comment '职称名称', -- 角色名
+    role_permissions varchar(100) default '' comment '角色权限'
 ) engine=InnoDB default charset=utf8mb4 comment '职称信息表';
 
 # 员工信息表
@@ -110,7 +111,7 @@ create table if not exists purchase_record (
     user_id int default null comment '采购人ID',
     procuring_entity varchar(50) default '' comment '采购人',
     remark varchar(255) default '' comment '备注',
-    create_time date not null default current_timestamp comment '创建时间',
+    create_time datetime not null default current_timestamp comment '创建时间',
     primary key (purchase_id),
     constraint fk_purchase_material foreign key (material_id) references material_information(material_id)
         on delete restrict on update cascade ,
