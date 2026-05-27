@@ -182,7 +182,7 @@ onMounted(() => {
           show-password
         />
         <div class="login-options">
-          <el-checkbox name="remember" v-model="rememberMe" /> 记住账号
+<!--          <el-checkbox name="remember" v-model="rememberMe" /> 记住账号-->
           <span @click="open_el_dialog" class="register-link">没有账号？点击注册</span>
         </div>
         <el-button class="login-btn" @click="loginUser">登 录</el-button>

@@ -87,12 +87,12 @@ async function handle_delete(id){
   try{
     const res = await delete_category_list_(id)
     console.log(res)
-    await fetch_data()
+
   }
   catch(err){
     ElMessage.error(err)
   }
-
+  await fetch_data()
 }
 
 // 更新分类

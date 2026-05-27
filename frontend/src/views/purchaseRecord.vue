@@ -145,7 +145,7 @@ async function add_purchase_information(){
       material_id: add_purchase_form.material_id,
       purchase_quantity: add_purchase_form.purchase_quantity,
       purchase_price: add_purchase_form.purchase_price,
-      purchase_amount: add_purchase_form.purchase_amount,
+      purchase_amount: String(parseFloat(add_purchase_form.purchase_price) * parseFloat(add_purchase_form.purchase_quantity)),
       supplier_name: add_purchase_form.supplier_name,
       production_batch: add_purchase_form.production_batch,
       production_date: add_purchase_form.production_date,
@@ -175,7 +175,7 @@ async function update_purchase_information(row) {
   add_purchase_form.material_id = row.material_id
   add_purchase_form.purchase_quantity = row.purchase_quantity
   add_purchase_form.purchase_price = row.purchase_price
-  add_purchase_form.purchase_amount = row.purchase_amount
+  add_purchase_form.purchase_amount = String(parseFloat(row.purchase_quantity) * parseFloat(row.purchase_price))
   add_purchase_form.supplier_name = row.supplier_name
   add_purchase_form.production_batch = row.production_batch
   add_purchase_form.production_date = row.production_date

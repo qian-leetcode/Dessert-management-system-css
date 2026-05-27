@@ -62,10 +62,10 @@ async function get_information_list() {
   }
   const res = await get_user_information_list(params);
   // console.log(res)
-  // console.log(res.data);
+  console.log(res.data);
   user_information_list.value = res.data.rows
   total.value = res.data.total
-  // console.log(user_information_list)
+  console.log(user_information_list)
 }
 
 // 新增
@@ -335,11 +335,7 @@ onMounted(() => {
       <el-table :data="user_information_list" stripe @selection-change="val => selected = val.map(v=>v.id)" >
         <el-table-column type="selection" width="50" />
         <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="gender" label="性别">
-          <template #default="{ row }">
-            {{ row.gender === 'M' ? '男' : '女' }}
-          </template>
-        </el-table-column>
+        <el-table-column prop="gender" label="性别" />
         <el-table-column prop="phone" label="联系电话" />
         <el-table-column prop="username" label="用户名" />
         <el-table-column prop="position" label="岗位职称" />

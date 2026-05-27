@@ -124,7 +124,6 @@ public class UserController {
             String position = mp.get("position");
             String hire_date = mp.get("hire_date");
             String shift = mp.get("shift");
-
             log.info("查询用户列表 - 入参: page_num={}, page_size={}, name={}, username={}", page_num, page_size, name, username);
             log.info("查询用户总条数: {}", begin_user_list.size());
             List<User> temp_user_list = new ArrayList<>();

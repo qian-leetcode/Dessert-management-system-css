@@ -44,17 +44,16 @@ insert into t_role (role, role_permissions) values
 -- BCrypt hash: 12345 -> $2a$10$B8LxkYNhwl.uTFKc992ItOqSDPDzQ1q2EmJ6MgvMET/k/hrr.BReW
 -- BCrypt hash: 123   -> $2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky
 insert into t_user (name, gender, phone, username, password, position, hire_date, shift) values
-                                                                                         ('张三', 'M', '13800138001', 'admin', '$2a$10$B8LxkYNhwl.uTFKc992ItOqSDPDzQ1q2EmJ6MgvMET/k/hrr.BReW', '老板', '2023-01-01', '全天'),
-                                                                                         ('李四', 'F', '13800138002', 'bob', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '店长', '2023-02-01', '全天'),
-                                                                                         ('王五', 'M', '13800138003', 'wangwu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '甜品师', '2023-03-01', '早班'),
-                                                                                         ('赵六', 'F', '13800138004', 'zhaoliu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '收银员', '2023-04-01', '晚班'),
-                                                                                         ('陈七', 'M', '13800138005', 'chenqi', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '服务员', '2023-05-01', '中班'),
-                                                                                         ('周六', 'F', '13800138006', 'zhouliu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '后厨', '2023-06-01', '早班'),
-                                                                                         ('吴八', 'M', '13800138007', 'wuba', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '保洁', '2023-07-01', '早班'),
-                                                                                         ('孙千', 'F', '13800138008', 'sunqian', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '甜品师', '2023-08-01', '中班'),
-                                                                                         ('李思', 'F', '13800138009', 'lisi', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '收银员', '2023-09-01', '晚班'),
-                                                                                         ('周九', 'M', '13800138010', 'zhoujiu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '服务员', '2023-10-01', '早班');
-
+                                                                                             ('张三', '男', '13800138001', 'admin', '$2a$10$B8LxkYNhwl.uTFKc992ItOqSDPDzQ1q2EmJ6MgvMET/k/hrr.BReW', '老板', '2023-01-01', '全天'),
+                                                                                             ('李四', '女', '13800138002', 'bob', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '店长', '2023-02-01', '全天'),
+                                                                                             ('王五', '男', '13800138003', 'wangwu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '甜品师', '2023-03-01', '早班'),
+                                                                                             ('赵六', '女', '13800138004', 'zhaoliu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '收银员', '2023-04-01', '晚班'),
+                                                                                             ('陈七', '男', '13800138005', 'chenqi', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '服务员', '2023-05-01', '中班'),
+                                                                                             ('周六', '女', '13800138006', 'zhouliu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '后厨', '2023-06-01', '早班'),
+                                                                                             ('吴八', '男', '13800138007', 'wuba', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '保洁', '2023-07-01', '早班'),
+                                                                                             ('孙千', '女', '13800138008', 'sunqian', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '甜品师', '2023-08-01', '中班'),
+                                                                                             ('李思', '女', '13800138009', 'lisi', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '收银员', '2023-09-01', '晚班'),
+                                                                                             ('周九', '男', '13800138010', 'zhoujiu', '$2a$10$M.Nz3hjbQo0QaIyQ/yrOpectmUbUQ9az/yg4XES6yHfWb2jRfKDky', '服务员', '2023-10-01', '早班');
 -- 5. 员工职称关联 (t_user_role)
 insert into t_user_role (user_id, role_id) values
                                                (1,1), (2,2), (3,4), (4,3), (5,6), (6,5), (7,7), (8,4), (9,3), (10,6);
