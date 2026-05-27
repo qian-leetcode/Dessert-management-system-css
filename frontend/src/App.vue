@@ -1,15 +1,18 @@
 <script setup>
-import Login from './views/Login.vue'
 </script>
 
 <template>
-<!--  <Login></Login>-->
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <transition name="fade" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
-
+.fade-enter-from { opacity: 0; transform: translateY(12px); }
+.fade-leave-to { opacity: 0; transform: translateY(-12px); }
 </style>

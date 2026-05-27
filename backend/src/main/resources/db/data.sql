@@ -1,5 +1,5 @@
 -- 使用数据库
-use dessert2;
+use dessert_three_groups;
 
 -- 1. 甜品种类 (category)
 insert into category (name, description) values

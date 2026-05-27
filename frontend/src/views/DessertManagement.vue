@@ -238,158 +238,104 @@ onMounted(() => {
 
 <template>
   <div>
-
-    <el-form :inline="true" :model="query_form">
-        <el-form-item label="分类名称">
-          <el-input v-model="query_form.dessert_name" placeholder="输入名称" clearable style="width: 250px;"/>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="query_form.dessert_description" placeholder="请输入描述" clearable style="width: 250px;"/>
-        </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="query_form.dessert_category" placeholder="选择分类" style="width: 250px;">
-            <el-option
-                v-for="item in category_cat_id"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name"
-            />
-          </el-select>
-        </el-form-item>
-      <br style="margin: 10px 0;">
-      <el-form-item label="价格区间">
-        <el-input type="number" v-model="query_form.dessert_min_price" placeholder="最低价" style="width: 150px;"/>
-        <span style="margin: 0 5px;">~</span>
-        <el-input type="number" v-model="query_form.dessert_max_price" placeholder="最高价" style="width: 150px;"/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="query_form_dessert"> 查询 </el-button>
-        <el-button type="primary" @click="clear_query_form"> 重置 </el-button>
-      </el-form-item>
-    </el-form>
-    <div>
-      <el-button type="danger" @click="Batch_delete">批量删除</el-button>
-      <el-button type="primary" @click="dessert_visible = true">新增</el-button>
-      <el-dialog
-          :model-value="dessert_visible"
-          @close="dessert_visible = false"
-          :title="add_dessert_form.id ? '修改甜品' : '新增甜品'"
-          width="600px"
-      >
-        <el-form
-            :model="add_dessert_form"
-            label-width="100px"
-            label-position="right"
-        >
-          <!-- 甜品名称 -->
-          <el-form-item label="甜品名称" required>
-            <el-input
-                v-model="add_dessert_form.name"
-                placeholder="请输入甜品名称"
-                clearable
-            />
+    <div class="query-form">
+      <el-form :inline="true" :model="query_form">
+          <el-form-item label="分类名称">
+            <el-input v-model="query_form.dessert_name" placeholder="输入名称" clearable style="width: 250px;"/>
           </el-form-item>
-
-          <!-- 图片地址 -->
-          <el-form-item label="图片地址" required>
-            <el-input
-                v-model="add_dessert_form.photo_url"
-                placeholder="请输入图片URL"
-                clearable
-            />
+          <el-form-item label="描述">
+            <el-input v-model="query_form.dessert_description" placeholder="请输入描述" clearable style="width: 250px;"/>
           </el-form-item>
-
-          <!-- 价格 -->
-          <el-form-item label="价格" required>
-            <el-input
-                v-model.number="add_dessert_form.price"
-                type="number"
-                placeholder="请输入价格"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 描述 -->
-          <el-form-item label="描述" required>
-            <el-input
-                v-model="add_dessert_form.description"
-                type="textarea"
-                :rows="3"
-                placeholder="请输入甜品描述"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 上架日期 -->
-          <el-form-item label="上架日期" required>
-            <el-date-picker
-                v-model="add_dessert_form.release_date"
-                type="date"
-                placeholder="选择上架日期"
-                style="width: 100%"
-            />
-          </el-form-item>
-
-          <!-- 所属分类 -->
-          <el-form-item label="所属分类" required>
-            <el-select
-                v-model="add_dessert_form.cat_id"
-                placeholder="请选择分类"
-                clearable
-                style="width: 100%"
-            >
+          <el-form-item label="分类">
+            <el-select v-model="query_form.dessert_category" placeholder="选择分类" style="width: 250px;">
               <el-option
                   v-for="item in category_cat_id"
-                  :key="item.id"
+                  :key="item.name"
                   :label="item.name"
-                  :value="item.id"
+                  :value="item.name"
               />
             </el-select>
           </el-form-item>
-
-          <!-- 状态 -->
-          <el-form-item label="状态" required>
-            <el-radio-group v-model="add_dessert_form.dessert_status">
-              <el-radio :value="1">上架</el-radio>
-              <el-radio :value="0">下架</el-radio>
-            </el-radio-group>
-          </el-form-item>
-
-          <!-- 库存数量 -->
-          <el-form-item label="库存数量" required>
-            <el-input
-                v-model.number="add_dessert_form.dessert_number"
-                type="number"
-                placeholder="请输入库存数量"
-                clearable
-            />
-          </el-form-item>
-        </el-form>
-
-        <template #footer>
-          <el-button @click="dessert_visible = false">取消</el-button>
-          <el-button
-              type="primary"
-              @click="add_dessert_form.id ? update_dessert_() : add_dessert_information()"
-          >
-            {{ add_dessert_form.id ? '修改' : '添加' }}
-          </el-button>
-        </template>
-      </el-dialog>
-      
+        <br style="margin: 10px 0;">
+        <el-form-item label="价格区间">
+          <el-input type="number" v-model="query_form.dessert_min_price" placeholder="最低价" style="width: 150px;"/>
+          <span style="margin: 0 5px;">~</span>
+          <el-input type="number" v-model="query_form.dessert_max_price" placeholder="最高价" style="width: 150px;"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="query_form_dessert"> 查询 </el-button>
+          <el-button type="primary" @click="clear_query_form"> 重置 </el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div>
+
+    <div class="toolbar">
+      <el-button type="danger" @click="Batch_delete">批量删除</el-button>
+      <el-button type="primary" @click="dessert_visible = true">新增</el-button>
+    </div>
+
+    <el-dialog
+        class="dialog-form"
+        :model-value="dessert_visible"
+        @close="dessert_visible = false"
+        :title="add_dessert_form.id ? '修改甜品' : '新增甜品'"
+        width="600px"
+    >
+      <el-form
+          :model="add_dessert_form"
+          label-width="100px"
+          label-position="right"
+      >
+        <el-form-item label="甜品名称" required>
+          <el-input v-model="add_dessert_form.name" placeholder="请输入甜品名称" clearable />
+        </el-form-item>
+        <el-form-item label="图片地址" required>
+          <el-input v-model="add_dessert_form.photo_url" placeholder="请输入图片URL" clearable />
+        </el-form-item>
+        <el-form-item label="价格" required>
+          <el-input v-model.number="add_dessert_form.price" type="number" placeholder="请输入价格" clearable />
+        </el-form-item>
+        <el-form-item label="描述" required>
+          <el-input v-model="add_dessert_form.description" type="textarea" :rows="3" placeholder="请输入甜品描述" clearable />
+        </el-form-item>
+        <el-form-item label="上架日期" required>
+          <el-date-picker v-model="add_dessert_form.release_date" type="date" placeholder="选择上架日期" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="所属分类" required>
+          <el-select v-model="add_dessert_form.cat_id" placeholder="请选择分类" clearable style="width: 100%">
+            <el-option v-for="item in category_cat_id" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" required>
+          <el-radio-group v-model="add_dessert_form.dessert_status">
+            <el-radio :value="1">上架</el-radio>
+            <el-radio :value="0">下架</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="库存数量" required>
+          <el-input v-model.number="add_dessert_form.dessert_number" type="number" placeholder="请输入库存数量" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dessert_visible = false">取消</el-button>
+        <el-button type="primary" @click="add_dessert_form.id ? update_dessert_() : add_dessert_information()">
+          {{ add_dessert_form.id ? '修改' : '添加' }}
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <div class="table-container">
       <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v=>v.id)">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="photo_url" label="图片" >
           <template #default="{ row }">
-            <el-image v-if="row.photo_url" :src="row.photo_url" style="width: 60px; height: 60px;" fit="cover" />
+            <el-image v-if="row.photo_url" :src="row.photo_url" style="width: 60px; height: 60px; border-radius: 8px;" fit="cover" />
             <span v-else>无图片</span>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="dessert_category" label="所属分类" />
-        <el-table-column prop="price" label="单价(单位: ￥)" />
+        <el-table-column prop="price" label="单价(￥)" />
         <el-table-column prop="description" label="描述" />
         <el-table-column prop="release_date" label="发布日" />
         <el-table-column label="上架状态" >
@@ -404,26 +350,81 @@ onMounted(() => {
           <template #default="{row}">
             <el-button size="small" type="primary" @click="update_dessert_information(row)"> 修改 </el-button>
             <el-button size="small" type="danger" @click="delete_dessert_information(row.id)"> 删除 </el-button>
-            <el-button size="small" type="primary" @click="row.dessert_status = row.dessert_status === 1 ? 0 : 1">
+            <el-button size="small" :type="row.dessert_status === 1 ? 'warning' : 'success'" @click="row.dessert_status = row.dessert_status === 1 ? 0 : 1">
               {{row.dessert_status == 0 ? '上架' : '下架'}} </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <!--  设置页码-->
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 15px; justify-content: center;"
-        @size-change="query_form_dessert"
-        @current-change="query_form_dessert"
-    />
+
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="query_form_dessert"
+          @current-change="query_form_dessert"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.query-form { margin-bottom: 20px; }
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper),
+.query-form :deep(.el-select .el-input__wrapper) {
+  border-radius: 8px; transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover),
+.query-form :deep(.el-select .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
 
+.toolbar {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none;
+}
+.toolbar .el-button--primary:hover { box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+
+.table-container :deep(.el-table) {
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7; font-weight: 600; font-size: 13px;
+}
+.table-container :deep(.el-table__row) { transition: background 0.2s; }
+.table-container :deep(.el-table__row:hover) { background: #faf9ff !important; }
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) { background: #fafafa; }
+.table-container :deep(.el-button--small) { border-radius: 6px; transition: all 0.2s; }
+.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
+
+.pagination-wrap {
+  margin-top: 18px; display: flex; justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px; margin: 0 2px; transition: all 0.2s;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) { color: #6c5ce7; }
+
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0; padding: 18px 20px; border-radius: 4px 4px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
+.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
 </style>

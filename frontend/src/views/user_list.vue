@@ -234,62 +234,53 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-form inline>
-      <el-form-item label="姓名">
-        <el-input v-model="user_list.name" placeholder="请输入员工姓名" clearable style="width: 250px;"/>
-      </el-form-item>
-      <el-form-item label="性别" style="width: 250px;">
-        <el-select v-model="user_list.gender" placeholder="请选择性别">
-          <el-option label="男" value="男" />
-          <el-option label="女" value="女" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="联系电话">
-         <el-input type="number" v-model="user_list.phone" placeholder="请输入联系电话" clearable style="width: 250px;"/>
-      </el-form-item>
-      <el-form-item label="用户名">
-        <el-input v-model="user_list.username" placeholder="请输入用户名" clearable style="width: 250px;"/>
-      </el-form-item>
-      <el-form-item label="职位">
-        <el-select v-model="user_list.position" style="width: 250px;" placeholder="请选择职业">
-          <el-option
-              v-for="item in role_list"
-              :key ="item"
-              :label="item"
-              :value="item"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="入职日期">
-        <!-- 日期选择器，默认选择日期格式 -->
-        <el-date-picker
-            v-model="user_list.hire_date"
-            type="date"
-            placeholder="请选择入职日期"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            style="width: 250px;"
-        />
-      </el-form-item>
-      <el-form-item label="上班班次">
-        <el-select v-model="user_list.shift" style="width: 250px;" placeholder="请选择上班班次">
-          <el-option label="早班" value="早班" />
-          <el-option label="中班" value="中班" />
-          <el-option label="晚班" value="晚班" />
-          <el-option label="全天" value="全天" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="get_information_list"> 查询 </el-button>
-        <el-button type="primary" @click="clear_user_list"> 重置 </el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-  <div>
-    <el-button type="danger" @click="Batch_delete">批量删除</el-button>
-    <el-button type="primary" @click="regVisible = true">新增</el-button>
-    <!-- 注册弹窗 -->
+    <div class="query-form">
+      <el-form inline>
+        <el-form-item label="姓名">
+          <el-input v-model="user_list.name" placeholder="请输入员工姓名" clearable style="width: 250px;"/>
+        </el-form-item>
+        <el-form-item label="性别" style="width: 250px;">
+          <el-select v-model="user_list.gender" placeholder="请选择性别">
+            <el-option label="男" value="男" />
+            <el-option label="女" value="女" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系电话">
+           <el-input type="number" v-model="user_list.phone" placeholder="请输入联系电话" clearable style="width: 250px;"/>
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="user_list.username" placeholder="请输入用户名" clearable style="width: 250px;"/>
+        </el-form-item>
+        <el-form-item label="职位">
+          <el-select v-model="user_list.position" style="width: 250px;" placeholder="请选择职业">
+            <el-option v-for="item in role_list" :key ="item" :label="item" :value="item" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="入职日期">
+          <el-date-picker v-model="user_list.hire_date" type="date" placeholder="请选择入职日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
+        </el-form-item>
+        <el-form-item label="上班班次">
+          <el-select v-model="user_list.shift" style="width: 250px;" placeholder="请选择上班班次">
+            <el-option label="早班" value="早班" />
+            <el-option label="中班" value="中班" />
+            <el-option label="晚班" value="晚班" />
+            <el-option label="全天" value="全天" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="get_information_list"> 查询 </el-button>
+          <el-button type="primary" @click="clear_user_list"> 重置 </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="toolbar">
+      <el-button type="danger" @click="Batch_delete">批量删除</el-button>
+      <el-button type="primary" @click="regVisible = true">新增</el-button>
+    </div>
+
     <el-dialog
+        class="dialog-form"
         :model-value="regVisible"
         @close="regVisible = false"
         :title="user_from_register.id ? '账户修改' :'账号注册'"
@@ -319,23 +310,11 @@ onMounted(() => {
         </el-form-item>
         <el-form-item label="职位" required>
           <el-select v-model="user_from_register.position" placeholder="请选择职位">
-            <el-option
-                v-for="item in role_list"
-                :key ="item"
-                :label="item"
-                :value="item"
-            />
+            <el-option v-for="item in role_list" :key ="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-form-item label="入职日期" required>
-          <!-- 日期选择器，默认选择日期格式 -->
-          <el-date-picker
-              v-model="user_from_register.hire_date"
-              type="date"
-              placeholder="请选择入职日期"
-              format="YYYY-MM-DD"
-              value-format="YYYY-MM-DD"
-          />
+          <el-date-picker v-model="user_from_register.hire_date" type="date" placeholder="请选择入职日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="班次" required>
           <el-select v-model="user_from_register.shift" placeholder="选择班次">
@@ -351,42 +330,98 @@ onMounted(() => {
         <el-button type="primary" @click="user_from_register.id ? update_user() : push_from_register_data()">{{user_from_register.id ? '保存修改' : '立即注册'}}</el-button>
       </template>
     </el-dialog>
-  </div>
-  <div>
-    <el-table :data="user_information_list" stripe @selection-change="val => selected = val.map(v=>v.id)" >
-      <el-table-column type="selection" width="50" />
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="gender" label="性别">
-        <template #default="{ row }">
-          {{ row.gender === 'M' ? '男' : '女' }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="phone" label="联系电话" />
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="position" label="岗位职称" />
-      <el-table-column prop="hire_date" label="入职日期"/>
-      <el-table-column prop="shift" label="上班班次" />
-      <el-table-column label="操作" width="150">
-        <template #default="{row}">
-          <el-button size="small" type="primary" @click="update_user_information(row)"> 修改 </el-button>
-          <el-button size="small" type="danger" @click="delete_user_information(row.id)"> 删除 </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--  设置页码-->
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 15px; justify-content: center;"
-        @size-change="get_information_list"
-        @current-change="get_information_list"
-    />
+
+    <div class="table-container">
+      <el-table :data="user_information_list" stripe @selection-change="val => selected = val.map(v=>v.id)" >
+        <el-table-column type="selection" width="50" />
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="gender" label="性别">
+          <template #default="{ row }">
+            {{ row.gender === 'M' ? '男' : '女' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="联系电话" />
+        <el-table-column prop="username" label="用户名" />
+        <el-table-column prop="position" label="岗位职称" />
+        <el-table-column prop="hire_date" label="入职日期"/>
+        <el-table-column prop="shift" label="上班班次" />
+        <el-table-column label="操作" width="150">
+          <template #default="{row}">
+            <el-button size="small" type="primary" @click="update_user_information(row)"> 修改 </el-button>
+            <el-button size="small" type="danger" @click="delete_user_information(row.id)"> 删除 </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="get_information_list"
+          @current-change="get_information_list"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.query-form { margin-bottom: 20px; }
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper),
+.query-form :deep(.el-select .el-input__wrapper) {
+  border-radius: 8px; transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover),
+.query-form :deep(.el-select .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
 
+.toolbar {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none;
+}
+.toolbar .el-button--primary:hover { box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+
+.table-container :deep(.el-table) {
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7; font-weight: 600; font-size: 13px;
+}
+.table-container :deep(.el-table__row) { transition: background 0.2s; }
+.table-container :deep(.el-table__row:hover) { background: #faf9ff !important; }
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) { background: #fafafa; }
+.table-container :deep(.el-button--small) { border-radius: 6px; transition: all 0.2s; }
+.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
+
+.pagination-wrap {
+  margin-top: 18px; display: flex; justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px; margin: 0 2px; transition: all 0.2s;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) { color: #6c5ce7; }
+
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0; padding: 18px 20px; border-radius: 4px 4px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
+.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
 </style>

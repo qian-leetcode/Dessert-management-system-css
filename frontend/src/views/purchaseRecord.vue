@@ -280,188 +280,89 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- 采购记录查询表单（和你下面的格式完全一致） -->
-    <el-form inline :model="query_record_form">
-      <el-form-item label="采购订单号">
-        <el-input v-model="query_record_form.purchase_order_number" placeholder="请输入采购订单号" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="采购日期">
-        <!-- 日期选择器，默认选择日期格式 -->
-        <el-date-picker
-            v-model="query_record_form.purchase_date"
-            type="date"
-            placeholder="请选择采购日期"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            style="width: 250px;"
-        />
-      </el-form-item>
-      <el-form-item label="原材料ID" >
-        <el-input v-model="query_record_form.material_id" placeholder="请输入原材料ID" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="供应商名称">
-        <el-input v-model="query_record_form.supplier_name" placeholder="请输入供应商名称" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="生产批次">
-        <el-input v-model="query_record_form.production_batch" placeholder="请输入生产批次" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="生产日期">
-        <!-- 日期选择器，默认选择日期格式 -->
-        <el-date-picker
-            v-model="query_record_form.purchase_date"
-            type="date"
-            placeholder="请选择生产日期"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            style="width: 250px;"
-        />
-<!--        <el-input v-model="query_record_form.production_date" placeholder="请选择生产日期" style="width: 250px;" clearable/>-->
-      </el-form-item>
-      <el-form-item label="付款状态">
-        <el-input v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;" clearable/>
-      </el-form-item>
-<!--      <el-form-item label="采购单位">-->
-<!--        <el-input v-model="query_record_form.procuring_entity" placeholder="请输入采购单位" style="width: 250px;" clearable/>-->
-<!--      </el-form-item>-->
-      <el-form-item label="采购人">
-          <el-select v-model="query_record_form.user_name" placeholder="选择采购人" style="width: 250px;">
-            <el-option
-                v-for="item in user_list_"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name"
-            />
-          </el-select>
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input v-model="query_record_form.remark" placeholder="输入额外的备注" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <!-- 日期选择器，默认选择日期格式 -->
-        <el-date-picker
-            v-model="query_record_form.purchase_date"
-            type="date"
-            placeholder="请选择创建时间"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            style="width: 250px;"
-        />
-<!--        <el-input v-model="query_record_form.create_time" placeholder="请选择创建时间" style="width: 250px;" clearable/>-->
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="get_purchase_record_information_form"> 查询 </el-button>
-        <el-button type="primary" @click="clear_query_record_form"> 重置 </el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-  <div>
-    <el-button type="danger" @click="batch_delete">批量删除</el-button>
-    <el-button type="primary" @click="purchase_visible = true">新增</el-button>
+    <div class="query-form">
+      <el-form inline :model="query_record_form">
+        <el-form-item label="采购订单号">
+          <el-input v-model="query_record_form.purchase_order_number" placeholder="请输入采购订单号" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="采购日期">
+          <el-date-picker v-model="query_record_form.purchase_date" type="date" placeholder="请选择采购日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
+        </el-form-item>
+        <el-form-item label="原材料ID" >
+          <el-input v-model="query_record_form.material_id" placeholder="请输入原材料ID" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="供应商名称">
+          <el-input v-model="query_record_form.supplier_name" placeholder="请输入供应商名称" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="生产批次">
+          <el-input v-model="query_record_form.production_batch" placeholder="请输入生产批次" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="生产日期">
+          <el-date-picker v-model="query_record_form.production_date" type="date" placeholder="请选择生产日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
+        </el-form-item>
+        <el-form-item label="付款状态">
+          <el-input v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="采购人">
+            <el-select v-model="query_record_form.user_name" placeholder="选择采购人" style="width: 250px;">
+              <el-option v-for="item in user_list_" :key="item.name" :label="item.name" :value="item.name" />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="query_record_form.remark" placeholder="输入额外的备注" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-date-picker v-model="query_record_form.create_time" type="date" placeholder="请选择创建时间" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="get_purchase_record_information_form"> 查询 </el-button>
+          <el-button type="primary" @click="clear_query_record_form"> 重置 </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="toolbar">
+      <el-button type="danger" @click="batch_delete">批量删除</el-button>
+      <el-button type="primary" @click="purchase_visible = true">新增</el-button>
+    </div>
+
     <el-dialog
+        class="dialog-form"
         :model-value="purchase_visible"
         @close="purchase_visible = false"
         :title="add_purchase_form.purchase_id ? '修改采购记录' : '新增采购记录'"
         width="800px"
     >
-      <el-form
-          :model="add_purchase_form"
-          label-width="140px"
-          label-position="right"
-      >
-        <!-- 采购单号 -->
+      <el-form :model="add_purchase_form" label-width="140px" label-position="right">
         <el-form-item label="采购单号" required>
-          <el-input
-              v-model="add_purchase_form.purchase_order_number"
-              placeholder="请输入采购单号"
-              clearable
-          />
+          <el-input v-model="add_purchase_form.purchase_order_number" placeholder="请输入采购单号" clearable />
         </el-form-item>
-
-        <!-- 采购日期 -->
         <el-form-item label="采购日期" required>
-          <el-date-picker
-              v-model="add_purchase_form.purchase_date"
-              type="date"
-              placeholder="选择采购日期"
-              format="YYYY-MM-DD"
-              value-format="YYYY-MM-DD"
-              style="width: 100%"
-          />
+          <el-date-picker v-model="add_purchase_form.purchase_date" type="date" placeholder="选择采购日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 100%" />
         </el-form-item>
-
-        <!-- 物料ID -->
         <el-form-item label="物料ID" required>
           <el-select v-model="add_purchase_form.material_id" placeholder="请选择原材料">
-            <el-option
-                v-for="item in material_list_"
-                :key="item.material_id"
-                :label="item.material_name"
-                :value="item.material_id"
-            />
+            <el-option v-for="item in material_list_" :key="item.material_id" :label="item.material_name" :value="item.material_id" />
           </el-select>
         </el-form-item>
-
-        <!-- 采购数量 -->
         <el-form-item label="采购数量" required>
-          <el-input
-              v-model.number="add_purchase_form.purchase_quantity"
-              type="number"
-              placeholder="请输入采购数量"
-              clearable
-          />
+          <el-input v-model.number="add_purchase_form.purchase_quantity" type="number" placeholder="请输入采购数量" clearable />
         </el-form-item>
-
-        <!-- 采购单价 -->
         <el-form-item label="采购单价" required>
-          <el-input
-              v-model.number="add_purchase_form.purchase_price"
-              type="number"
-              placeholder="请输入采购单价"
-              clearable
-          />
+          <el-input v-model.number="add_purchase_form.purchase_price" type="number" placeholder="请输入采购单价" clearable />
         </el-form-item>
-
-        <!-- 采购金额 -->
         <el-form-item label="采购金额" required>
-          <el-input
-              v-model.number="add_purchase_form.purchase_amount"
-              type="number"
-              placeholder="系统自动计算或手动输入"
-              clearable
-          />
+          <el-input v-model.number="add_purchase_form.purchase_amount" type="number" placeholder="系统自动计算或手动输入" clearable />
         </el-form-item>
-
-        <!-- 供应商名称 -->
         <el-form-item label="供应商名称" required>
-          <el-input
-              v-model="add_purchase_form.supplier_name"
-              placeholder="请输入供应商名称"
-              clearable
-          />
+          <el-input v-model="add_purchase_form.supplier_name" placeholder="请输入供应商名称" clearable />
         </el-form-item>
-
-        <!-- 生产批次 -->
         <el-form-item label="生产批次" required>
-          <el-input
-              v-model="add_purchase_form.production_batch"
-              placeholder="请输入生产批次"
-              clearable
-          />
+          <el-input v-model="add_purchase_form.production_batch" placeholder="请输入生产批次" clearable />
         </el-form-item>
-
-        <!-- 生产日期 -->
         <el-form-item label="生产日期" required>
-          <el-date-picker
-              v-model="add_purchase_form.production_date"
-              type="date"
-              placeholder="选择生产日期"
-              format="YYYY-MM-DD"
-              value-format="YYYY-MM-DD"
-              style="width: 100%"
-          />
+          <el-date-picker v-model="add_purchase_form.production_date" type="date" placeholder="选择生产日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 100%" />
         </el-form-item>
-
-        <!-- 支付状态 -->
         <el-form-item label="支付状态" required>
           <el-radio-group v-model="add_purchase_form.payment_status">
             <el-radio :value="2">已支付</el-radio>
@@ -469,122 +370,131 @@ onMounted(() => {
             <el-radio :value="0">未支付</el-radio>
           </el-radio-group>
         </el-form-item>
-
-        <!-- 用户ID/采购人ID -->
         <el-form-item label="采购人" required>
-<!--          <el-input-->
-<!--              v-model.number="add_purchase_form.user_id"-->
-<!--              type="number"-->
-<!--              placeholder="请输入采购人ID"-->
-<!--              clearable-->
-<!--          />-->
           <el-select v-model="add_purchase_form.user_id" placeholder="选择采购人">
-            <el-option
-                v-for="item in user_list_"
-                :key="item.id"
-                :label="item.name"
-                :value="String(item.id)"
-            />
+            <el-option v-for="item in user_list_" :key="item.id" :label="item.name" :value="String(item.id)" />
           </el-select>
         </el-form-item>
-
-        <!-- 采购单位 -->
         <el-form-item label="采购单位" required>
-          <el-input
-              v-model="add_purchase_form.supplier_name"
-              placeholder="请输入采购单位"
-              clearable
-          />
+          <el-input v-model="add_purchase_form.procuring_entity" placeholder="请输入采购单位" clearable />
         </el-form-item>
-
-        <!-- 备注 -->
         <el-form-item label="备注" required>
-          <el-input
-              v-model="add_purchase_form.remark"
-              type="textarea"
-              :rows="3"
-              placeholder="请输入备注信息"
-              clearable
-          />
+          <el-input v-model="add_purchase_form.remark" type="textarea" :rows="3" placeholder="请输入备注信息" clearable />
         </el-form-item>
         <el-form-item label="创建时间" required>
-          <el-date-picker
-              v-model="add_purchase_form.create_time"
-              type="date"
-              placeholder="选择创建时间"
-              format="YYYY-MM-DD"
-              value-format="YYYY-MM-DD"
-              style="width: 100%"
-          />
+          <el-date-picker v-model="add_purchase_form.create_time" type="date" placeholder="选择创建时间" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 100%" />
         </el-form-item>
       </el-form>
-
       <template #footer>
         <el-button @click="purchase_visible = false">取消</el-button>
-        <el-button
-            type="primary"
-            @click="add_purchase_form.purchase_id ? update_purchase() : add_purchase_information()"
-        >
+        <el-button type="primary" @click="add_purchase_form.purchase_id ? update_purchase() : add_purchase_information()">
           {{ add_purchase_form.purchase_id ? '修改' : '添加' }}
         </el-button>
       </template>
     </el-dialog>
+
+    <div class="table-container">
+      <el-table :data="purchase_record_information_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v=>v.purchase_id)">
+        <el-table-column type="selection" width="50" />
+        <el-table-column prop="purchase_id" label="采购ID" />
+        <el-table-column prop="purchase_order_number" label="采购订单编号" />
+        <el-table-column prop="purchase_date" label="采购日期" />
+        <el-table-column prop="material_id" label="物料ID" />
+        <el-table-column prop="purchase_quantity" label="采购数量" />
+        <el-table-column prop="purchase_price" label="采购单价" />
+        <el-table-column prop="purchase_amount" label="采购金额" />
+        <el-table-column prop="supplier_name" label="供应商名称" />
+        <el-table-column prop="production_batch" label="生产批次号" />
+        <el-table-column prop="production_date" label="生产日期" />
+        <el-table-column label="付款状态" width="100px">
+          <template #default="scope">
+            <el-tag :type="scope.row.payment_status == 1 ? 'warning' : scope.row.payment_status == 2 ? 'success' : 'danger'">
+              <template v-if="scope.row.payment_status == 1">部分支付</template>
+              <template v-else-if="scope.row.payment_status == 2">已支付</template>
+              <template v-else>未支付</template>
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="procuring_name" label="采购人" />
+        <el-table-column prop="remark" label="备注" />
+        <el-table-column prop="create_time" label="创建时间" />
+        <el-table-column label="操作" width="150">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" @click="update_purchase_information(row)">修改</el-button>
+            <el-button size="small" type="danger" @click="delete_purchase(row.purchase_id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="get_purchase_record_information_form"
+          @current-change="get_purchase_record_information_form"
+      />
+    </div>
   </div>
-  <div>
-    <el-table :data="purchase_record_information_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v=>v.purchase_id)">
-      <el-table-column type="selection" width="50" />
-      <el-table-column prop="purchase_id" label="采购ID" />
-      <el-table-column prop="purchase_order_number" label="采购订单编号" />
-      <el-table-column prop="purchase_date" label="采购日期" />
-      <el-table-column prop="material_id" label="物料ID" />
-      <el-table-column prop="purchase_quantity" label="采购数量" />
-      <el-table-column prop="purchase_price" label="采购单价" />
-      <el-table-column prop="purchase_amount" label="采购金额" />
-      <el-table-column prop="supplier_name" label="供应商名称" />
-      <el-table-column prop="production_batch" label="生产批次号" />
-      <el-table-column prop="production_date" label="生产日期" />
-      <el-table-column label="付款状态" width="100px">
-        <template #default="scope">
-          <el-tag
-              :type="
-              scope.row.payment_status == 1 ? 'warning' :
-              scope.row.payment_status == 2 ? 'success' : 'danger'
-      "
-          >
-            <template v-if="scope.row.payment_status == 1">部分支付</template>
-            <template v-else-if="scope.row.payment_status == 2">已支付</template>
-            <template v-else>未支付</template>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="procuring_name" label="采购人" />
-
-      <el-table-column prop="remark" label="备注" />
-      <el-table-column prop="create_time" label="创建时间" />
-
-      <!-- 操作按钮 -->
-      <el-table-column label="操作" width="150">
-        <template #default="{ row }">
-          <el-button size="small" type="primary" @click="update_purchase_information(row)">修改</el-button>
-          <el-button size="small" type="danger" @click="delete_purchase(row.purchase_id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--  设置页码-->
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 15px; justify-content: center;"
-        @size-change="get_purchase_record_information_form"
-        @current-change="get_purchase_record_information_form"
-    />
-  </div>
-
 </template>
 
 <style scoped>
+.query-form { margin-bottom: 20px; }
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper),
+.query-form :deep(.el-select .el-input__wrapper) {
+  border-radius: 8px; transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover),
+.query-form :deep(.el-select .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
 
+.toolbar {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none;
+}
+.toolbar .el-button--primary:hover { box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+
+.table-container :deep(.el-table) {
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7; font-weight: 600; font-size: 13px;
+}
+.table-container :deep(.el-table__row) { transition: background 0.2s; }
+.table-container :deep(.el-table__row:hover) { background: #faf9ff !important; }
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) { background: #fafafa; }
+.table-container :deep(.el-button--small) { border-radius: 6px; transition: all 0.2s; }
+.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
+
+.pagination-wrap {
+  margin-top: 18px; display: flex; justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px; margin: 0 2px; transition: all 0.2s;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) { color: #6c5ce7; }
+
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0; padding: 18px 20px; border-radius: 4px 4px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
+.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
 </style>

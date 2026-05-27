@@ -10,6 +10,7 @@ const regVisible = ref(false)
 
 const router = useRouter()
 const loginStore = useLoginStore()
+const rememberMe = ref(false)
 
 // 登录信息表
 const user_login_information = reactive({
@@ -77,7 +78,7 @@ const push_from_register_data = async () => {
     return
   }
   const len = username_list.length
-  const val = false;
+  let val = false;
   for (let i = 0; i < len; i++) {
     if (user_from_register.username && user_from_register.username === username_list[i]) {
       val = true;
@@ -150,129 +151,285 @@ onMounted(() => {
 </script>
 
 <template>
-    <el-container class="login-page">
-      <el-header class="login-header">
-        甜品管理系统
-      </el-header>
-      <el-main class="login-main">
-        <el-container style="font-size:32px">
-          账号登录
-        </el-container>
-        <el-container>
-          <el-input type="text" v-model="user_login_information.username" placeholder="请输入用户名" class="input"/>
-        </el-container>
-        <el-container>
-          <el-input type="text" v-model="user_login_information.password" placeholder="请输入密码" class="input"/>
-        </el-container>
-        <el-container style="padding-top: 12px;justify-content: center; align-items: center">
-          <el-checkbox name="remember" /> 记住账号
-          <el-container style="justify-content: flex-end">
-          <span @click="open_el_dialog" class="clickable-text"> 没有账号？点击注册 </span>
-            <!-- 注册弹窗 -->
-            <el-dialog
-              :model-value="regVisible"
-              @update:model-value="regVisible = $event"
-              title="账号注册"
-              width="500px"
-            >
-              <el-form label-width="80px">
-                <el-form-item label="账号">
-                  <el-input v-model="user_from_register.username" />
-                </el-form-item>
-                <el-form-item label="密码">
-                  <el-input v-model="user_from_register.password" show-password/>
-                </el-form-item>
-                <el-form-item label="确认密码">
-                  <el-input v-model="user_from_register.re_password" show-password/>
-                </el-form-item>
-                <el-form-item label="姓名">
-                  <el-input v-model="user_from_register.name" placeholder="请输入姓名" />
-                </el-form-item>
-                <el-form-item label="性别">
-                  <el-select v-model="user_from_register.gender" placeholder="请选择性别">
-                    <el-option label="男" value="男"/>
-                    <el-option label="女" value="女"/>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="电话">
-                  <el-input v-model="user_from_register.phone" placeholder="请输入电话号码" />
-                </el-form-item>
-                <el-form-item label="职位">
-                  <el-select v-model="user_from_register.position">
-                    <el-option
-                    v-for="item in role_list"
-                    :key ="item"
-                    :label="item"
-                    :value="item"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="入职日期">
-                  <!-- 日期选择器，默认选择日期格式 -->
-                  <el-date-picker
-                      v-model="user_from_register.hire_date"
-                      type="date"
-                      placeholder="请选择入职日期"
-                      format="YYYY-MM-DD"
-                      value-format="YYYY-MM-DD"
-                  />
-                </el-form-item>
-                <el-form-item label="班次">
-                  <el-select v-model="user_from_register.shift" placeholder="选择班次">
-                    <el-option label="早班" value="早班"></el-option>
-                    <el-option label="中班" value="中班"></el-option>
-                    <el-option label="晚班" value="晚班"></el-option>
-                    <el-option label="全天" value="全天"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-form>
-              <template #footer>
-                <el-button @click="regVisible = false"> 取消 </el-button>
-                <el-button type="primary" @click="push_from_register_data"> 立即注册 </el-button>
-              </template>
-            </el-dialog>
-          </el-container>
-        </el-container>
-        <el-button class="login-button" @click="loginUser"> 登录 </el-button>
-      </el-main>
-      <el-footer >Copyright@2026</el-footer>
-    </el-container>
+  <div class="login-wrapper">
+    <div class="bg-shapes">
+      <div class="shape s1"></div>
+      <div class="shape s2"></div>
+      <div class="shape s3"></div>
+      <div class="shape s4"></div>
+    </div>
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="brand-icon">🍰</div>
+        <h1 class="brand-title">甜品管理系统</h1>
+        <p class="brand-subtitle">Sweet Management, Sweet Life</p>
+      </div>
+      <div class="login-form">
+        <h2 class="form-title">账号登录</h2>
+        <el-input
+          type="text"
+          v-model="user_login_information.username"
+          placeholder="请输入用户名"
+          class="login-input"
+          prefix-icon="User"
+        />
+        <el-input
+          type="password"
+          v-model="user_login_information.password"
+          placeholder="请输入密码"
+          class="login-input"
+          prefix-icon="Lock"
+          show-password
+        />
+        <div class="login-options">
+          <el-checkbox name="remember" v-model="rememberMe" /> 记住账号
+          <span @click="open_el_dialog" class="register-link">没有账号？点击注册</span>
+        </div>
+        <el-button class="login-btn" @click="loginUser">登 录</el-button>
+      </div>
+      <div class="login-footer">Copyright &copy; 2026 甜品管理系统</div>
+    </div>
+
+    <el-dialog
+      :model-value="regVisible"
+      @update:model-value="regVisible = $event"
+      title="账号注册"
+      width="500px"
+      top="5vh"
+      class="register-dialog"
+    >
+      <el-form label-width="80px">
+        <el-form-item label="账号" required>
+          <el-input v-model="user_from_register.username" />
+        </el-form-item>
+        <el-form-item label="密码" required>
+          <el-input v-model="user_from_register.password" show-password/>
+        </el-form-item>
+        <el-form-item label="确认密码" required>
+          <el-input v-model="user_from_register.re_password" show-password/>
+        </el-form-item>
+        <el-form-item label="姓名" required>
+          <el-input v-model="user_from_register.name" placeholder="请输入姓名" />
+        </el-form-item>
+        <el-form-item label="性别" required>
+          <el-select v-model="user_from_register.gender" placeholder="请选择性别">
+            <el-option label="男" value="男"/>
+            <el-option label="女" value="女"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="电话" required>
+          <el-input v-model="user_from_register.phone" placeholder="请输入电话号码" />
+        </el-form-item>
+        <el-form-item label="职位" required>
+          <el-select v-model="user_from_register.position">
+            <el-option
+            v-for="item in role_list"
+            :key ="item"
+            :label="item"
+            :value="item"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="入职日期" required>
+          <el-date-picker
+              v-model="user_from_register.hire_date"
+              type="date"
+              placeholder="请选择入职日期"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+        <el-form-item label="班次" required>
+          <el-select v-model="user_from_register.shift" placeholder="选择班次">
+            <el-option label="早班" value="早班"></el-option>
+            <el-option label="中班" value="中班"></el-option>
+            <el-option label="晚班" value="晚班"></el-option>
+            <el-option label="全天" value="全天"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="regVisible = false"> 取消 </el-button>
+        <el-button type="primary" @click="push_from_register_data"> 立即注册 </el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <style scoped>
-.login-page {
+.login-wrapper {
   width: 100vw;
   height: 100vh;
-  margin: 0 auto;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.login-header {
-  background: rgb(150,200,255);
-  font-size: 72px;
-  height: 100px;
+.bg-shapes { position: absolute; inset: 0; pointer-events: none; }
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: float 8s ease-in-out infinite;
+}
+.s1 {
+  width: 500px; height: 500px;
+  background: linear-gradient(135deg, #e17055, #fd79a8);
+  top: -10%; left: -5%;
+}
+.s2 {
+  width: 400px; height: 400px;
+  background: linear-gradient(135deg, #00cec9, #81ecec);
+  bottom: -10%; right: -5%;
+  animation-delay: -3s;
+}
+.s3 {
+  width: 300px; height: 300px;
+  background: linear-gradient(135deg, #fdcb6e, #f39c12);
+  top: 50%; left: 60%;
+  animation-delay: -5s;
+}
+.s4 {
+  width: 250px; height: 250px;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  top: 20%; right: 10%;
+  animation-delay: -2s;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-.login-main {
-  margin: 0 auto;
-  padding-top: 100px;
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: cardIn 0.6s ease-out;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.input {
-  width: 450px;
-  height: 78px;
-  padding-top: 24px;
+.login-brand {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe, #fd79a8);
+  padding: 32px 0 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.login-brand::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
+.brand-icon { font-size: 48px; animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.brand-title {
+  color: #fff; font-size: 26px; font-weight: 700;
+  margin-top: 8px; letter-spacing: 2px;
+}
+.brand-subtitle {
+  color: rgba(255,255,255,0.8); font-size: 13px;
+  margin-top: 4px; letter-spacing: 4px;
 }
 
-.clickable-text {
-  color: #409eff;           /* 蓝色，看起来像链接 */
-  cursor: pointer;          /* 鼠标变成手型 */
-  user-select: none;        /* 防止选中文字 */
+.login-form { padding: 32px 36px 20px; }
+.form-title {
+  text-align: center; font-size: 22px; font-weight: 600;
+  color: #2d3436; margin-bottom: 24px;
+  letter-spacing: 1px;
 }
 
-.login-button {
-  width: 450px;
+.login-input { margin-bottom: 18px; }
+.login-input :deep(.el-input__wrapper) {
+  border-radius: 10px;
+  padding: 4px 16px;
+  box-shadow: 0 0 0 1px #e0e0e0 inset;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.login-input :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #a29bfe inset;
+}
+.login-input :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 2px #6c5ce7 inset, 0 4px 12px rgba(108,92,231,0.15);
+  transform: translateY(-1px);
+}
+.login-input :deep(.el-input__inner) { height: 44px; font-size: 14px; }
+.login-input :deep(.el-input__prefix-inner) { color: #b2bec3; }
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #636e72;
+}
+.register-link {
+  color: #6c5ce7;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+.register-link:hover { color: #a29bfe; text-decoration: underline; }
+
+.login-btn {
+  width: 100%;
   height: 48px;
-  background: #409eff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(108,92,231,0.3);
 }
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(108,92,231,0.4);
+}
+.login-btn:active { transform: translateY(0); }
+
+.login-footer {
+  text-align: center;
+  padding: 16px 0;
+  color: #b2bec3;
+  font-size: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.register-dialog :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: #fff;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: 4px 4px 0 0;
+}
+.register-dialog :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.register-dialog :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.register-dialog :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.register-dialog :deep(.el-dialog__body) { padding: 24px 20px; }
 </style>

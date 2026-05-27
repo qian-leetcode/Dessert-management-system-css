@@ -202,135 +202,86 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-form :model="query_material_form" inline>
-      <el-form-item label="原材料编码">
-        <el-input v-model="query_material_form.material_code" placeholder="请输入原材料编码" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="原材料名称">
-        <el-input v-model="query_material_form.material_name" placeholder="请输入原材料名称" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="原材料的种类">
-        <el-input v-model="query_material_form.material_category" placeholder="请输入原材料的种类"  style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="原材料的保质期">
-        <el-input type="number" v-model="query_material_form.material_shelf_life_days_min" placeholder="请输入保质期时间(天)最小值" style="width: 250px;" clearable/>
-        <span style="margin: 0 5px;">~</span>
-        <el-input type="number" v-model="query_material_form.material_shelf_life_days_max" placeholder="请输入保质期时间(天)最大值" style="width: 250px" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="原材料的存储条件">
-        <el-input v-model="query_material_form.material_storage_condition" placeholder="请输入存储条件" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input v-model="query_material_form.material_remark" placeholder="输入额外的备注" style="width: 250px;" clearable/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="get_material_form"> 查询 </el-button>
-        <el-button type="primary" @click="clear_material_form"> 重置 </el-button>
-      </el-form-item>
-    </el-form>
-    <div>
+    <div class="query-form">
+      <el-form :model="query_material_form" inline>
+        <el-form-item label="原材料编码">
+          <el-input v-model="query_material_form.material_code" placeholder="请输入原材料编码" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="原材料名称">
+          <el-input v-model="query_material_form.material_name" placeholder="请输入原材料名称" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="原材料的种类">
+          <el-input v-model="query_material_form.material_category" placeholder="请输入原材料的种类"  style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="原材料的保质期">
+          <el-input type="number" v-model="query_material_form.material_shelf_life_days_min" placeholder="请输入保质期时间(天)最小值" style="width: 250px;" clearable/>
+          <span style="margin: 0 5px;">~</span>
+          <el-input type="number" v-model="query_material_form.material_shelf_life_days_max" placeholder="请输入保质期时间(天)最大值" style="width: 250px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="原材料的存储条件">
+          <el-input v-model="query_material_form.material_storage_condition" placeholder="请输入存储条件" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="query_material_form.material_remark" placeholder="输入额外的备注" style="width: 250px;" clearable/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="get_material_form"> 查询 </el-button>
+          <el-button type="primary" @click="clear_material_form"> 重置 </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="toolbar">
       <el-button type="danger" @click="Batch_delete">批量删除</el-button>
       <el-button type="primary" @click="material_visible = true">新增</el-button>
-      <el-dialog
-          :model-value="material_visible"
-          @close="material_visible = false"
-          :title="add_material_form.id ? '修改物料' : '新增物料'"
-          width="700px"
-      >
-        <el-form
-            :model="add_material_form"
-            label-width="130px"
-            label-position="right"
-        >
-          <!-- 物料编码 -->
-          <el-form-item label="物料编码" required>
-            <el-input
-                v-model="add_material_form.material_code"
-                placeholder="请输入物料编码"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 物料名称 -->
-          <el-form-item label="物料名称" required>
-            <el-input
-                v-model="add_material_form.material_name"
-                placeholder="请输入物料名称"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 物料分类 -->
-          <el-form-item label="物料分类" required>
-            <el-input
-                v-model="add_material_form.material_category"
-                placeholder="请输入物料分类"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 物料规格 -->
-          <el-form-item label="物料规格" required>
-            <el-input
-                v-model="add_material_form.material_specification"
-                placeholder="请输入物料规格"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 物料单位 -->
-          <el-form-item label="物料单位" required>
-            <el-input
-                v-model="add_material_form.material_unit"
-                placeholder="kg/个/袋/瓶等"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 保质期天数 -->
-          <el-form-item label="保质期(天)"required>
-            <el-input
-                v-model.number="add_material_form.material_shelf_life_days"
-                type="number"
-                placeholder="请输入数字"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 储存条件 -->
-          <el-form-item label="储存条件" required>
-            <el-input
-                v-model="add_material_form.material_storage_condition"
-                placeholder="常温/冷藏/冷冻等"
-                clearable
-            />
-          </el-form-item>
-
-          <!-- 备注 -->
-          <el-form-item label="备注" required>
-            <el-input
-                v-model="add_material_form.material_remark"
-                type="textarea"
-                :rows="3"
-                placeholder="请输入备注信息"
-                clearable
-            />
-          </el-form-item>
-        </el-form>
-
-        <template #footer>
-          <el-button @click="material_visible = false">取消</el-button>
-          <el-button
-              type="primary"
-              @click="add_material_form.id ? update_material() : add_material_information()"
-          >
-            {{ add_material_form.id ? '修改' : '添加' }}
-          </el-button>
-        </template>
-      </el-dialog>
-
     </div>
-    <div>
+
+    <el-dialog
+        class="dialog-form"
+        :model-value="material_visible"
+        @close="material_visible = false"
+        :title="add_material_form.id ? '修改物料' : '新增物料'"
+        width="700px"
+    >
+      <el-form
+          :model="add_material_form"
+          label-width="130px"
+          label-position="right"
+      >
+        <el-form-item label="物料编码" required>
+          <el-input v-model="add_material_form.material_code" placeholder="请输入物料编码" clearable />
+        </el-form-item>
+        <el-form-item label="物料名称" required>
+          <el-input v-model="add_material_form.material_name" placeholder="请输入物料名称" clearable />
+        </el-form-item>
+        <el-form-item label="物料分类" required>
+          <el-input v-model="add_material_form.material_category" placeholder="请输入物料分类" clearable />
+        </el-form-item>
+        <el-form-item label="物料规格" required>
+          <el-input v-model="add_material_form.material_specification" placeholder="请输入物料规格" clearable />
+        </el-form-item>
+        <el-form-item label="物料单位" required>
+          <el-input v-model="add_material_form.material_unit" placeholder="kg/个/袋/瓶等" clearable />
+        </el-form-item>
+        <el-form-item label="保质期(天)"required>
+          <el-input v-model.number="add_material_form.material_shelf_life_days" type="number" placeholder="请输入数字" clearable />
+        </el-form-item>
+        <el-form-item label="储存条件" required>
+          <el-input v-model="add_material_form.material_storage_condition" placeholder="常温/冷藏/冷冻等" clearable />
+        </el-form-item>
+        <el-form-item label="备注" required>
+          <el-input v-model="add_material_form.material_remark" type="textarea" :rows="3" placeholder="请输入备注信息" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="material_visible = false">取消</el-button>
+        <el-button type="primary" @click="add_material_form.id ? update_material() : add_material_information()">
+          {{ add_material_form.id ? '修改' : '添加' }}
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <div class="table-container">
       <el-table :data="material_information_form" stripe  style="width: 100%" @selection-change="val => selected = val.map(v=>v.material_id)">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="material_code" label="原材料编码" />
@@ -349,20 +300,73 @@ onMounted(() => {
         </el-table-column>
       </el-table>
     </div>
-    <!--  设置页码-->
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 15px; justify-content: center;"
-        @size-change="get_material_form"
-        @current-change="get_material_form"
-    />
+
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="get_material_form"
+          @current-change="get_material_form"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.query-form { margin-bottom: 20px; }
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper) {
+  border-radius: 8px; transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
 
+.toolbar {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none;
+}
+.toolbar .el-button--primary:hover { box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+
+.table-container :deep(.el-table) {
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7; font-weight: 600; font-size: 13px;
+}
+.table-container :deep(.el-table__row) { transition: background 0.2s; }
+.table-container :deep(.el-table__row:hover) { background: #faf9ff !important; }
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) { background: #fafafa; }
+.table-container :deep(.el-button--small) { border-radius: 6px; transition: all 0.2s; }
+.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
+
+.pagination-wrap {
+  margin-top: 18px; display: flex; justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px; margin: 0 2px; transition: all 0.2s;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) { color: #6c5ce7; }
+
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0; padding: 18px 20px; border-radius: 4px 4px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
+.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
 </style>

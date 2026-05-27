@@ -134,7 +134,7 @@ async function update_inventory(){
     }
     await update_inventory_information_(add_inventory_form)
 
-    inventory_visible = false
+    inventory_visible.value = false
   }
   catch (error) {
     console.log(error);
@@ -185,135 +185,143 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-form inline :model="query_inventory_form">
-<!--      <el-form-item label="库存ID" >-->
-<!--        <el-input v-model="query_inventory_form.inventory_id" placeholder="请输入库存ID" style="width: 250px;" clearable/>-->
-<!--      </el-form-item>-->
-      <el-form-item label="原料" >
-<!--        <el-input v-model="query_inventory_form.material_id" placeholder="请输入原料ID" style="width: 250px;" clearable/>-->
-        <el-select v-model="query_inventory_form.material_name" placeholder="请选择原材料" style="width: 250px;">
-          <el-option
-              v-for="item in material_category"
-              :key="item.material_name"
-              :label="item.material_name"
-              :value="item.material_name"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="最后采购时间">
-        <!-- 日期选择器，默认选择日期格式 -->
-        <el-date-picker
-            v-model="query_inventory_form.latest_purchase_date"
-            type="date"
-            placeholder="请选择最后采购时间"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            style="width: 250px;"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="query_inventory_information"> 查询 </el-button>
-        <el-button type="primary" @click="clear_inventory_information"> 重置 </el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-  <div>
-    <el-button type="danger" @click="batch_delete">批量删除</el-button>
-    <el-button type="primary" @click="inventory_visible = true">新增</el-button>
+    <div class="query-form">
+      <el-form inline :model="query_inventory_form">
+        <el-form-item label="原料" >
+          <el-select v-model="query_inventory_form.material_name" placeholder="请选择原材料" style="width: 250px;">
+            <el-option v-for="item in material_category" :key="item.material_name" :label="item.material_name" :value="item.material_name" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="最后采购时间">
+          <el-date-picker v-model="query_inventory_form.latest_purchase_date" type="date" placeholder="请选择最后采购时间" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="query_inventory_information"> 查询 </el-button>
+          <el-button type="primary" @click="clear_inventory_information"> 重置 </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="toolbar">
+      <el-button type="danger" @click="batch_delete">批量删除</el-button>
+      <el-button type="primary" @click="inventory_visible = true">新增</el-button>
+    </div>
+
     <el-dialog
+        class="dialog-form"
         :model-value="inventory_visible"
         @close="inventory_visible = false"
         :title="add_inventory_form.inventory_id ? '修改库存' : '新增库存'"
         width="700px"
     >
-      <el-form
-          :model="add_inventory_form"
-          label-width="130px"
-          label-position="right"
-      >
-        <!-- 原材料 ID -->
+      <el-form :model="add_inventory_form" label-width="130px" label-position="right">
         <el-form-item label="原材料ID" required>
           <el-select v-model="add_inventory_form.material_id" placeholder="请选择原材料">
-            <el-option
-              v-for="item in material_category"
-              :key="item.material_id"
-              :label="item.material_name"
-              :value="item.material_id"
-            />
+            <el-option v-for="item in material_category" :key="item.material_id" :label="item.material_name" :value="item.material_id" />
           </el-select>
         </el-form-item>
-
-        <!-- 当前库存 -->
         <el-form-item label="当前库存" required>
-          <el-input
-              v-model.number="add_inventory_form.current_inventory_level"
-              type="number"
-              placeholder="请输入当前库存"
-              clearable
-          />
+          <el-input v-model.number="add_inventory_form.current_inventory_level" type="number" placeholder="请输入当前库存" clearable />
         </el-form-item>
-
-        <!-- 安全库存 -->
         <el-form-item label="安全库存" required>
-          <el-input
-              v-model.number="add_inventory_form.safety_stock_quantity"
-              type="number"
-              placeholder="请输入安全库存"
-              clearable
-          />
+          <el-input v-model.number="add_inventory_form.safety_stock_quantity" type="number" placeholder="请输入安全库存" clearable />
         </el-form-item>
-
-        <!-- 最后采购时间 -->
         <el-form-item label="最后采购时间" required>
-          <el-date-picker
-              v-model="add_inventory_form.last_purchase_time"
-              type="date"
-              placeholder="选择最后采购日期"
-              style="width: 100%"
-          />
+          <el-date-picker v-model="add_inventory_form.last_purchase_time" type="date" placeholder="选择最后采购日期" style="width: 100%" />
         </el-form-item>
       </el-form>
-
       <template #footer>
         <el-button @click="inventory_visible = false">取消</el-button>
-        <el-button
-            type="primary"
-            @click="add_inventory_form.inventory_id ? update_inventory() : add_inventory_information()"
-        >
+        <el-button type="primary" @click="add_inventory_form.inventory_id ? update_inventory() : add_inventory_information()">
           {{ add_inventory_form.inventory_id ? '修改' : '添加' }}
         </el-button>
       </template>
     </el-dialog>
-  </div>
-  <div>
-    <el-table :data="inventory_information_form" @selection-change="val => selected = val.map(v=>v.inventory_id)">
-      <el-table-column type="selection" />
-<!--      <el-table-column prop="material_id" label="物料ID" />-->
-      <el-table-column prop="material_name" label="原材料名称" />
-      <el-table-column prop="current_inventory_level" label="当前库存数量" />
-      <el-table-column prop="safety_stock_quantity" label="安全库存数量" />
-      <el-table-column prop="last_purchase_time" label="最后采购时间" />
-      <el-table-column label="操作" width="150">
-        <template #default="{row}">
-          <el-button size="small" type="primary" @click="update_inventory_information(row)"> 修改 </el-button>
-          <el-button size="small" type="danger" @click="delete_inventory(row.inventory_id)"> 删除 </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--  设置页码-->
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 15px; justify-content: center;"
-        @size-change="query_inventory_information"
-        @current-change="query_inventory_information"
-    />
+
+    <div class="table-container">
+      <el-table :data="inventory_information_form" stripe @selection-change="val => selected = val.map(v=>v.inventory_id)">
+        <el-table-column type="selection" />
+        <el-table-column prop="material_name" label="原材料名称" />
+        <el-table-column prop="current_inventory_level" label="当前库存数量" />
+        <el-table-column prop="safety_stock_quantity" label="安全库存数量" />
+        <el-table-column prop="last_purchase_time" label="最后采购时间" />
+        <el-table-column label="操作" width="150">
+          <template #default="{row}">
+            <el-button size="small" type="primary" @click="update_inventory_information(row)"> 修改 </el-button>
+            <el-button size="small" type="danger" @click="delete_inventory(row.inventory_id)"> 删除 </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="query_inventory_information"
+          @current-change="query_inventory_information"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.query-form { margin-bottom: 20px; }
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper),
+.query-form :deep(.el-select .el-input__wrapper) {
+  border-radius: 8px; transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover),
+.query-form :deep(.el-select .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
 
+.toolbar {
+  display: flex; gap: 12px; margin-bottom: 16px;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none;
+}
+.toolbar .el-button--primary:hover { box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+
+.table-container :deep(.el-table) {
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7; font-weight: 600; font-size: 13px;
+}
+.table-container :deep(.el-table__row) { transition: background 0.2s; }
+.table-container :deep(.el-table__row:hover) { background: #faf9ff !important; }
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) { background: #fafafa; }
+.table-container :deep(.el-button--small) { border-radius: 6px; transition: all 0.2s; }
+.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
+
+.pagination-wrap {
+  margin-top: 18px; display: flex; justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px; margin: 0 2px; transition: all 0.2s;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) { color: #6c5ce7; }
+
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0; padding: 18px 20px; border-radius: 4px 4px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
+.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
+.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
 </style>
