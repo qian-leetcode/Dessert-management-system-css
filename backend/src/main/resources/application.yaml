@@ -1,8 +1,8 @@
 spring:
   application:
-    name: demo518
+    name: dms
   datasource:
-    url: jdbc:mysql://localhost:3306/dessert2?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/dessert_three_groups?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456

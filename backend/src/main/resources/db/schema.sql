@@ -1,9 +1,9 @@
 # create database if not exists desserts DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-drop database if exists  dessert2;
+drop database if exists  dessert_three_groups;
 
-create database if not exists dessert2 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+create database if not exists dessert_three_groups DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-use dessert2;
+use dessert_three_groups;
 
 drop table if exists dessert;
 drop table if exists t_user_role;

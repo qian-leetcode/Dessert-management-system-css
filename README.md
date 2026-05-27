@@ -3,17 +3,13 @@
 #### 介绍
 期末
 
-#### 软件架构
-软件架构说明
 
 
 #### 安装教程
 1. 打开终端 输入 cd fronted
-2. 下载前端依赖-运行 npm install 
+2. 下载前端依赖-运行 npm install
+3. 执行 /backed/src/main/resources/db/ 中的文件
+4. 先执行schema.sql ,再执行 data.sql
+5. (可选) idea 中配置springboot 和 npm , 并使用复合
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
 
