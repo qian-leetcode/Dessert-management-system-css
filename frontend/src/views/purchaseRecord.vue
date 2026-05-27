@@ -301,7 +301,12 @@ onMounted(() => {
           <el-date-picker v-model="query_record_form.production_date" type="date" placeholder="请选择生产日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 250px;" />
         </el-form-item>
         <el-form-item label="付款状态">
-          <el-input v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;" clearable/>
+<!--          <el-input v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;" clearable/>-->
+          <el-select v-model="query_record_form.payment_status" placeholder="请输入付款状态" style="width: 250px;">
+            <el-option label="未支付" value="0"></el-option>
+            <el-option label="部分支付" value="1"></el-option>
+            <el-option label="已支付" value="2"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="采购人">
             <el-select v-model="query_record_form.user_name" placeholder="选择采购人" style="width: 250px;">
