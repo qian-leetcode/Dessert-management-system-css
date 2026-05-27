@@ -87,15 +87,6 @@ public class DessertController {
     public Map<String, Object> add(@RequestBody Map<String, String> map){
         Map<String, Object> res = new HashMap<>();
         try{
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String value = entry.getValue();
-                if (value == null || value.isEmpty()) {
-                    res.put("code", 400 );
-                    res.put("msg", entry.getKey() + "' 不能为空");
-                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
-                    return res;
-                }
-            }
 
             Integer catId = Integer.parseInt(map.get("cat_id"));
             String name = map.get("name");
@@ -169,15 +160,6 @@ public class DessertController {
     public Map<String, Object> update(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String value = entry.getValue();
-                if (value == null || value.isEmpty()) {
-                    res.put("code", 400 );
-                    res.put("msg", entry.getKey() + "' 不能为空");
-                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
-                    return res;
-                }
-            }
 
             Integer id = Integer.parseInt(map.get("id"));
             String name = map.get("name");

@@ -92,15 +92,6 @@ public class MaterialInformationController {
     public Map<String, Object> addMaterial(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String value = entry.getValue();
-                if (value == null || value.isEmpty()) {
-                    res.put("code", 400 );
-                    res.put("msg", entry.getKey() + "' 不能为空");
-                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
-                    return res;
-                }
-            }
             String materialCode = map.get("material_code");
             String materialName = map.get("material_name");
             String materialCategory = map.get("material_category");
@@ -170,15 +161,6 @@ public class MaterialInformationController {
     public Map<String, Object> updateMaterial(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String value = entry.getValue();
-                if (value == null || value.isEmpty()) {
-                    res.put("code", 400 );
-                    res.put("msg", entry.getKey() + "' 不能为空");
-                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
-                    return res;
-                }
-            }
             Integer materialId = Integer.parseInt(map.get("materialId"));
             String materialCode = map.get("materialCode");
             String materialName = map.get("materialName");

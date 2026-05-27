@@ -292,7 +292,7 @@ onMounted(() => {
     <el-dialog
         :model-value="regVisible"
         @close="regVisible = false"
-        title="账号注册"
+        :title="user_from_register.id ? '账户修改' :'账号注册'"
         width="500px"
     >
       <el-form label-width="120px">
@@ -348,7 +348,7 @@ onMounted(() => {
       </el-form>
       <template #footer>
         <el-button @click="regVisible = false"> 取消 </el-button>
-        <el-button type="primary" @click="user_from_register.id ? update_user() : push_from_register_data">{{user_from_register.id ? '保存修改' : '立即注册'}}</el-button>
+        <el-button type="primary" @click="user_from_register.id ? update_user() : push_from_register_data()">{{user_from_register.id ? '保存修改' : '立即注册'}}</el-button>
       </template>
     </el-dialog>
   </div>

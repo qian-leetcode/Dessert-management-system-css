@@ -94,18 +94,18 @@ const add_purchase_form = reactive({
 
 // 清空采购表
 async function clear_add_purchase_form() {
-  add_purchase_form.purchase_id= '',
-  add_purchase_form.purchase_order_number= '',
-  add_purchase_form.purchase_date= '',
-  add_purchase_form.material_id= '',
-  add_purchase_form.purchase_quantity= '',
-  add_purchase_form.purchase_price= '',
-  add_purchase_form.purchase_amount= '',
-  add_purchase_form.supplier_name= '',
-  add_purchase_form.production_batch= '',
-  add_purchase_form.production_date= '',
-  add_purchase_form.payment_status= 0,
-  add_purchase_form.user_id= '',
+  add_purchase_form.purchase_id= ''
+  add_purchase_form.purchase_order_number= ''
+  add_purchase_form.purchase_date= ''
+  add_purchase_form.material_id= ''
+  add_purchase_form.purchase_quantity= ''
+  add_purchase_form.purchase_price= ''
+  add_purchase_form.purchase_amount= ''
+  add_purchase_form.supplier_name= ''
+  add_purchase_form.production_batch= ''
+  add_purchase_form.production_date= ''
+  add_purchase_form.payment_status= 0
+  add_purchase_form.user_id= ''
   add_purchase_form.procuring_entity= ''
   add_purchase_form.remark= ''
   add_purchase_form.create_time = ''
@@ -122,6 +122,23 @@ watch(purchase_visible, (newVal, oldVal) => {
 // 新增
 async function add_purchase_information(){
   try {
+    if (
+        add_purchase_form.purchase_order_number === '' ||
+        add_purchase_form.purchase_date === '' ||
+        add_purchase_form.material_id === '' ||
+        add_purchase_form.purchase_quantity === '' ||
+        add_purchase_form.purchase_price === '' ||
+        add_purchase_form.purchase_amount === '' ||
+        add_purchase_form.supplier_name === '' ||
+        add_purchase_form.production_batch === '' ||
+        add_purchase_form.production_date === '' ||
+        add_purchase_form.user_id === '' ||
+        add_purchase_form.procuring_entity === '' ||
+        add_purchase_form.remark === '' ||
+        add_purchase_form.create_time === ''
+    ) {
+      return
+    }
     const params = {
       purchase_order_number: add_purchase_form.purchase_order_number,
       purchase_date: add_purchase_form.purchase_date,
@@ -172,6 +189,24 @@ async function update_purchase_information(row) {
 //修改
 async function update_purchase() {
   try {
+    if (
+        add_purchase_form.purchase_id === '' ||
+        add_purchase_form.purchase_order_number === '' ||
+        add_purchase_form.purchase_date === '' ||
+        add_purchase_form.material_id === '' ||
+        add_purchase_form.purchase_quantity === '' ||
+        add_purchase_form.purchase_price === '' ||
+        add_purchase_form.purchase_amount === '' ||
+        add_purchase_form.supplier_name === '' ||
+        add_purchase_form.production_batch === '' ||
+        add_purchase_form.production_date === '' ||
+        add_purchase_form.user_id === '' ||
+        add_purchase_form.procuring_entity === '' ||
+        add_purchase_form.remark === '' ||
+        add_purchase_form.create_time === ''
+    ) {
+      return
+    }
     await update_purchase_record_form_(add_purchase_form)
     await get_purchase_record_information_form()
     purchase_visible.value = false

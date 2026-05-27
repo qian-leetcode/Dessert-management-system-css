@@ -104,6 +104,18 @@ async function clear_add_dessert_form(){
 //添加
 async function add_dessert_information(){
   try{
+    if (
+        add_dessert_form.name === '' ||
+        add_dessert_form.photo_url === '' ||
+        add_dessert_form.price === '' ||
+        add_dessert_form.description === '' ||
+        add_dessert_form.release_date === '' ||
+        add_dessert_form.cat_id === '' ||
+        add_dessert_form.dessert_status === '' ||
+        add_dessert_form.dessert_number === ''
+    ) {
+      return; // 有空值，直接返回
+    }
     await add_dessert_list_(add_dessert_form);
     // console.log(res)
     await fetch_category_list()
@@ -140,6 +152,19 @@ async function update_dessert_information(row){
 // 更新代码
 async function update_dessert_(){
   try{
+    if (
+        add_dessert_form.id === '' ||
+        add_dessert_form.name === '' ||
+        add_dessert_form.photo_url === '' ||
+        add_dessert_form.price === '' ||
+        add_dessert_form.description === '' ||
+        add_dessert_form.release_date === '' ||
+        add_dessert_form.cat_id === '' ||
+        add_dessert_form.dessert_status === '' ||
+        add_dessert_form.dessert_number === ''
+    ) {
+      return; // 有空值，直接返回
+    }
     await update_dessert_list_(add_dessert_form);
     ElMessage.success("修改成功")
     dessert_visible.value = false

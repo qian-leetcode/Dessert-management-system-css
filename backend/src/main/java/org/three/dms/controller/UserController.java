@@ -37,14 +37,6 @@ public class UserController {
     public Map<String, Object> login(@RequestBody Map<String,String> user){
         Map<String,Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : user.entrySet()){
-                if(entry.getValue() == null || entry.getValue().equals("")){
-                    res.put("code", 500);
-                    res.put("msg", "不能有空值");
-                    log.warn("[参数校验] 登录参数为空");
-                    return res;
-                }
-            }
             String username = user.get("username");
             String password = user.get("password");
             log.info("{}尝试登录",username);
@@ -80,14 +72,6 @@ public class UserController {
     public Map<String, Object> register(@RequestBody Map<String,String> user){
         Map<String,Object> res = new HashMap<>();
         try {
-//            for (Map.Entry<String, String> entry : user.entrySet()){
-//                if(entry.getValue() == null || entry.getValue().equals("")){
-//                    res.put("code", 500);
-//                    res.put("msg", "不能有空值");
-//                    log.warn("[参数校验] 登录参数为空");
-//                    return res;
-//                }
-//            }
             String username = user.get("username");
             String password = user.get("password");
             String encrypted_password = BCrypt.hashpw(password,BCrypt.gensalt());
@@ -207,14 +191,6 @@ public class UserController {
     public Map<String, Object> updateUser(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()){
-                if(entry.getValue() == null || entry.getValue().equals("")){
-                    res.put("code", 500);
-                    res.put("msg", "不能有空值");
-                    log.warn("[参数校验] 修改参数为空");
-                    return res;
-                }
-            }
             Integer id = Integer.parseInt(map.get("id"));
             String name = map.get("name");
             String gender = map.get("gender");

@@ -86,6 +86,14 @@ async function clear_add_inventory_form() {
 // 添加
 async function add_inventory_information(){
   try {
+    if (
+        add_inventory_form.material_id === '' ||
+        add_inventory_form.current_inventory_level === '' ||
+        add_inventory_form.safety_stock_quantity === '' ||
+        add_inventory_form.last_purchase_time === ''
+    ) {
+      return
+    }
     await add_inventory_information_(add_inventory_form)
     console.log(add_inventory_form)
     await query_inventory_information()
@@ -115,6 +123,15 @@ async function update_inventory_information(row){
 // 更新
 async function update_inventory(){
   try {
+    if (
+        add_inventory_form.inventory_id === '' ||
+        add_inventory_form.material_id === '' ||
+        add_inventory_form.current_inventory_level === '' ||
+        add_inventory_form.safety_stock_quantity === '' ||
+        add_inventory_form.last_purchase_time === ''
+    ) {
+      return
+    }
     await update_inventory_information_(add_inventory_form)
 
     inventory_visible = false
@@ -206,7 +223,7 @@ onMounted(() => {
     <el-dialog
         :model-value="inventory_visible"
         @close="inventory_visible = false"
-        :title="add_inventory_form.id ? '修改库存' : '新增库存'"
+        :title="add_inventory_form.inventory_id ? '修改库存' : '新增库存'"
         width="700px"
     >
       <el-form

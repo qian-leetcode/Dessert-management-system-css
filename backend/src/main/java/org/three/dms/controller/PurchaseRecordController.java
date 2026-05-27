@@ -89,14 +89,6 @@ public class PurchaseRecordController {
     public Map<String, Object> addPurchaseRecord(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()){
-                if(entry.getValue() == null || entry.getValue().equals("")){
-                    res.put("code", 500);
-                    res.put("msg", "不能有空值");
-                    log.warn("[参数校验] 新增采购记录参数为空");
-                    return res;
-                }
-            }
             String purchaseOrderNumber = map.get("purchase_order_number");
             LocalDate purchaseDate = LocalDate.parse(map.get("purchase_date"));
             Integer materialId = Integer.parseInt(map.get("material_id"));
@@ -168,14 +160,6 @@ public class PurchaseRecordController {
     public Map<String, Object> updatePurchaseRecord(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            for (Map.Entry<String, String> entry : map.entrySet()){
-                if(entry.getValue() == null || entry.getValue().equals("")){
-                    res.put("code", 500);
-                    res.put("msg", "不能有空值");
-                    log.warn("[参数校验] 修改采购记录参数为空");
-                    return res;
-                }
-            }
             Integer purchaseId = Integer.parseInt(map.get("purchase_id"));
             String productionBatch = map.get("production_batch");
             LocalDate productionDate = LocalDate.parse(map.get("production_date"));

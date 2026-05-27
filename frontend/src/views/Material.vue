@@ -73,7 +73,7 @@ const add_material_form = reactive({
 })
 
 async function clear_add_material_form() {
-  add_material_form.id= '', // 修改时必须用
+      add_material_form.id= '', // 修改时必须用
       add_material_form.material_code= '',
       add_material_form.material_name= '',
       add_material_form.material_category= '',
@@ -87,10 +87,21 @@ async function clear_add_material_form() {
 // 新增
 async function add_material_information(){
   try{
-
+    if (
+        add_material_form.material_code === '' ||
+        add_material_form.material_name === '' ||
+        add_material_form.material_category === '' ||
+        add_material_form.material_specification === '' ||
+        add_material_form.material_unit === '' ||
+        add_material_form.material_shelf_life_days === '' ||
+        add_material_form.material_storage_condition === '' ||
+        add_material_form.material_remark === ''
+    ) {
+      return
+    }
     await add_material_list_(add_material_form)
     await get_material_form();
-    add_material_form.id = ''
+    // add_material_form.id = ''
     add_material_form.material_code = ''
     add_material_form.material_name = ''
     add_material_form.material_category = ''
@@ -110,7 +121,7 @@ async function add_material_information(){
 async function update_material_form(row){
   // console.log(row)
   material_visible.value = true
-  add_material_form.id = row.inventory_id
+  add_material_form.id = row.material_id
   add_material_form.material_code = row.material_code
   add_material_form.material_name = row.material_name
   add_material_form.material_category = row.material_category
@@ -124,6 +135,19 @@ async function update_material_form(row){
 // 修改
 async function update_material(){
   try{
+    if (
+        add_material_form.id === '' ||
+        add_material_form.material_code === '' ||
+        add_material_form.material_name === '' ||
+        add_material_form.material_category === '' ||
+        add_material_form.material_specification === '' ||
+        add_material_form.material_unit === '' ||
+        add_material_form.material_shelf_life_days === '' ||
+        add_material_form.material_storage_condition === '' ||
+        add_material_form.material_remark === ''
+    ) {
+      return
+    }
     await update_material_list_(add_material_form)
     ElMessage.success("修改成功")
     material_visible.value = false

@@ -72,13 +72,14 @@ async function add_category_list(){
       return
     }
     const res = await add_category_list_(add_category)
-    console.log(res)
+    // console.log(res)
     category_visible.value = false
   }
   catch(err){
     ElMessage.error(err)
     console.log(err)
   }
+  await fetch_data();
 }
 
 // 删除分类
@@ -96,14 +97,15 @@ async function handle_delete(id){
 
 // 更新分类
 async function update_category_list(row){
-    category_visible.value = true
+
     add_category.name = row.name
     add_category.description = row.description
     add_category.id = row.id
+    category_visible.value = true
     // category_visible.value = false
 }
 
-// 删除种类
+// 更新种类
 async function update_category(){
   try {
     if (!add_category.name || !add_category.description) {
@@ -173,7 +175,7 @@ onMounted(() => {
     <el-dialog
       :model-value="category_visible"
       @close="category_visible = false"
-      title="新增分类"
+      :title="add_category.id ? '新增分类' : '修改分类'"
       width="500px"
     >
       <el-form label-width="120px">
