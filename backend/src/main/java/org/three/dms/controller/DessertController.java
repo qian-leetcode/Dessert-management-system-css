@@ -38,14 +38,6 @@ public class DessertController {
             log.info("查询甜品列表 - 入参: {}", map);
             List<Dessert> desserts = dessertService.selectDessertWithCategory();
             log.info("查询甜品总数: {}", desserts.size());
-            double temp_price_max = 0.0;
-            for (Dessert dessert : desserts) {
-                double temp_price = dessert.getPrice();
-                if(temp_price > temp_price_max){
-                    temp_price_max = temp_price;
-                }
-            }
-            log.info("查询最高价格: {}", temp_price_max);
 
             // 预处理
             String dessert_name = map.get("dessert_name");
@@ -53,12 +45,13 @@ public class DessertController {
             String dessert_category = map.get("dessert_category");
             String minStr = map.get("dessert_min_price");
 
-            double temp_price_min = minStr == "" ? 0.0 : Double.parseDouble(minStr);
+            double min_price = Double.parseDouble(String.valueOf(map.get("dessert_min_price")));
+            double max_price = Double.parseDouble(String.valueOf(map.get("dessert_max_price")));
             Integer page_num = Integer.parseInt(map.get("page_num")) == 0 ? 1 : Integer.parseInt(map.get("page_num"));
             Integer page_size = Integer.parseInt(map.get("page_size")) == 0 ? 10 : Integer.parseInt(map.get("page_size"));
             int total;
 
-            log.info("分页参数: page_num={}, page_size={}, 最低价格={}", page_num, page_size, temp_price_min);
+            log.info("分页参数: page_num={}, page_size={}, 最低价格={} ,最大价格", page_num, page_size, min_price , max_price);
 
             List<Dessert> temp_desserts = new ArrayList<>();
             // 筛选条件
@@ -67,8 +60,7 @@ public class DessertController {
                 if(dessert.getName().contains(dessert_name) &&
                         dessert.getDescription().contains(dessert_description) &&
                         dessert.getDessert_category().contains(dessert_category) &&
-                        priceStr >= temp_price_min &&
-                        priceStr <= temp_price_max){
+                        priceStr >= min_price && priceStr <= max_price){
                     temp_desserts.add(dessert);
                 }
             }
@@ -85,7 +77,7 @@ public class DessertController {
         }
         catch(Exception e){
             res.setCode(500);
-            res.setMsg("failure");
+            res.setMsg(e.getMessage());
             log.error("查询甜品列表异常: {}", e.getMessage(), e);
         }
         return res;
@@ -141,7 +133,7 @@ public class DessertController {
         }
         catch(Exception e){
             res.put("code", 500);
-            res.put("msg", "新增失败");
+            res.put("msg",e.getMessage());
             log.error("添加甜品异常: {}", e.getMessage(), e);
         }
         return res;
@@ -167,7 +159,7 @@ public class DessertController {
         }
         catch(Exception e){
             res.put("code", 500);
-            res.put("msg", "删除失败");
+            res.put("msg",e.getMessage());
             log.error("删除甜品异常: {}", e.getMessage(), e);
         }
         return res;
@@ -200,15 +192,15 @@ public class DessertController {
             log.info("更新甜品 - 入参: id={}, name='{}', price={}, cat_id={}", id, name, price, catId);
 
             int result = dessertService.update_dessert(
-                    id,
-                    name,
-                    photoUrl,
-                    price,
-                    description,
-                    releaseDate,
-                    catId,
-                    dessertStatus,
-                    dessertNumber
+                id,
+                name,
+                photoUrl,
+                price,
+                description,
+                releaseDate,
+                catId,
+                dessertStatus,
+                dessertNumber
             );
 
             log.info("更新甜品结果: result={}", result);
@@ -225,7 +217,7 @@ public class DessertController {
         }
         catch (Exception e) {
             res.put("code", 500);
-            res.put("msg", "修改失败");
+            res.put("msg", e.getMessage());
             log.error("修改甜品异常: {}", e.getMessage(), e);
         }
         return res;

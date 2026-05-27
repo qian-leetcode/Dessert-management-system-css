@@ -97,7 +97,7 @@ const push_from_register_data = async () => {
         user_from_register.phone,
         user_from_register.position,
         user_from_register.hire_date,
-        user_from_register.hire_date,)
+        user_from_register.shift,)
     // for (const v in res){
     //   console.log(v + "-----" + res[v])
     //   // console.log(res[v])

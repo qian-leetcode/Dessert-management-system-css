@@ -15,7 +15,8 @@ const query_material_form = reactive({
   material_category:'',
   material_specification:'',
   material_unit:'',
-  material_shelf_life_days:'',
+  material_shelf_life_days_min: '',
+  material_shelf_life_days_max:'',
   material_storage_condition:'',
   material_remark:''
 })
@@ -30,7 +31,8 @@ async function get_material_form() {
     material_code: query_material_form.material_code,
     material_name: query_material_form.material_name,
     material_category: query_material_form.material_category,
-    material_shelf_life_days: query_material_form.material_shelf_life_days,
+    material_shelf_life_days_min: Number(query_material_form.material_shelf_life_days_min || 0),
+    material_shelf_life_days_max: Number(query_material_form.material_shelf_life_days_max) || Number.MAX_VALUE,
     material_storage_condition: query_material_form.material_storage_condition,
     material_remark: query_material_form.material_remark,
   }
@@ -42,13 +44,15 @@ async function get_material_form() {
 }
 
 // 清除查询表
-function clear_material_form() {
+async function clear_material_form() {
   query_material_form.material_code = ''
   query_material_form.material_name = ''
   query_material_form.material_category = ''
-  query_material_form.material_shelf_life_days = ''
+  query_material_form.material_shelf_life_days_min = ''
+  query_material_form.material_shelf_life_days_max = ''
   query_material_form.material_storage_condition = ''
   query_material_form.material_remark = ''
+  await get_material_form();
 }
 
 const material_information_form = ref([])
@@ -75,8 +79,8 @@ async function clear_add_material_form() {
       add_material_form.material_category= '',
       add_material_form.material_specification= '',
       add_material_form.material_unit= '',
-      add_material_form.material_shelf_life_days= '',
-      add_material_form.material_storage_condition= '',
+      add_material_form.material_shelf_life_days= ''
+      add_material_form.material_storage_condition= ''
       add_material_form.material_remark= ''
 }
 
@@ -185,7 +189,9 @@ onMounted(() => {
         <el-input v-model="query_material_form.material_category" placeholder="请输入原材料的种类"  style="width: 250px;" clearable/>
       </el-form-item>
       <el-form-item label="原材料的保质期">
-        <el-input type="number" v-model="query_material_form.material_shelf_life_days" placeholder="请输入保质期时间(天)" style="width: 250px;" clearable/>
+        <el-input type="number" v-model="query_material_form.material_shelf_life_days_min" placeholder="请输入保质期时间(天)最小值" style="width: 250px;" clearable/>
+        <span style="margin: 0 5px;">~</span>
+        <el-input type="number" v-model="query_material_form.material_shelf_life_days_max" placeholder="请输入保质期时间(天)最大值" style="width: 250px" clearable></el-input>
       </el-form-item>
       <el-form-item label="原材料的存储条件">
         <el-input v-model="query_material_form.material_storage_condition" placeholder="请输入存储条件" style="width: 250px;" clearable/>

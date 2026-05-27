@@ -29,6 +29,8 @@ async function clear_user_list(){
   user_list.position = ''
   user_list.hire_date = ''
   user_list.shift = ''
+  await get_information_list()
+
 }
 
 // 职业列表
@@ -105,7 +107,7 @@ const push_from_register_data = async () => {
     ElMessage.warning('请输入用户名和密码')
     return
   }
-  if (!user_from_register.re_password && user_from_register.re_password !== user_from_register.password) {
+  if (!user_from_register.re_password || user_from_register.re_password !== user_from_register.password) {
     ElMessage.warning('请再次确认密码')
     return
   }
@@ -113,8 +115,8 @@ const push_from_register_data = async () => {
     ElMessage.warning('请完善信息')
     return
   }
-  const len = username_list.length
-  const val = false;
+  const len = username_list.value.length
+  let val = false;
   for (let i = 0; i < len; i++) {
     if (user_from_register.username && user_from_register.username === username_list[i]) {
       val = true;
@@ -127,21 +129,24 @@ const push_from_register_data = async () => {
   }
   try {
     // console.log(user_from_register)
-    const res = await user_register(user_from_register.username ,
+    const res = await user_register(
+        user_from_register.username ,
         user_from_register.password,
         user_from_register.name,
         user_from_register.gender,
         user_from_register.phone,
         user_from_register.position,
         user_from_register.hire_date,
-        user_from_register.hire_date,)
+        user_from_register.shift,)
     // for (const v in res){
     //   console.log(v + "-----" + res[v])
     //   // console.log(res[v])
     // }
+    console.log(res)
     if (res["status"]=== 200) {
       // ElMessage.info('注册成功')
       ElMessage.success('注册成功')
+      await clear_user_from_register()
     } else {
       ElMessage.warning('注册失败')
       console.log(res.msg)
@@ -351,7 +356,11 @@ onMounted(() => {
     <el-table :data="user_information_list" stripe @selection-change="val => selected = val.map(v=>v.id)" >
       <el-table-column type="selection" width="50" />
       <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="gender" label="性别" />
+      <el-table-column prop="gender" label="性别">
+        <template #default="{ row }">
+          {{ row.gender === 'M' ? '男' : '女' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="phone" label="联系电话" />
       <el-table-column prop="username" label="用户名" />
       <el-table-column prop="position" label="岗位职称" />

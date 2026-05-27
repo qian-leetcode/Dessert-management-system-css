@@ -46,8 +46,8 @@ async function query_form_dessert() {
       dessert_name: query_form.dessert_name,
       dessert_description: query_form.dessert_description,
       dessert_category: query_form.dessert_category,
-      dessert_min_price: query_form.dessert_min_price,
-      dessert_max_price: query_form.dessert_max_price,
+      dessert_min_price: query_form.dessert_min_price === '' ? 0.0 : parseFloat(query_form.dessert_min_price),
+      dessert_max_price: query_form.dessert_max_price === '' ? 999999.0 : parseFloat(query_form.dessert_max_price),
       page_num: page_num.value,
       page_size: page_size.value,
     }
@@ -63,12 +63,13 @@ async function query_form_dessert() {
 
 
 // 清空查询条件
-function clear_query_form(){
+async function clear_query_form(){
   query_form.dessert_name  =''
   query_form.dessert_description  =''
   query_form.dessert_category  = ''
   query_form.dessert_min_price  =''
   query_form.dessert_max_price  =''
+  await query_form_dessert();
 }
 
 // 新增

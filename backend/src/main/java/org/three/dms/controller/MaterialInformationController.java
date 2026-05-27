@@ -32,34 +32,57 @@ public class MaterialInformationController {
 
     @PostMapping("/query_list")
     public MaterialDataInfo queryList(@RequestBody Map<String,Object> map){
-        Integer page_num = (Integer) map.get("page_num");
-        Integer page_size = (Integer) map.get("page_size");
-
-        String material_code = (String) map.get("material_code");
-        String material_name = (String) map.get("material_name");
-        String material_category = (String) map.get("material_category");
-        String material_shelf_life_days = (String) map.get("material_shelf_life_days");
-        String material_storage_condition = (String) map.get("material_storage_condition");
-        String material_remark = (String) map.get("material_remark");
-        List<MaterialInformation> begin_material_list = materialInformationService.list();
-        List<MaterialInformation> temp_list = new ArrayList<>();
-        for (MaterialInformation materialInformation:begin_material_list){
-            if(materialInformation.getMaterial_code().contains(material_code)
-            && materialInformation.getMaterial_name().contains(material_name)
-            && materialInformation.getMaterial_category().contains(material_category)
-            && materialInformation.getMaterial_storage_condition().contains(material_remark)
-            && materialInformation.getMaterial_shelf_life_days().toString().contains(material_shelf_life_days)
-            &&  materialInformation.getMaterial_storage_condition().contains(material_storage_condition)){
-                temp_list.add(materialInformation);
-            }
-        }
         MaterialDataInfo res = new MaterialDataInfo();
-        int total = temp_list.size();
-        res.setTotal(total);
-        res.setCode(200);
-        res.setMsg("success");
-        for (int i = page_size *(page_num - 1); i < min((long) page_size *(page_num - 1) + page_size , total); i++) {
-            res.add(temp_list.get(i));
+        try {
+            Integer page_num = ((Number) map.get("page_num")).intValue();
+            Integer page_size = ((Number) map.get("page_size")).intValue();
+
+            String material_code = (String) map.get("material_code");
+            String material_name = (String) map.get("material_name");
+            String material_category = (String) map.get("material_category");
+            Integer material_shelf_life_days_min = ((Number) map.get("material_shelf_life_days_min")).intValue();
+            Integer material_shelf_life_days_max = ((Number) map.get("material_shelf_life_days_max")).intValue();
+            String material_storage_condition = (String) map.get("material_storage_condition");
+            String material_remark = (String) map.get("material_remark");
+            log.info("查询物料列表 - 入参: page_num={}, page_size={}, material_code={}, material_name={}", page_num, page_size, material_code, material_name);
+            // int 最大值
+            int max = Integer.MAX_VALUE;
+            // int 最小值
+            int min = Integer.MIN_VALUE;
+            min = Math.max(min, material_shelf_life_days_min);
+            max = Math.min(max, material_shelf_life_days_max);
+
+            List<MaterialInformation> begin_material_list = materialInformationService.list();
+            log.info("查询物料总条数: {}", begin_material_list.size());
+            List<MaterialInformation> temp_list = new ArrayList<>();
+            for (MaterialInformation materialInformation:begin_material_list){
+                Integer time = materialInformation.getMaterial_shelf_life_days();
+                if(materialInformation.getMaterial_code().contains(material_code)
+                        && materialInformation.getMaterial_name().contains(material_name)
+                        && materialInformation.getMaterial_category().contains(material_category)
+                        && materialInformation.getMaterial_storage_condition().contains(material_remark)
+                        &&  materialInformation.getMaterial_storage_condition().contains(material_storage_condition)
+                        && (time >= min && time <= max)
+                ){
+                    temp_list.add(materialInformation);
+                }
+            }
+            log.info("物料条件筛选后条数: {}", temp_list.size());
+
+            int total = temp_list.size();
+            res.setTotal(total);
+            res.setCode(200);
+            res.setMsg("success");
+            for (int i = page_size *(page_num - 1); i < min((long) page_size *(page_num - 1) + page_size , total); i++) {
+                res.add(temp_list.get(i));
+            }
+            log.info("物料列表查询成功, 返回条数: {}", total);
+        }
+        catch (Exception e){
+            res.setCode(500);
+            res.setMsg(e.getMessage());
+            res.setTotal(0);
+            log.error("查询物料列表异常: {}", e.getMessage(), e);
         }
         return res;
     }
@@ -67,79 +90,128 @@ public class MaterialInformationController {
     // 新增物料
     @PostMapping("/add")
     public Map<String, Object> addMaterial(@RequestBody Map<String, String> map) {
-        String materialCode = map.get("material_code");
-        String materialName = map.get("material_name");
-        String materialCategory = map.get("material_category");
-        String materialSpecification = map.get("material_specification");
-        String materialUnit = map.get("material_unit");
-        Integer materialShelfLifeDays = Integer.parseInt(map.get("material_shelf_life_days"));
-        String materialStorageCondition = map.get("material_storage_condition");
-        String materialRemark = map.get("material_remark");
+        Map<String, Object> res = new HashMap<>();
+        try {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String value = entry.getValue();
+                if (value == null || value.isEmpty()) {
+                    res.put("code", 400 );
+                    res.put("msg", entry.getKey() + "' 不能为空");
+                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
+                    return res;
+                }
+            }
+            String materialCode = map.get("material_code");
+            String materialName = map.get("material_name");
+            String materialCategory = map.get("material_category");
+            String materialSpecification = map.get("material_specification");
+            String materialUnit = map.get("material_unit");
+            Integer materialShelfLifeDays = Integer.parseInt(map.get("material_shelf_life_days"));
+            String materialStorageCondition = map.get("material_storage_condition");
+            String materialRemark = map.get("material_remark");
 
-        int result = materialInformationService.insertMaterial(
-                materialCode, materialName, materialCategory, materialSpecification,
-                materialUnit, materialShelfLifeDays, materialStorageCondition, materialRemark
-        );
+            log.info("添加物料 - 入参: code={}, name='{}', category={}, unit={}", materialCode, materialName, materialCategory, materialUnit);
 
-        Map<String, Object> response = new HashMap<>();
-        if (result > 0) {
-            response.put("code", 200);
-            response.put("msg", "新增物料成功");
-        } else {
-            response.put("code", 500);
-            response.put("msg", "新增物料失败");
+            int result = materialInformationService.insertMaterial(
+                    materialCode, materialName, materialCategory, materialSpecification,
+                    materialUnit, materialShelfLifeDays, materialStorageCondition, materialRemark
+            );
+
+            log.info("插入物料结果: result={}", result);
+
+            if (result > 0) {
+                res.put("code", 200);
+                res.put("msg", "新增物料成功");
+                log.info("物料新增成功, code={}", materialCode);
+            } else {
+                res.put("code", 500);
+                res.put("msg", "新增物料失败");
+                log.warn("物料新增失败, code={}", materialCode);
+            }
         }
-        return response;
+        catch (Exception e){
+            res.put("code", 400);
+            res.put("msg", e.getMessage());
+            log.error("添加物料异常: {}", e.getMessage(), e);
+        }
+
+        return res;
     }
 
     // 删除物料
     @PostMapping("/delete")
     public Map<String, Object> deleteMaterial(Integer id) {
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
         try{
+            log.info("删除物料 - 入参: id={}", id);
             int result = materialInformationService.deleteMaterial(id);
+            log.info("删除物料结果: result={}", result);
             if (result > 0) {
-                response.put("code", 200);
-                response.put("msg", "删除物料成功");
+                res.put("code", 200);
+                res.put("msg", "删除物料成功");
+                log.info("物料删除成功, id={}", id);
             } else {
-                response.put("code", 500);
-                response.put("msg", "删除物料失败");
+                res.put("code", 500);
+                res.put("msg", "删除物料失败");
+                log.warn("物料删除失败, id={}", id);
             }
         }
         catch (Exception e){
-            response.put("code", 500);
-            response.put("msg", "删除物料失败");
-            response.put("exception", e);
+            res.put("code", 500);
+            res.put("msg", "删除物料失败");
+            res.put("exception", e.getMessage());
+            log.error("删除物料异常: {}", e.getMessage(), e);
         }
-        return response;
+        return res;
     }
 
     // 修改物料（不修改主键）
     @PostMapping("/update")
     public Map<String, Object> updateMaterial(@RequestBody Map<String, String> map) {
-        Integer materialId = Integer.parseInt(map.get("materialId"));
-        String materialCode = map.get("materialCode");
-        String materialName = map.get("materialName");
-        String materialCategory = map.get("materialCategory");
-        String materialSpecification = map.get("materialSpecification");
-        String materialUnit = map.get("materialUnit");
-        Integer materialShelfLifeDays = Integer.parseInt(map.get("materialShelfLifeDays"));
-        String materialStorageCondition = map.get("materialStorageCondition");
-        String materialRemark = map.get("materialRemark");
+        Map<String, Object> res = new HashMap<>();
+        try {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String value = entry.getValue();
+                if (value == null || value.isEmpty()) {
+                    res.put("code", 400 );
+                    res.put("msg", entry.getKey() + "' 不能为空");
+                    log.warn("[参数校验] 非空校验失败, 字段:{} 值为空", entry.getKey());
+                    return res;
+                }
+            }
+            Integer materialId = Integer.parseInt(map.get("materialId"));
+            String materialCode = map.get("materialCode");
+            String materialName = map.get("materialName");
+            String materialCategory = map.get("materialCategory");
+            String materialSpecification = map.get("materialSpecification");
+            String materialUnit = map.get("materialUnit");
+            Integer materialShelfLifeDays = Integer.parseInt(map.get("materialShelfLifeDays"));
+            String materialStorageCondition = map.get("materialStorageCondition");
+            String materialRemark = map.get("materialRemark");
+            log.info("更新物料 - 入参: id={}, code={}, name='{}'", materialId, materialCode, materialName);
 
-        int result = materialInformationService.updateMaterial(
-                materialId, materialCode, materialName, materialCategory, materialSpecification,
-                materialUnit, materialShelfLifeDays, materialStorageCondition, materialRemark
-        );
+            int result = materialInformationService.updateMaterial(
+                    materialId, materialCode, materialName, materialCategory, materialSpecification,
+                    materialUnit, materialShelfLifeDays, materialStorageCondition, materialRemark
+            );
 
-        Map<String, Object> response = new HashMap<>();
-        if (result > 0) {
-            response.put("code", 200);
-            response.put("msg", "修改物料成功");
-        } else {
-            response.put("code", 500);
-            response.put("msg", "修改物料失败");
+            log.info("更新物料结果: result={}", result);
+
+            if (result > 0) {
+                res.put("code", 200);
+                res.put("msg", "修改物料成功");
+                log.info("物料修改成功, id={}", materialId);
+            } else {
+                res.put("code", 500);
+                res.put("msg", "修改物料失败");
+                log.warn("物料修改失败, id={}", materialId);
+            }
         }
-        return response;
+        catch (Exception e){
+            res.put("code", 500);
+            res.put("msg", e.getMessage());
+            log.error("修改物料异常: {}", e.getMessage(), e);
+        }
+        return res;
     }
 }

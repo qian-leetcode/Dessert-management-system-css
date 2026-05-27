@@ -54,7 +54,7 @@ async function get_purchase_record_information_form() {
   total.value = res.data.total
 }
 
-function clear_query_record_form() {
+async function clear_query_record_form() {
   query_record_form.purchase_order_number = ''
   query_record_form.purchase_date = ''
   query_record_form.material_id = ''
@@ -67,6 +67,7 @@ function clear_query_record_form() {
   query_record_form.create_time = ''
   query_record_form.procuring_entity= ''
   query_record_form.user_name = ''
+  await get_purchase_record_information_form();
 }
 
 // 采购弹窗
@@ -105,7 +106,7 @@ async function clear_add_purchase_form() {
   add_purchase_form.production_date= '',
   add_purchase_form.payment_status= 0,
   add_purchase_form.user_id= '',
-  add_purchase_form.procuring_entity= '',
+  add_purchase_form.procuring_entity= ''
   add_purchase_form.remark= ''
   add_purchase_form.create_time = ''
 }

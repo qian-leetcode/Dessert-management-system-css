@@ -15,9 +15,10 @@ function query_form_button(){
 }
 
 // 清空种类查询表中的内容
-function clear_query_form(){
+async function clear_query_form(){
   query_form.name = '';
   query_form.description = '';
+  await fetch_data();
 }
 
 // 种类显示

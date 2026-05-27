@@ -60,6 +60,7 @@ async function clear_inventory_information() {
   query_inventory_form.material_id = "";
   query_inventory_form.latest_purchase_date = "";
   query_inventory_form.material_name = "";
+  await query_inventory_information();
 }
 
 // 库存弹窗显示

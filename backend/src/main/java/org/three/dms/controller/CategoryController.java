@@ -137,7 +137,7 @@ public class CategoryController {
         }
         catch(Exception e){
             res.put("code", 500);
-            res.put("msg", "Deletion failed");
+            res.put("msg", e.getMessage());
             log.error("分类删除异常，id：{}", id, e);
         }
         return res;
@@ -175,7 +175,7 @@ public class CategoryController {
         }
         catch(Exception e){
             res.put("code", 500);
-            res.put("msg", "update failed");
+            res.put("msg", e.getMessage());
             log.error("分类更新异常，参数：{}", map, e);
         }
         return res;
