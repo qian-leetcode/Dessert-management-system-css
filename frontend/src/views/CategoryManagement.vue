@@ -40,9 +40,11 @@ async function fetch_data(){
     }
     const res = await get_category_List_(params)
     dessert_form.value = res.data.rows
-    // console.log(dessert_form)
-    // console.log(res)
     total.value = res.data.total
+    if(res.data.code !== 200) {
+      ElMessage.info("请联系工作人员")
+    }
+    // console.log(res)
   }
   catch(err){
     ElMessage.error(err)
@@ -58,6 +60,7 @@ const add_category = reactive({
   id:''
 })
 
+//  清空查询表
 async function clear_add_category(){
   add_category.name = ''
   add_category.description = ''
@@ -72,7 +75,15 @@ async function add_category_list(){
       return
     }
     const res = await add_category_list_(add_category)
-    // console.log(res)
+    if(res.data.code === 200 ){
+      ElMessage.success("新增成功")
+    }
+    else if(res.data.code === 500){
+      ElMessage.error("添加失败")
+    }
+    else {
+      ElMessage.error("请联系工作人员")
+    }
     category_visible.value = false
   }
   catch(err){
@@ -86,8 +97,16 @@ async function add_category_list(){
 async function handle_delete(id){
   try{
     const res = await delete_category_list_(id)
-    console.log(res)
-
+    // console.log(res)
+    if (res.data.code === 200) {
+      ElMessage.success("删除成功");
+    }
+    else if(res.data.code === 400) {
+      ElMessage.error("删除失败")
+    }
+    else {
+      ElMessage.error("请联系工作人员")
+    }
   }
   catch(err){
     ElMessage.error(err)
@@ -97,7 +116,6 @@ async function handle_delete(id){
 
 // 更新分类
 async function update_category_list(row){
-
     add_category.name = row.name
     add_category.description = row.description
     add_category.id = row.id
@@ -112,8 +130,17 @@ async function update_category(){
       ElMessage.error("请完善信息")
       return
     }
-    await update_category_list_(add_category)
-    ElMessage.success("修改成功")
+    const res = await update_category_list_(add_category)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("请联系工作人员")
+    }
+
     category_visible.value = false
     await fetch_data()
   } catch (err) {
@@ -126,20 +153,29 @@ async function update_category(){
 async function Batch_delete(){
   try {
     for (const value of selected.value){
-      await delete_category_list_(value)
+      const temp_res = await delete_category_list_(value)
+      if (temp_res.data.code === 200) {
+        ElMessage.success("删除成功");
+      }
+      else if(temp_res.data.code === 400) {
+        ElMessage.error("删除失败")
+      }
+      else {
+        ElMessage.error("请联系工作人员")
+      }
     }
     ElMessage.success("批量删除成功")
     selected.value = []
     await fetch_data()
   }
   catch(err){
-    ElMessage.error(err)
+    ElMessage.error("批量删除失败， 请联系工作人人员")
   }
 }
 
 
 watch(category_visible, (newVal, oldVal) => {
-  console.log("变量变了！新值：", newVal)
+  // console.log("变量变了！新值：", newVal)
   if(newVal === false) {
     clear_add_category()
   }

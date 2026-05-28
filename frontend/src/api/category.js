@@ -28,7 +28,7 @@ export function delete_category_list_(id){
     });
 }
 
-// 根据id 修改分类
+// 根据 id 修改分类
 export function update_category_list_(params){
     return request.post("/category/update",params);
 }

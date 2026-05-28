@@ -102,7 +102,7 @@ public class CategoryController {
             }
         }
         catch(Exception e){
-            res.put("code", 500);
+            res.put("code", 400);
             res.put("msg", "Insertion failed");
             log.error("添加分类异常: {}", e.getMessage(), e);
         }
@@ -116,7 +116,7 @@ public class CategoryController {
         try{
             int pos = categoryService.delete_category(id);
             if(pos == 0){
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "Deletion failed");
                 log.warn("分类删除失败，数据不存在，id：{}", id);
             }
@@ -145,7 +145,7 @@ public class CategoryController {
             int pos = categoryService.update_category(name , description, id);
             log.info("更新分类 - 入参: id={}, name='{}', description='{}'", id, name, description);
             if(pos == 0){
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "update failed");
                 log.warn("分类更新失败，数据不存在，id：{}", id);
             }
