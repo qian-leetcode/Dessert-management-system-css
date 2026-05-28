@@ -117,7 +117,7 @@ public class DessertController {
                 res.put("msg", "新增成功");
                 log.info("甜品新增成功, name={}", name);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "新增失败");
                 log.warn("甜品新增失败, name={}", name);
             }
@@ -143,7 +143,7 @@ public class DessertController {
                 res.put("msg", "删除成功");
                 log.info("甜品删除成功, id={}", id);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "删除失败");
                 log.warn("甜品删除失败, id={}", id);
             }
@@ -192,7 +192,7 @@ public class DessertController {
                 res.put("msg", "修改成功");
                 log.info("甜品修改成功, id={}", id);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "修改失败");
                 log.warn("甜品修改失败, id={}", id);
             }

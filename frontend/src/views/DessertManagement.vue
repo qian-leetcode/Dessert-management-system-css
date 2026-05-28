@@ -23,6 +23,7 @@ const category_list = ref([])
 async function fetch_category_list() {
   try{
     const res = await get_category_list_name_()
+    // console.log(res)
     category_list.value = res.data
   }
   catch(error){
@@ -52,12 +53,16 @@ async function query_form_dessert() {
       page_size: page_size.value,
     }
     const res = await get_dessert_list_(params)
-    dessert_form.value = res.data.rows
-    // console.log(dessert_form)
-    total.value = res.data.total
+    if(res.data.code === 200 ){
+      dessert_form.value = res.data.rows
+      total.value = res.data.total
+    }
+    else {
+      ElMessage("列表信息获取失败，请联系工作人员")
+    }
   }
   catch(error){
-    ElMessage.error(error.message);
+    ElMessage.error("查询异常" + error.message);
   }
 }
 
@@ -89,6 +94,7 @@ const add_dessert_form = reactive({
   dessert_number:''
 })
 
+// 清空添加添加表
 async function clear_add_dessert_form(){
   add_dessert_form.id = ''
   add_dessert_form.name = ''
@@ -116,7 +122,16 @@ async function add_dessert_information(){
     ) {
       return; // 有空值，直接返回
     }
-    await add_dessert_list_(add_dessert_form);
+    const res = await add_dessert_list_(add_dessert_form);
+    if(res.data.code === 200){
+      ElMessage.success("添加成功")
+    }
+    else if(res.data.code === 400) {
+      ElMessage.error("添加失败")
+    }
+    else {
+      ElMessage.error("出现异常，请联系管理员")
+    }
     // console.log(res)
     await fetch_category_list()
     await query_form_dessert();
@@ -145,7 +160,6 @@ async function update_dessert_information(row){
   }
   add_dessert_form.dessert_status = row.dessert_status
   add_dessert_form.dessert_number = row.dessert_number
-  console.log(add_dessert_form)
 }
 
 
@@ -165,15 +179,23 @@ async function update_dessert_(){
     ) {
       return; // 有空值，直接返回
     }
-    await update_dessert_list_(add_dessert_form);
-    ElMessage.success("修改成功")
+    const res = await update_dessert_list_(add_dessert_form);
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400) {
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("添加异常请联系工作人员")
+    }
     dessert_visible.value = false
     await fetch_category_list()
     await query_form_dessert();
   }
   catch(error){
     dessert_visible.value = false
-    ElMessage.error(error.message);
+    ElMessage.error("出现异常，请联系工作人员");
   }
 }
 
@@ -188,6 +210,7 @@ async function get_set_cat_id(){
   }
   catch(error){
     ElMessage.error(error.message);
+    ElMessage.error("出现异常， 请联系工作人员")
   }
 }
 
@@ -195,12 +218,22 @@ async function get_set_cat_id(){
 async function delete_dessert_information(id){
   try {
     const res = await delete_dessert_list_(id);
-    console.log(res)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("请联系工作人员")
+    }
+    // console.log(res)
     await fetch_category_list();
     await query_form_dessert();
   }
   catch(error){
-    ElMessage.error(error.message);
+    console.log(error)
+    ElMessage.error("修改异常，请联系工作人员")
   }
 }
 
@@ -208,7 +241,18 @@ async function delete_dessert_information(id){
 async function Batch_delete(){
   try {
     for (const value of selected.value){
-      await delete_dessert_information(value);
+      const temp_res = await delete_dessert_information(value);
+      if (temp_res.data.code === 200) {
+        ElMessage.success("删除成功");
+      }
+      else if(temp_res.data.code === 400) {
+        ElMessage.error("删除失败,批量删除终止")
+        return
+      }
+      else {
+        ElMessage.error("批量删除终止 ， 请联系工作人员")
+        return
+      }
     }
     ElMessage.success("批量删除成功")
     selected.value = []
@@ -216,12 +260,13 @@ async function Batch_delete(){
     // await fetch_data()
   }
   catch(error){
-    ElMessage.error(error.message);
+    ElMessage.error("批量删除失败， 请联系工作人人员")
+    console.log(error)
   }
 }
 
 watch(dessert_visible, (newVal, oldVal) => {
-  console.log("变量变了！新值：", newVal)
+  // console.log("变量变了！新值：", newVal)
   if(newVal === false) {
     clear_add_dessert_form()
   }
@@ -240,7 +285,7 @@ onMounted(() => {
   <div>
     <div class="query-form">
       <el-form :inline="true" :model="query_form">
-          <el-form-item label="分类名称">
+          <el-form-item label="甜品名称">
             <el-input v-model="query_form.dessert_name" placeholder="输入名称" clearable style="width: 250px;"/>
           </el-form-item>
           <el-form-item label="描述">
@@ -333,7 +378,7 @@ onMounted(() => {
             <span v-else>无图片</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="name" label="甜品名称" />
         <el-table-column prop="dessert_category" label="所属分类" />
         <el-table-column prop="price" label="单价(￥)" />
         <el-table-column prop="description" label="描述" />
@@ -351,7 +396,7 @@ onMounted(() => {
             <el-button size="small" type="primary" @click="update_dessert_information(row)"> 修改 </el-button>
             <el-button size="small" type="danger" @click="delete_dessert_information(row.id)"> 删除 </el-button>
             <el-button size="small" :type="row.dessert_status === 1 ? 'warning' : 'success'" @click="row.dessert_status = row.dessert_status === 1 ? 0 : 1">
-              {{row.dessert_status == 0 ? '上架' : '下架'}} </el-button>
+              {{row.dessert_status === 0 ? '上架' : '下架'}} </el-button>
           </template>
         </el-table-column>
       </el-table>

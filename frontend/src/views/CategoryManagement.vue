@@ -144,7 +144,8 @@ async function update_category(){
     category_visible.value = false
     await fetch_data()
   } catch (err) {
-    ElMessage.error("修改失败")
+    console.log(err)
+    ElMessage.error("修改异常，请联系工作人员")
   }
 }
 
@@ -158,10 +159,12 @@ async function Batch_delete(){
         ElMessage.success("删除成功");
       }
       else if(temp_res.data.code === 400) {
-        ElMessage.error("删除失败")
+        ElMessage.error("删除失败,批量删除终止")
+        return
       }
       else {
-        ElMessage.error("请联系工作人员")
+        ElMessage.error("批量删除终止 ， 请联系工作人员")
+        return
       }
     }
     ElMessage.success("批量删除成功")
@@ -170,6 +173,7 @@ async function Batch_delete(){
   }
   catch(err){
     ElMessage.error("批量删除失败， 请联系工作人人员")
+    console.log(err.message)
   }
 }
 
