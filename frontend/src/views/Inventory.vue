@@ -25,9 +25,8 @@ const material_category = ref([])
 async function get_material_categories() {
   try {
     const res = await get_material_list_()
-    // console.log(res)
+
     material_category.value = res.data
-    // console.log(material_category)
   }
   catch (error) {
     console.log(error)
@@ -48,7 +47,7 @@ async function query_inventory_information() {
   // console.log(params.page_num)
   // console.log(params.page_size)
   const res = await get_inventory_information(params);
-  console.log(res)
+  // console.log(res)
   inventory_information_form.value = res.data.rows
   // console.log(inventory_information_form)
   total.value = res.data.total
@@ -95,7 +94,7 @@ async function add_inventory_information(){
       return
     }
     await add_inventory_information_(add_inventory_form)
-    console.log(add_inventory_form)
+    // console.log(add_inventory_form)
     await query_inventory_information()
     inventory_visible.value = false
     add_inventory_form.inventory_id = ''
@@ -170,7 +169,7 @@ async function batch_delete() {
 }
 
 watch(inventory_visible, (newVal, oldVal) => {
-  console.log("变量变了！新值：", newVal)
+  // console.log("变量变了！新值：", newVal)
   if(newVal === false) {
     clear_add_inventory_form()
   }

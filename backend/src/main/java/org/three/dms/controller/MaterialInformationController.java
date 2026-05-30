@@ -115,13 +115,13 @@ public class MaterialInformationController {
                 res.put("msg", "新增物料成功");
                 log.info("物料新增成功, code={}", materialCode);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "新增物料失败");
                 log.warn("物料新增失败, code={}", materialCode);
             }
         }
         catch (Exception e){
-            res.put("code", 400);
+            res.put("code", 500);
             res.put("msg", e.getMessage());
             log.error("添加物料异常: {}", e.getMessage(), e);
         }
@@ -142,7 +142,7 @@ public class MaterialInformationController {
                 res.put("msg", "删除物料成功");
                 log.info("物料删除成功, id={}", id);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "删除物料失败");
                 log.warn("物料删除失败, id={}", id);
             }
@@ -184,7 +184,7 @@ public class MaterialInformationController {
                 res.put("msg", "修改物料成功");
                 log.info("物料修改成功, id={}", materialId);
             } else {
-                res.put("code", 500);
+                res.put("code", 400);
                 res.put("msg", "修改物料失败");
                 log.warn("物料修改失败, id={}", materialId);
             }

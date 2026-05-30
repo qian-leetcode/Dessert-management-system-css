@@ -24,23 +24,28 @@ const query_material_form = reactive({
 
 // 发送原材料查询表
 async function get_material_form() {
-  const params = {
-    // 原材料查询属性
-    page_num: page_num.value,
-    page_size: page_size.value,
-    material_code: query_material_form.material_code,
-    material_name: query_material_form.material_name,
-    material_category: query_material_form.material_category,
-    material_shelf_life_days_min: Number(query_material_form.material_shelf_life_days_min || 0),
-    material_shelf_life_days_max: Number(query_material_form.material_shelf_life_days_max) || Number.MAX_VALUE,
-    material_storage_condition: query_material_form.material_storage_condition,
-    material_remark: query_material_form.material_remark,
+  try {
+    const params = {
+      // 原材料查询属性
+      page_num: page_num.value,
+      page_size: page_size.value,
+      material_code: query_material_form.material_code,
+      material_name: query_material_form.material_name,
+      material_category: query_material_form.material_category,
+      material_shelf_life_days_min: Number(query_material_form.material_shelf_life_days_min || 0),
+      material_shelf_life_days_max: Number(query_material_form.material_shelf_life_days_max) || Number.MAX_VALUE,
+      material_storage_condition: query_material_form.material_storage_condition,
+      material_remark: query_material_form.material_remark,
+    }
+    const res = await get_query_list(params);
+    // console.log(res)
+    material_information_form.value = res.data.rows
+    // console.log(material_information_form)
+    total.value = res.data.total
   }
-  const res = await get_query_list(params);
-  console.log(res)
-  material_information_form.value = res.data.rows
-  console.log(material_information_form)
-  total.value = res.data.total
+  catch (error){
+    ElMessage.error("数据获取失败， 请联系工作人员");
+  }
 }
 
 // 清除查询表
@@ -72,16 +77,17 @@ const add_material_form = reactive({
   material_remark: ''
 })
 
+// 清空数据
 async function clear_add_material_form() {
-      add_material_form.id= '', // 修改时必须用
-      add_material_form.material_code= '',
-      add_material_form.material_name= '',
-      add_material_form.material_category= '',
-      add_material_form.material_specification= '',
-      add_material_form.material_unit= '',
-      add_material_form.material_shelf_life_days= ''
-      add_material_form.material_storage_condition= ''
-      add_material_form.material_remark= ''
+  add_material_form.id= '', // 修改时必须用
+  add_material_form.material_code= '',
+  add_material_form.material_name= '',
+  add_material_form.material_category= '',
+  add_material_form.material_specification= '',
+  add_material_form.material_unit= '',
+  add_material_form.material_shelf_life_days= ''
+  add_material_form.material_storage_condition= ''
+  add_material_form.material_remark= ''
 }
 
 // 新增
@@ -99,25 +105,32 @@ async function add_material_information(){
     ) {
       return
     }
-    await add_material_list_(add_material_form)
-    await get_material_form();
-    // add_material_form.id = ''
-    add_material_form.material_code = ''
-    add_material_form.material_name = ''
-    add_material_form.material_category = ''
-    add_material_form.material_specification = ''
-    add_material_form.material_unit = ''
-    add_material_form.material_shelf_life_days = ''
-    add_material_form.material_storage_condition = ''
-    add_material_form.material_remark = ''
-    material_visible.value = false
+    const res = await add_material_list_(add_material_form)
+    // console.log(res)
+    if(res.data.code === 200){
+      add_material_form.material_code = ''
+      add_material_form.material_name = ''
+      add_material_form.material_category = ''
+      add_material_form.material_specification = ''
+      add_material_form.material_unit = ''
+      add_material_form.material_shelf_life_days = ''
+      add_material_form.material_storage_condition = ''
+      add_material_form.material_remark = ''
+      material_visible.value = false
+      ElMessage.success("原料添加成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("原料添加失败")
+    }
   }
   catch(err){
-    console.log(err)
+    ElMessage.error("新增异常， 请联系工作人员")
+    // console.log(err)
   }
+  await get_material_form();
 }
 
-// 更新
+// 更新 -- 回填数据
 async function update_material_form(row){
   // console.log(row)
   material_visible.value = true
@@ -148,24 +161,42 @@ async function update_material(){
     ) {
       return
     }
-    await update_material_list_(add_material_form)
-    ElMessage.success("修改成功")
-    material_visible.value = false
+    const res = await update_material_list_(add_material_form)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+      material_visible.value = false
+    }
+    else if(res.data.code === 400){
+      ElMessage.success("修改成功")
+    }
+    else {
+      ElMessage.error("修改异常， 请联系工作人员")
+    }
     await get_material_form();
-
   }
   catch(err){
-    console.log(err)
+    ElMessage.error("修改异常， 请联系工作人员")
+    // console.log(err)
   }
 }
 
 //删除
 async function delete_material_form(id){
   try {
-    await delete_material_list_(id)
+    const res = await delete_material_list_(id)
+    if(res.data.code === 200){
+      ElMessage.success("删除成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("删除失败")
+    }
+    else {
+      ElMessage.error("删除异常， 请联系工作人员")
+    }
   }
   catch(err){
-    console.log(err)
+    // console.log(err)
+    ElMessage.error("删除异常， 请联系工作人员")
   }
   await get_material_form();
 }
@@ -174,14 +205,34 @@ const selected = ref([])
 
 // 批量删除
 async function Batch_delete(){
+  const val = ref(false)
   try {
     for (const value of selected.value){
-      await delete_material_list_(value)
+      const res = await delete_material_list_(value)
+      if(res.data.code === 200){
+        ElMessage.success("删除成功")
+      }
+      else if(res.data.code === 400){
+        ElMessage.error("删除失败")
+        val.value = true;
+      }
+      else {
+        ElMessage.error("删除异常， 请联系工作人员")
+        val.value = true;
+      }
     }
-
+    if(val.value === false){
+      ElMessage.success("批量删除成功")
+    }
+    selected.value = []
   }
   catch(err){
-    console.log(err)
+    // console.log(err)
+    ElMessage.error("删除异常， 请联系工作人员")
+    val.value = true;
+  }
+  if(val.value === true){
+    ElMessage.warning("删除存在异常， 请核查数据")
   }
   await get_material_form();
 }

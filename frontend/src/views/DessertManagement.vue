@@ -187,7 +187,7 @@ async function update_dessert_(){
       ElMessage.error("修改失败")
     }
     else {
-      ElMessage.error("添加异常请联系工作人员")
+      ElMessage.error("修改异常请联系工作人员")
     }
     dessert_visible.value = false
     await fetch_category_list()
@@ -219,10 +219,10 @@ async function delete_dessert_information(id){
   try {
     const res = await delete_dessert_list_(id);
     if(res.data.code === 200){
-      ElMessage.success("修改成功")
+      ElMessage.success("删除成功")
     }
     else if(res.data.code === 400){
-      ElMessage.error("修改失败")
+      ElMessage.error("删除失败")
     }
     else {
       ElMessage.error("请联系工作人员")
@@ -233,12 +233,13 @@ async function delete_dessert_information(id){
   }
   catch(error){
     console.log(error)
-    ElMessage.error("修改异常，请联系工作人员")
+    ElMessage.error("删除异常，请联系工作人员")
   }
 }
 
 // 批量删除
 async function Batch_delete(){
+  const val = ref(false)
   try {
     for (const value of selected.value){
       const temp_res = await delete_dessert_information(value);
@@ -246,23 +247,27 @@ async function Batch_delete(){
         ElMessage.success("删除成功");
       }
       else if(temp_res.data.code === 400) {
-        ElMessage.error("删除失败,批量删除终止")
-        return
+        ElMessage.error("删除失败")
+        val.value = true
       }
       else {
-        ElMessage.error("批量删除终止 ， 请联系工作人员")
-        return
+        ElMessage.error("删除存在异常， 请联系工作人员")
+        val.value = true
       }
     }
-    ElMessage.success("批量删除成功")
+    if(val.value === false){
+      ElMessage.success("批量删除成功")
+    }
     selected.value = []
-    await query_form_dessert();
-    // await fetch_data()
   }
   catch(error){
     ElMessage.error("批量删除失败， 请联系工作人人员")
-    console.log(error)
+    // console.log(error)
   }
+  if(val.value === true){
+    ElMessage.warning("删除存在异常， 请核查数据")
+  }
+  await query_form_dessert();
 }
 
 watch(dessert_visible, (newVal, oldVal) => {
