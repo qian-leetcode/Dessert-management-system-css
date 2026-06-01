@@ -65,6 +65,7 @@ async function clear_inventory_information() {
   query_inventory_form.material_id = "";
   query_inventory_form.latest_purchase_date = "";
   query_inventory_form.material_name = "";
+  page_num.value = 1
   await query_inventory_information();
 }
 

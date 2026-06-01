@@ -13,7 +13,7 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             "p.purchase_id, p.purchase_order_number, p.purchase_date, p.material_id, m.material_name as material_name, " +
             "p.purchase_quantity, p.purchase_price, p.purchase_amount, p.supplier_name, " +
             "p.production_batch, p.production_date, p.payment_status, u.name as procuring_name , " +
-            "p.remark, p.create_time ,p.user_id " +
+            "p.procuring_entity, p.remark, p.create_time ,p.user_id " +
             "FROM purchase_record p " +
             "LEFT JOIN material_information m  on m.material_id = p.material_id " +
             "LEFT JOIN t_user u on p.user_id = u.id")

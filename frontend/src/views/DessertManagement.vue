@@ -74,6 +74,7 @@ async function clear_query_form(){
   query_form.dessert_category  = ''
   query_form.dessert_min_price  =''
   query_form.dessert_max_price  =''
+  page_num.value = 1
   await query_form_dessert();
 }
 
@@ -120,6 +121,7 @@ async function add_dessert_information(){
         add_dessert_form.dessert_status === '' ||
         add_dessert_form.dessert_number === ''
     ) {
+      ElMessage.error("请完善信息")
       return; // 有空值，直接返回
     }
     const res = await add_dessert_list_(add_dessert_form);
@@ -177,6 +179,7 @@ async function update_dessert_(){
         add_dessert_form.dessert_status === '' ||
         add_dessert_form.dessert_number === ''
     ) {
+      ElMessage.error("请完善信息")
       return; // 有空值，直接返回
     }
     const res = await update_dessert_list_(add_dessert_form);

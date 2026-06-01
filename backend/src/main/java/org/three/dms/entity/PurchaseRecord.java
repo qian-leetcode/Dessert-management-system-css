@@ -56,6 +56,8 @@ public class PurchaseRecord {
     // 操作人ID
     private Integer user_id;
 
+    // 采购单位
+    private String procuring_entity;
 
     // 备注
     private String remark;

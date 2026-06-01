@@ -74,8 +74,8 @@ async function clear_query_record_form() {
   query_record_form.procuring_entity = ''
   query_record_form.remark = ''
   query_record_form.create_time = ''
-  query_record_form.procuring_entity= ''
   query_record_form.user_name = ''
+  page_num.value = 1
   await get_purchase_record_information_form();
 }
 

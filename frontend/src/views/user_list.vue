@@ -29,8 +29,8 @@ async function clear_user_list(){
   user_list.position = ''
   user_list.hire_date = ''
   user_list.shift = ''
+  page_num.value = 1
   await get_information_list()
-
 }
 
 // 职业列表

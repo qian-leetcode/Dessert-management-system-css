@@ -57,6 +57,7 @@ async function clear_material_form() {
   query_material_form.material_shelf_life_days_max = ''
   query_material_form.material_storage_condition = ''
   query_material_form.material_remark = ''
+  page_num.value = 1
   await get_material_form();
 }
 
@@ -79,15 +80,15 @@ const add_material_form = reactive({
 
 // 清空数据
 async function clear_add_material_form() {
-  add_material_form.id= '', // 修改时必须用
-  add_material_form.material_code= '',
-  add_material_form.material_name= '',
-  add_material_form.material_category= '',
-  add_material_form.material_specification= '',
-  add_material_form.material_unit= '',
-  add_material_form.material_shelf_life_days= ''
-  add_material_form.material_storage_condition= ''
-  add_material_form.material_remark= ''
+  add_material_form.id = ''
+  add_material_form.material_code = ''
+  add_material_form.material_name = ''
+  add_material_form.material_category = ''
+  add_material_form.material_specification = ''
+  add_material_form.material_unit = ''
+  add_material_form.material_shelf_life_days = ''
+  add_material_form.material_storage_condition = ''
+  add_material_form.material_remark = ''
 }
 
 // 新增
@@ -103,6 +104,7 @@ async function add_material_information(){
         add_material_form.material_storage_condition === '' ||
         add_material_form.material_remark === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
     const res = await add_material_list_(add_material_form)
@@ -159,6 +161,7 @@ async function update_material(){
         add_material_form.material_storage_condition === '' ||
         add_material_form.material_remark === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
     const res = await update_material_list_(add_material_form)
