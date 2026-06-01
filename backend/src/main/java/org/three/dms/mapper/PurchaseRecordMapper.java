@@ -26,9 +26,9 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
     // 新增采购记录（create_time 数据库自动赋值，不用传）
     @Insert("INSERT INTO purchase_record(" +
             "purchase_order_number, purchase_date, material_id, purchase_quantity, purchase_price, purchase_amount, " +
-            "supplier_name, production_batch, production_date, payment_status, user_id, procuring_entity, remark , creat_time) " +
+            "supplier_name, production_batch, production_date, payment_status, user_id, procuring_entity, remark, create_time) " +
             "VALUES(#{purchaseOrderNumber}, #{purchaseDate}, #{materialId}, #{purchaseQuantity}, #{purchasePrice}, #{purchaseAmount}, " +
-            "#{supplierName}, #{productionBatch}, #{productionDate}, #{paymentStatus}, #{userId},  #{remark} , #{creat_time})")
+            "#{supplierName}, #{productionBatch}, #{productionDate}, #{paymentStatus}, #{userId}, #{procuringEntity}, #{remark}, #{createTime})")
     int insertPurchaseRecord(
             @Param("purchaseOrderNumber") String purchaseOrderNumber,
             @Param("purchaseDate") LocalDate purchaseDate,
@@ -41,8 +41,9 @@ public interface PurchaseRecordMapper extends BaseMapper<PurchaseRecord> {
             @Param("productionDate") LocalDate productionDate,
             @Param("paymentStatus") Integer paymentStatus,
             @Param("userId") Integer userId,
+            @Param("procuringEntity") String procuringEntity,
             @Param("remark") String remark,
-            @Param("creat_time") LocalDate create_time
+            @Param("createTime") LocalDate createTime
     );
 
     // 删除采购记录（按主键purchase_id）

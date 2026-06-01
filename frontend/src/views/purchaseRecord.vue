@@ -9,6 +9,7 @@ import {
 } from "@/api/purchase_record.js";
 import {get_user_list_} from "@/api/user.js";
 import {get_material_list_} from "@/api/material.js";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const page_num = ref(1)
 const page_size = ref(10)
@@ -31,27 +32,35 @@ const query_record_form = reactive({
 const purchase_record_information_form = ref([])
 
 async function get_purchase_record_information_form() {
-  const params = {
-    page_size: page_size.value,
-    page_num: page_num.value,
-    purchase_order_number: query_record_form.purchase_order_number,
-    purchase_date: query_record_form.purchase_date,
-    material_id: query_record_form.material_id,
-    supplier_name: query_record_form.supplier_name,
-    production_batch: query_record_form.production_batch,
-    production_date: query_record_form.production_date,
-    payment_status: query_record_form.payment_status,
-    remark: query_record_form.remark,
-    create_time: query_record_form.create_time,
-    procuring_entity:query_record_form.procuring_entity,
-    user_name:query_record_form.user_name,
+  try {
+    const params = {
+      page_size: page_size.value,
+      page_num: page_num.value,
+      purchase_order_number: query_record_form.purchase_order_number,
+      purchase_date: query_record_form.purchase_date,
+      material_id: query_record_form.material_id,
+      supplier_name: query_record_form.supplier_name,
+      production_batch: query_record_form.production_batch,
+      production_date: query_record_form.production_date,
+      payment_status: query_record_form.payment_status,
+      remark: query_record_form.remark,
+      create_time: query_record_form.create_time,
+      procuring_entity: query_record_form.procuring_entity,
+      user_name: query_record_form.user_name,
+    }
+    // console.log(params)
+    const res = await get_purchase_record_form(params);
+    if(res.data.code === 200){
+      purchase_record_information_form.value = res.data.rows
+      total.value = res.data.total
+    }
+    else {
+      ElMessage.error("获取采购记录失败，请联系工作人员")
+    }
   }
-  console.log(params)
-  const res = await get_purchase_record_form(params);
-  // console.log(res)
-  purchase_record_information_form.value = res.data.rows
-  // console.log(purchase_record_information_form)
-  total.value = res.data.total
+  catch(err){
+    ElMessage.error(err)
+  }
 }
 
 async function clear_query_record_form() {
@@ -137,6 +146,7 @@ async function add_purchase_information(){
         add_purchase_form.remark === '' ||
         add_purchase_form.create_time === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
     const params = {
@@ -155,13 +165,21 @@ async function add_purchase_information(){
       remark: add_purchase_form.remark,
       create_time : add_purchase_form.create_time,
     }
-    // console.log(add_purchase_form)
-    await add_purchase_record_form_(add_purchase_form)
+    const res = await add_purchase_record_form_(add_purchase_form)
+    if(res.data.code === 200){
+      ElMessage.success("新增成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("新增失败")
+    }
+    else {
+      ElMessage.error("新增异常，请联系工作人员")
+    }
     await get_purchase_record_information_form();
     purchase_visible.value = false
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("新增异常，请联系工作人员");
   }
 }
 
@@ -205,25 +223,43 @@ async function update_purchase() {
         add_purchase_form.remark === '' ||
         add_purchase_form.create_time === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
-    await update_purchase_record_form_(add_purchase_form)
+    const res = await update_purchase_record_form_(add_purchase_form)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("修改异常，请联系工作人员")
+    }
     await get_purchase_record_information_form()
     purchase_visible.value = false
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("修改异常，请联系工作人员");
   }
 }
 
 // 删除
 async function delete_purchase(id) {
   try {
-    await delete_purchase_record_form_(id)
-
+    const res = await delete_purchase_record_form_(id)
+    if(res.data.code === 200){
+      ElMessage.success("删除成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("删除失败")
+    }
+    else {
+      ElMessage.error("删除异常，请联系工作人员")
+    }
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("删除异常，请联系工作人员");
   }
   await get_purchase_record_information_form()
 }
@@ -233,13 +269,30 @@ const selected = ref([])
 // 批量删除
 async function batch_delete() {
   try {
+    await ElMessageBox.confirm(
+        '确定要删除选中的采购记录吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
     for (const value of selected.value) {
-      await delete_purchase_record_form_(value)
+      const res = await delete_purchase_record_form_(value)
+      if(res.data.code === 200){
+        ElMessage.success("删除成功")
+      }
+      else if(res.data.code === 400){
+        ElMessage.error("删除失败，批量删除终止")
+        return
+      }
+      else {
+        ElMessage.error("批量删除终止，请联系工作人员")
+        return
+      }
     }
+    ElMessage.success("批量删除成功")
     selected.value = []
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("批量删除失败，请联系工作人员");
   }
   await get_purchase_record_information_form()
 }
@@ -253,7 +306,7 @@ async function get_material_list_id() {
     // console.log(material_list_)
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("获取原料列表失败，请联系工作人员");
   }
 }
 
@@ -266,7 +319,7 @@ async function get_user_list_id() {
     user_list_.value = res.data
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("获取用户列表失败，请联系工作人员");
   }
 }
 

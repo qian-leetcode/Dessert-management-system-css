@@ -30,8 +30,8 @@ public class PurchaseRecordController {
     public PurchaseRecordDataInfo purchase_record_list(@RequestBody Map<String,Object> map){
         PurchaseRecordDataInfo res = new PurchaseRecordDataInfo();
         try {
-            Integer page_num = (Integer) map.get("page_num");
-            Integer page_size = (Integer) map.get("page_size");
+            Integer page_num = ((Number) map.get("page_num")).intValue();
+            Integer page_size = ((Number) map.get("page_size")).intValue();
 
             String purchase_order_number = (String) map.get("purchase_order_number");
             String purchase_date = (String) map.get("purchase_date");
@@ -100,14 +100,14 @@ public class PurchaseRecordController {
             LocalDate productionDate = LocalDate.parse(map.get("production_date"));
             Integer paymentStatus = Integer.parseInt(map.get("payment_status"));
             Integer userId = Integer.parseInt(map.get("user_id"));
-
+            String procuringEntity = map.get("procuring_entity");
             String remark = map.get("remark");
             LocalDate createTime = LocalDate.parse(map.get("create_time"));
             log.info("添加采购记录 - 入参: orderNo={}, materialId={}, supplier={}", purchaseOrderNumber, materialId, supplierName);
 
             int result = purchaseRecordService.insertPurchaseRecord(
                     purchaseOrderNumber, purchaseDate, materialId, purchaseQuantity, purchasePrice, purchaseAmount,
-                    supplierName, productionBatch, productionDate, paymentStatus, userId,  remark , createTime
+                    supplierName, productionBatch, productionDate, paymentStatus, userId, procuringEntity, remark, createTime
             );
             log.info("插入采购记录结果: result={}", result);
 

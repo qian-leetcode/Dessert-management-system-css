@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {get_category_list_name_, get_category_lists} from "@/api/category.js";
 import {add_dessert_list_, delete_dessert_list_, get_dessert_list_, update_dessert_list_} from "@/api/dessert.js";
 
@@ -230,44 +230,41 @@ async function delete_dessert_information(id){
     // console.log(res)
     await fetch_category_list();
     await query_form_dessert();
+    return res
   }
   catch(error){
     console.log(error)
     ElMessage.error("删除异常，请联系工作人员")
+    return { data: { code: 500 } }
   }
 }
 
 // 批量删除
 async function Batch_delete(){
-  const val = ref(false)
   try {
+    await ElMessageBox.confirm(
+        '确定要删除选中的甜品吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
     for (const value of selected.value){
       const temp_res = await delete_dessert_information(value);
-      if (temp_res.data.code === 200) {
-        ElMessage.success("删除成功");
+      if (temp_res.data.code === 400) {
+        ElMessage.error("删除失败,批量删除终止")
+        return
       }
-      else if(temp_res.data.code === 400) {
-        ElMessage.error("删除失败")
-        val.value = true
-      }
-      else {
-        ElMessage.error("删除存在异常， 请联系工作人员")
-        val.value = true
+      else if (temp_res.data.code !== 200) {
+        ElMessage.error("批量删除终止，请联系工作人员")
+        return
       }
     }
-    if(val.value === false){
-      ElMessage.success("批量删除成功")
-    }
+    ElMessage.success("批量删除成功")
     selected.value = []
+    await query_form_dessert();
   }
-  catch(error){
-    ElMessage.error("批量删除失败， 请联系工作人人员")
-    // console.log(error)
+  catch(err){
+    ElMessage.error("批量删除失败，请联系工作人员")
   }
-  if(val.value === true){
-    ElMessage.warning("删除存在异常， 请核查数据")
-  }
-  await query_form_dessert();
 }
 
 watch(dessert_visible, (newVal, oldVal) => {

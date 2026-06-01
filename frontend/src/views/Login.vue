@@ -77,10 +77,10 @@ const push_from_register_data = async () => {
     ElMessage.warning('请完善信息')
     return
   }
-  const len = username_list.length
+  const len = username_list.value.length
   let val = false;
   for (let i = 0; i < len; i++) {
-    if (user_from_register.username && user_from_register.username === username_list[i]) {
+    if (user_from_register.username && user_from_register.username === username_list.value[i]) {
       val = true;
       break;
     }
@@ -103,12 +103,10 @@ const push_from_register_data = async () => {
     //   console.log(v + "-----" + res[v])
     //   // console.log(res[v])
     // }
-    if (res["status"]=== 200) {
-      // ElMessage.info('注册成功')
+    if (res.data.code === 200) {
       ElMessage.success('注册成功')
     } else {
       ElMessage.warning('注册失败')
-      console.log(res.msg)
     }
   } catch (err) {
     ElMessage.warning('注册失败')
@@ -130,6 +128,7 @@ const fetch_user_role_list = async () => {
   }
   catch(error){
     console.error("获取列表失败",error)
+    ElMessage.error("获取职位列表失败，请联系工作人员")
   }
 }
 
@@ -140,6 +139,7 @@ const fetch_username_list = async () => {
   }
   catch(error){
     console.error("获取列表失败",error)
+    ElMessage.error("获取用户列表失败，请联系工作人员")
   }
 }
 

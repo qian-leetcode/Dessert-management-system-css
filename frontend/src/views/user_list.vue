@@ -7,7 +7,7 @@ import {
   get_user_role_List,
   update_user_information_
 } from "@/api/user.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {user_register} from "@/api/login.js";
 
 // 用户查询表
@@ -38,7 +38,12 @@ const role_list = ref([]);
 
 // 获取职业列表
 async function get_role_list() {
-  role_list.value = await (await get_user_role_List()).data;
+  try {
+    role_list.value = await (await get_user_role_List()).data;
+  }
+  catch(error){
+    ElMessage.error("获取职位列表失败，请联系工作人员")
+  }
 }
 
 // 用户信息表
@@ -49,23 +54,32 @@ const total = ref(0)
 
 //获取列表
 async function get_information_list() {
-  const params = {
-    page_size: page_size.value,
-    page_num: page_num.value,
-    name: user_list.name,
-    gender: user_list.gender,
-    phone: user_list.phone,
-    username: user_list.username,
-    position: user_list.position,
-    hire_date: user_list.hire_date,
-    shift: user_list.shift,
+  try {
+    const params = {
+      page_size: page_size.value,
+      page_num: page_num.value,
+      name: user_list.name,
+      gender: user_list.gender,
+      phone: user_list.phone,
+      username: user_list.username,
+      position: user_list.position,
+      hire_date: user_list.hire_date,
+      shift: user_list.shift,
+    }
+    const res = await get_user_information_list(params);
+    // console.log(res)
+    // console.log(res.data);
+    if(res.data.code === 200){
+      user_information_list.value = res.data.rows
+      total.value = res.data.total
+    }
+    else {
+      ElMessage.error("获取用户列表失败，请联系工作人员")
+    }
   }
-  const res = await get_user_information_list(params);
-  // console.log(res)
-  console.log(res.data);
-  user_information_list.value = res.data.rows
-  total.value = res.data.total
-  console.log(user_information_list)
+  catch(error){
+    ElMessage.error(error)
+  }
 }
 
 // 新增
@@ -118,7 +132,7 @@ const push_from_register_data = async () => {
   const len = username_list.value.length
   let val = false;
   for (let i = 0; i < len; i++) {
-    if (user_from_register.username && user_from_register.username === username_list[i]) {
+    if (user_from_register.username && user_from_register.username === username_list.value[i]) {
       val = true;
       break;
     }
@@ -142,20 +156,17 @@ const push_from_register_data = async () => {
     //   console.log(v + "-----" + res[v])
     //   // console.log(res[v])
     // }
-    console.log(res)
-    if (res["status"]=== 200) {
-      // ElMessage.info('注册成功')
+    // console.log(res)
+    if (res.data.code === 200) {
       ElMessage.success('注册成功')
       await clear_user_from_register()
     } else {
       ElMessage.warning('注册失败')
-      console.log(res.msg)
     }
   } catch (err) {
     ElMessage.warning('注册失败')
   }
 
-  // console.log(user_from.value)
   regVisible.value = false
 }
 
@@ -164,27 +175,51 @@ const selected = ref([])
 
 async function delete_user_information(id){
   try{
-    await delete_user_information_(id)
-    // console.log(res)
+    const res = await delete_user_information_(id)
+    if(res.data.code === 200){
+      ElMessage.success("删除成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("删除失败")
+    }
+    else {
+      ElMessage.error("删除异常，请联系工作人员")
+    }
     await get_information_list();
   }
   catch(err){
-    console.log(err)
+    ElMessage.error("删除异常，请联系工作人员")
   }
 }
 
 // 批量删除
 async function Batch_delete(){
   try{
+    await ElMessageBox.confirm(
+        '确定要删除选中的员工吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
     for (const value of selected.value){
-      await delete_user_information_(value)
+      const res = await delete_user_information_(value)
+      if(res.data.code === 200){
+        ElMessage.success("删除成功")
+      }
+      else if(res.data.code === 400){
+        ElMessage.error("删除失败，批量删除终止")
+        return
+      }
+      else {
+        ElMessage.error("批量删除终止，请联系工作人员")
+        return
+      }
     }
     ElMessage.success("批量删除成功")
     selected.value = []
     await get_information_list();
   }
   catch(err){
-    console.log(err)
+    ElMessage.error("批量删除失败，请联系工作人员")
   }
 }
 
@@ -207,13 +242,21 @@ async function update_user_information(row){
 // 更新用户
 async function update_user(){
   try{
-    await update_user_information_(user_from_register)
-    ElMessage.success("修改成功")
+    const res = await update_user_information_(user_from_register)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("修改异常，请联系工作人员")
+    }
     regVisible.value = false
     await get_information_list();
   }
   catch(err){
-    console.log(err)
+    ElMessage.error("修改异常，请联系工作人员")
   }
 }
 

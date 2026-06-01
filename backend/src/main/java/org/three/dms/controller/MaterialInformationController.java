@@ -40,8 +40,10 @@ public class MaterialInformationController {
             String material_code = (String) map.get("material_code");
             String material_name = (String) map.get("material_name");
             String material_category = (String) map.get("material_category");
-            Integer material_shelf_life_days_min = ((Number) map.get("material_shelf_life_days_min")).intValue();
-            Integer material_shelf_life_days_max = ((Number) map.get("material_shelf_life_days_max")).intValue();
+            Integer material_shelf_life_days_min = map.get("material_shelf_life_days_min") != null
+                    ? ((Number) map.get("material_shelf_life_days_min")).intValue() : 0;
+            Integer material_shelf_life_days_max = map.get("material_shelf_life_days_max") != null
+                    ? ((Number) map.get("material_shelf_life_days_max")).intValue() : Integer.MAX_VALUE;
             String material_storage_condition = (String) map.get("material_storage_condition");
             String material_remark = (String) map.get("material_remark");
             log.info("查询物料列表 - 入参: page_num={}, page_size={}, material_code={}, material_name={}", page_num, page_size, material_code, material_name);
@@ -60,7 +62,7 @@ public class MaterialInformationController {
                 if(materialInformation.getMaterial_code().contains(material_code)
                         && materialInformation.getMaterial_name().contains(material_name)
                         && materialInformation.getMaterial_category().contains(material_category)
-                        && materialInformation.getMaterial_storage_condition().contains(material_remark)
+                        && materialInformation.getMaterial_remark().contains(material_remark)
                         &&  materialInformation.getMaterial_storage_condition().contains(material_storage_condition)
                         && (time >= min && time <= max)
                 ){
@@ -161,15 +163,16 @@ public class MaterialInformationController {
     public Map<String, Object> updateMaterial(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
         try {
-            Integer materialId = Integer.parseInt(map.get("materialId"));
-            String materialCode = map.get("materialCode");
-            String materialName = map.get("materialName");
-            String materialCategory = map.get("materialCategory");
-            String materialSpecification = map.get("materialSpecification");
-            String materialUnit = map.get("materialUnit");
-            Integer materialShelfLifeDays = Integer.parseInt(map.get("materialShelfLifeDays"));
-            String materialStorageCondition = map.get("materialStorageCondition");
-            String materialRemark = map.get("materialRemark");
+            // 前端传的是 snake_case (id, material_code...)
+            Integer materialId = Integer.parseInt(map.get("id"));
+            String materialCode = map.get("material_code");
+            String materialName = map.get("material_name");
+            String materialCategory = map.get("material_category");
+            String materialSpecification = map.get("material_specification");
+            String materialUnit = map.get("material_unit");
+            Integer materialShelfLifeDays = Integer.parseInt(map.get("material_shelf_life_days"));
+            String materialStorageCondition = map.get("material_storage_condition");
+            String materialRemark = map.get("material_remark");
             log.info("更新物料 - 入参: id={}, code={}, name='{}'", materialId, materialCode, materialName);
 
             int result = materialInformationService.updateMaterial(

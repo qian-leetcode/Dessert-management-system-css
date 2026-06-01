@@ -12,7 +12,7 @@ public interface PurchaseRecordService extends IService<PurchaseRecord> {
 
     // 新增
     int insertPurchaseRecord(String purchaseOrderNumber, LocalDate purchaseDate, Integer materialId, Double purchaseQuantity, Double purchasePrice, Double purchaseAmount,
-                             String supplierName, String productionBatch, LocalDate productionDate, Integer paymentStatus, Integer userId,  String remark , LocalDate create_time);
+                             String supplierName, String productionBatch, LocalDate productionDate, Integer paymentStatus, Integer userId, String procuringEntity, String remark, LocalDate createTime);
 
     // 删除
     int deletePurchaseRecord(Integer purchaseId);

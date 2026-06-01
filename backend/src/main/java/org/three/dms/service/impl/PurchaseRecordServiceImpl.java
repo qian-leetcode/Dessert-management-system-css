@@ -22,10 +22,10 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
 
     @Override
     public int insertPurchaseRecord(String purchaseOrderNumber, LocalDate purchaseDate, Integer materialId, Double purchaseQuantity, Double purchasePrice, Double purchaseAmount,
-                                    String supplierName, String productionBatch, LocalDate productionDate, Integer paymentStatus, Integer userId,String remark ,LocalDate create_time) {
+                                    String supplierName, String productionBatch, LocalDate productionDate, Integer paymentStatus, Integer userId, String procuringEntity, String remark, LocalDate createTime) {
         return purchaseRecordMapper.insertPurchaseRecord(
                 purchaseOrderNumber, purchaseDate, materialId, purchaseQuantity, purchasePrice, purchaseAmount,
-                supplierName, productionBatch, productionDate, paymentStatus, userId, remark , create_time
+                supplierName, productionBatch, productionDate, paymentStatus, userId, procuringEntity, remark, createTime
         );
     }
 

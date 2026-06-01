@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, reactive, ref, watch} from "vue";
 import {add_material_list_, delete_material_list_, get_query_list, update_material_list_} from "@/api/material.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const page_num = ref(1)
 const page_size = ref(10)
@@ -167,7 +167,7 @@ async function update_material(){
       material_visible.value = false
     }
     else if(res.data.code === 400){
-      ElMessage.success("修改成功")
+      ElMessage.error("修改失败")
     }
     else {
       ElMessage.error("修改异常， 请联系工作人员")
@@ -205,8 +205,13 @@ const selected = ref([])
 
 // 批量删除
 async function Batch_delete(){
-  const val = ref(false)
   try {
+    await ElMessageBox.confirm(
+        '确定要删除选中的原料吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
+    const val = ref(false)
     for (const value of selected.value){
       const res = await delete_material_list_(value)
       if(res.data.code === 200){
@@ -225,14 +230,12 @@ async function Batch_delete(){
       ElMessage.success("批量删除成功")
     }
     selected.value = []
+    if(val.value === true){
+      ElMessage.warning("删除存在异常， 请核查数据")
+    }
   }
   catch(err){
-    // console.log(err)
     ElMessage.error("删除异常， 请联系工作人员")
-    val.value = true;
-  }
-  if(val.value === true){
-    ElMessage.warning("删除存在异常， 请核查数据")
   }
   await get_material_form();
 }

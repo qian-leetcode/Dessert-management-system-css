@@ -43,7 +43,6 @@ public class DessertController {
             String dessert_name = map.get("dessert_name");
             String dessert_description = map.get("dessert_description");
             String dessert_category = map.get("dessert_category");
-            String minStr = map.get("dessert_min_price");
 
             double min_price = Double.parseDouble(String.valueOf(map.get("dessert_min_price")));
             double max_price = Double.parseDouble(String.valueOf(map.get("dessert_max_price")));

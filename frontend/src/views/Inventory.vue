@@ -6,6 +6,7 @@ import {
   delete_inventory_information_, get_inventory_information, update_inventory_information_
 } from "@/api/inventory.js";
 import {get_material_list_} from "@/api/material.js";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const page_num = ref(1)
 const page_size = ref(5)
@@ -25,11 +26,10 @@ const material_category = ref([])
 async function get_material_categories() {
   try {
     const res = await get_material_list_()
-
     material_category.value = res.data
   }
   catch (error) {
-    console.log(error)
+    ElMessage.error("获取原料列表失败，请联系工作人员");
   }
 }
 
@@ -37,20 +37,26 @@ const inventory_information_form = ref([])
 
 // 查询
 async function query_inventory_information() {
-  const params = {
-    page_size: page_size.value,
-    page_num: page_num.value,
-    inventory_id: query_inventory_form.inventory_id,
-    material_name: query_inventory_form.material_name,
-    latest_purchase_date: query_inventory_form.latest_purchase_date,
+  try {
+    const params = {
+      page_size: page_size.value,
+      page_num: page_num.value,
+      inventory_id: query_inventory_form.inventory_id,
+      material_name: query_inventory_form.material_name,
+      latest_purchase_date: query_inventory_form.latest_purchase_date,
+    }
+    const res = await get_inventory_information(params);
+    if(res.data.code === 200){
+      inventory_information_form.value = res.data.rows
+      total.value = res.data.total
+    }
+    else {
+      ElMessage.error("获取库存信息失败，请联系工作人员")
+    }
   }
-  // console.log(params.page_num)
-  // console.log(params.page_size)
-  const res = await get_inventory_information(params);
-  // console.log(res)
-  inventory_information_form.value = res.data.rows
-  // console.log(inventory_information_form)
-  total.value = res.data.total
+  catch (error) {
+    ElMessage.error(error);
+  }
 }
 
 // 清空查询表
@@ -91,20 +97,24 @@ async function add_inventory_information(){
         add_inventory_form.safety_stock_quantity === '' ||
         add_inventory_form.last_purchase_time === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
-    await add_inventory_information_(add_inventory_form)
-    // console.log(add_inventory_form)
+    const res = await add_inventory_information_(add_inventory_form)
+    if(res.data.code === 200){
+      ElMessage.success("新增成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("新增失败")
+    }
+    else {
+      ElMessage.error("新增异常，请联系工作人员")
+    }
     await query_inventory_information()
     inventory_visible.value = false
-    add_inventory_form.inventory_id = ''
-    add_inventory_form.material_id = ''
-    add_inventory_form.last_purchase_time = ''
-    add_inventory_form.safety_stock_quantity = ''
-    add_inventory_form.current_inventory_level = ''
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("新增异常，请联系工作人员");
   }
 }
 
@@ -129,14 +139,23 @@ async function update_inventory(){
         add_inventory_form.safety_stock_quantity === '' ||
         add_inventory_form.last_purchase_time === ''
     ) {
+      ElMessage.error("请完善信息")
       return
     }
-    await update_inventory_information_(add_inventory_form)
-
+    const res = await update_inventory_information_(add_inventory_form)
+    if(res.data.code === 200){
+      ElMessage.success("修改成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("修改失败")
+    }
+    else {
+      ElMessage.error("修改异常，请联系工作人员")
+    }
     inventory_visible.value = false
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("修改异常，请联系工作人员");
   }
   await query_inventory_information();
 }
@@ -144,10 +163,19 @@ async function update_inventory(){
 // 删除
 async function delete_inventory(id) {
   try {
-    await delete_inventory_information_(id);
+    const res = await delete_inventory_information_(id);
+    if(res.data.code === 200){
+      ElMessage.success("删除成功")
+    }
+    else if(res.data.code === 400){
+      ElMessage.error("删除失败")
+    }
+    else {
+      ElMessage.error("删除异常，请联系工作人员")
+    }
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("删除异常，请联系工作人员");
   }
   await query_inventory_information()
 }
@@ -157,13 +185,30 @@ const selected = ref([])
 
 async function batch_delete() {
   try {
+    await ElMessageBox.confirm(
+        '确定要删除选中的库存记录吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
     for (const value of selected.value){
-      await delete_inventory_information_(value)
+      const res = await delete_inventory_information_(value)
+      if(res.data.code === 200){
+        ElMessage.success("删除成功")
+      }
+      else if(res.data.code === 400){
+        ElMessage.error("删除失败，批量删除终止")
+        return
+      }
+      else {
+        ElMessage.error("批量删除终止，请联系工作人员")
+        return
+      }
     }
+    ElMessage.success("批量删除成功")
     selected.value = []
   }
   catch (error) {
-    console.log(error);
+    ElMessage.error("批量删除失败，请联系工作人员");
   }
   await query_inventory_information();
 }

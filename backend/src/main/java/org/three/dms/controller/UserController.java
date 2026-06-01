@@ -152,7 +152,7 @@ public class UserController {
             log.info("用户列表查询成功, 返回条数: {}", total);
         }
         catch (Exception e){
-            res.setCode(200);
+            res.setCode(500);
             res.setMsg(e.getMessage());
             log.error("查询用户列表异常: {}", e.getMessage(), e);
         }
@@ -196,7 +196,13 @@ public class UserController {
             String phone = map.get("phone");
             String username = map.get("username");
             String password = map.get("password");
-            String encrypted_password = BCrypt.hashpw(password,BCrypt.gensalt());
+            // Bug 4: 密码为空时不覆盖，保留原密码
+            String encrypted_password;
+            if (password == null || password.isEmpty()) {
+                encrypted_password = userService.get_password(username);
+            } else {
+                encrypted_password = BCrypt.hashpw(password, BCrypt.gensalt());
+            }
             String position = map.get("position");
             LocalDate hireDate = LocalDate.parse(map.get("hire_date"));
             String shift = map.get("shift");

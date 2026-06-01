@@ -1,7 +1,7 @@
 <script setup>
 import {add_category_list_, delete_category_list_, get_category_List_, update_category_list_} from '@/api/category.js'
 import {onMounted, reactive, ref, watch} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 // 种类查询表
 const query_form = reactive({
@@ -153,6 +153,11 @@ async function update_category(){
 //批量删除
 async function Batch_delete(){
   try {
+    await ElMessageBox.confirm(
+        '确定要删除选中的分类吗？',
+        '删除确认',
+        { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+    )
     for (const value of selected.value){
       const temp_res = await delete_category_list_(value)
       if (temp_res.data.code === 200) {

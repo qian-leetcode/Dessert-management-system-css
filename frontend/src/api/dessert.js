@@ -2,7 +2,7 @@ import request from "../uitls/request";
 
 
 export function get_desserts_all_list() {
-    return request.get("/api/linked_list");
+    return request.get("/dessert/linked_list");
 }
 
 // 获取甜品列表
