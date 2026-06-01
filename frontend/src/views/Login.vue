@@ -34,7 +34,7 @@ const loginUser = async () => {
         loginStore.setToken(token)
         localStorage.setItem('token', token)
         ElMessage.success('登录成功')
-        await router.push('/category')
+        await router.push('/home')
       } else {
         ElMessage.error(data.msg || '登录失败')
       }

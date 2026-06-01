@@ -27,9 +27,11 @@ const dessert_form = ref([])
 const page_num = ref(1)
 const page_size = ref(10)
 const total = ref(0)
+const loading = ref(false)
 
 // 获取种类列表
 async function fetch_data(){
+  loading.value = true
   try {
     const params = {
       page_num: page_num.value,
@@ -45,10 +47,12 @@ async function fetch_data(){
     if(res.data.code !== 200) {
       ElMessage.info("请联系工作人员")
     }
-    // console.log(res)
   }
   catch(err){
     ElMessage.error(err)
+  }
+  finally {
+    loading.value = false
   }
 }
 
@@ -242,7 +246,7 @@ onMounted(() => {
     </el-dialog>
 
     <div class="table-container">
-      <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v => v.id)">
+      <el-table :data="dessert_form" v-loading="loading" stripe style="width: 100%" @selection-change="val => selected = val.map(v => v.id)">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="name" label="分类名称" />
         <el-table-column prop="description" label="描述" />
@@ -270,85 +274,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.query-form { margin-bottom: 20px; }
-.query-form :deep(.el-form-item) { margin-bottom: 0; }
-.query-form :deep(.el-input__wrapper) {
-  border-radius: 8px;
-  transition: box-shadow 0.3s;
-}
-.query-form :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #6c5ce7 inset;
-}
-
-.toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
-.toolbar .el-button:hover { transform: translateY(-1px); }
-.toolbar .el-button--primary {
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-  border: none;
-}
-.toolbar .el-button--primary:hover {
-  box-shadow: 0 4px 12px rgba(108,92,231,0.3);
-}
-
-.table-container :deep(.el-table) {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-}
-.table-container :deep(.el-table th.el-table__cell) {
-  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
-  color: #6c5ce7;
-  font-weight: 600;
-  font-size: 13px;
-}
-.table-container :deep(.el-table__row) {
-  transition: background 0.2s;
-}
-.table-container :deep(.el-table__row:hover) {
-  background: #faf9ff !important;
-}
-.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) {
-  background: #fafafa;
-}
-.table-container :deep(.el-button--small) {
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-.table-container :deep(.el-button--small:hover) { transform: translateY(-1px); }
-
-.pagination-wrap {
-  margin-top: 18px;
-  display: flex;
-  justify-content: center;
-}
-.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
-.pagination-wrap :deep(.el-pager li) {
-  border-radius: 6px;
-  margin: 0 2px;
-  transition: all 0.2s;
-}
-.pagination-wrap :deep(.el-pager li.active) {
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-  color: #fff;
-}
-.pagination-wrap :deep(.el-pager li:not(.active):hover) {
-  color: #6c5ce7;
-}
-
-.dialog-form :deep(.el-dialog__header) {
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-  margin: 0;
-  padding: 18px 20px;
-  border-radius: 4px 4px 0 0;
-}
-.dialog-form :deep(.el-dialog__title) { color: #fff; font-weight: 600; }
-.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) { color: rgba(255,255,255,0.7); }
-.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) { color: #fff; }
-.dialog-form :deep(.el-dialog__body) { padding: 24px 20px; }
-.dialog-form :deep(.el-input__wrapper) { border-radius: 8px; }
+/* 分类管理页面专属样式（共享样式在 shared.css 中） */
 </style>

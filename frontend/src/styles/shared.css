@@ -1,0 +1,148 @@
+/* ===== 共享布局样式 ===== */
+
+/* 查询表单 */
+.query-form {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: #fafbff;
+  border-radius: 10px;
+  border: 1px solid #f0f0f5;
+}
+.query-form :deep(.el-form-item) { margin-bottom: 0; }
+.query-form :deep(.el-input__wrapper),
+.query-form :deep(.el-select .el-input__wrapper) {
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+.query-form :deep(.el-input__wrapper:hover),
+.query-form :deep(.el-select .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #6c5ce7 inset;
+}
+
+/* 工具栏 */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.toolbar .el-button { border-radius: 8px; transition: all 0.25s; }
+.toolbar .el-button:hover { transform: translateY(-1px); }
+.toolbar .el-button--primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  border: none;
+  color: #fff;
+}
+.toolbar .el-button--primary:hover {
+  box-shadow: 0 4px 12px rgba(108,92,231,0.3);
+}
+.toolbar .el-button--danger:hover {
+  box-shadow: 0 4px 12px rgba(245,108,108,0.3);
+}
+
+/* 表格容器 */
+.table-container {
+  border-radius: 10px;
+  overflow: hidden;
+}
+.table-container :deep(.el-table) {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.table-container :deep(.el-table th.el-table__cell) {
+  background: linear-gradient(135deg, #f8f7ff, #f0eeff);
+  color: #6c5ce7;
+  font-weight: 600;
+  font-size: 13px;
+}
+.table-container :deep(.el-table__row) {
+  transition: background 0.2s;
+}
+.table-container :deep(.el-table__row:hover) {
+  background: #faf9ff !important;
+}
+.table-container :deep(.el-table--striped .el-table__body tr.el-table__row--striped) {
+  background: #fafafa;
+}
+.table-container :deep(.el-button--small) {
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.table-container :deep(.el-button--small:hover) {
+  transform: translateY(-1px);
+}
+
+/* 分页 */
+.pagination-wrap {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+.pagination-wrap :deep(.el-pagination) { font-weight: 500; }
+.pagination-wrap :deep(.el-pager li) {
+  border-radius: 6px;
+  margin: 0 2px;
+  transition: all 0.2s;
+  min-width: 32px;
+}
+.pagination-wrap :deep(.el-pager li.active) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: #fff;
+}
+.pagination-wrap :deep(.el-pager li:not(.active):hover) {
+  color: #6c5ce7;
+}
+
+/* 对话框 */
+.dialog-form :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: 8px 8px 0 0;
+}
+.dialog-form :deep(.el-dialog__title) {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+}
+.dialog-form :deep(.el-dialog__headerbtn .el-dialog__close) {
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+}
+.dialog-form :deep(.el-dialog__headerbtn:hover .el-dialog__close) {
+  color: #fff;
+}
+.dialog-form :deep(.el-dialog__body) {
+  padding: 24px 20px;
+}
+.dialog-form :deep(.el-input__wrapper) {
+  border-radius: 8px;
+}
+.dialog-form :deep(.el-dialog__footer) {
+  padding: 0 20px 20px;
+  border-top: none;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #999;
+}
+.empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.empty-state .empty-text {
+  font-size: 14px;
+}
+
+/* 加载动画 */
+.loading-skeleton {
+  padding: 20px;
+}
