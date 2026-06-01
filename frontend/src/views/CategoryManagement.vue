@@ -18,12 +18,13 @@ function query_form_button(){
 async function clear_query_form(){
   query_form.name = '';
   query_form.description = '';
+  page_num.value = 1;
   await fetch_data();
 }
 
 // 种类显示
 const dessert_form = ref([])
-const page_num = ref(0)
+const page_num = ref(1)
 const page_size = ref(10)
 const total = ref(0)
 
@@ -198,71 +199,73 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="query-form">
-    <el-form :inline="true" :model="query_form">
-      <el-form-item label="分类名称">
-        <el-input v-model="query_form.name" placeholder="请输入分类名称" />
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="query_form.description" placeholder="请输入描述"/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="query_form_button">查询</el-button>
-        <el-button type="primary" @click="clear_query_form">重置</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <div>
+    <div class="query-form">
+      <el-form :inline="true" :model="query_form">
+        <el-form-item label="分类名称">
+          <el-input v-model="query_form.name" placeholder="请输入分类名称" />
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="query_form.description" placeholder="请输入描述"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="query_form_button">查询</el-button>
+          <el-button type="primary" @click="clear_query_form">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-  <div class="toolbar">
-    <el-button type="danger" @click="Batch_delete">批量删除</el-button>
-    <el-button type="primary" @click="category_visible = true"> 新增 </el-button>
-  </div>
+    <div class="toolbar">
+      <el-button type="danger" @click="Batch_delete">批量删除</el-button>
+      <el-button type="primary" @click="category_visible = true"> 新增 </el-button>
+    </div>
 
-  <el-dialog
-    class="dialog-form"
-    :model-value="category_visible"
-    @close="category_visible = false"
-    :title="add_category.id ? '修改分类' : '新增分类'"
-    width="500px"
-  >
-    <el-form label-width="120px">
-      <el-form-item label="分类名称" required>
-        <el-input v-model="add_category.name" placeholder="请输入分类名称" clearable />
-      </el-form-item>
-      <el-form-item label="分类描述" required>
-        <el-input v-model="add_category.description" placeholder="请输入分类描述" clearable />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="category_visible = false"> 取消 </el-button>
-      <el-button type="primary" @click="add_category.id ? update_category():add_category_list()"> {{ add_category.id ? '修改' : '添加' }} </el-button>
-    </template>
-  </el-dialog>
+    <el-dialog
+      class="dialog-form"
+      :model-value="category_visible"
+      @close="category_visible = false"
+      :title="add_category.id ? '修改分类' : '新增分类'"
+      width="500px"
+    >
+      <el-form label-width="120px">
+        <el-form-item label="分类名称" required>
+          <el-input v-model="add_category.name" placeholder="请输入分类名称" clearable />
+        </el-form-item>
+        <el-form-item label="分类描述" required>
+          <el-input v-model="add_category.description" placeholder="请输入分类描述" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="category_visible = false"> 取消 </el-button>
+        <el-button type="primary" @click="add_category.id ? update_category():add_category_list()"> {{ add_category.id ? '修改' : '添加' }} </el-button>
+      </template>
+    </el-dialog>
 
-  <div class="table-container">
-    <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v => v.id)">
-      <el-table-column type="selection" width="50" />
-      <el-table-column prop="name" label="分类名称" />
-      <el-table-column prop="description" label="描述" />
-      <el-table-column label="操作" width="150">
-        <template #default="{ row }">
-          <el-button size="small" type="primary" @click="update_category_list(row)"> 修改 </el-button>
-          <el-button size="small" type="danger" @click="handle_delete(row.id)"> 删除 </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+    <div class="table-container">
+      <el-table :data="dessert_form" stripe style="width: 100%" @selection-change="val => selected = val.map(v => v.id)">
+        <el-table-column type="selection" width="50" />
+        <el-table-column prop="name" label="分类名称" />
+        <el-table-column prop="description" label="描述" />
+        <el-table-column label="操作" width="150">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" @click="update_category_list(row)"> 修改 </el-button>
+            <el-button size="small" type="danger" @click="handle_delete(row.id)"> 删除 </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
 
-  <div class="pagination-wrap">
-    <el-pagination
-        v-model:current-page="page_num"
-        v-model:page-size="page_size"
-        :total="total"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="fetch_data"
-        @current-change="fetch_data"
-    />
+    <div class="pagination-wrap">
+      <el-pagination
+          v-model:current-page="page_num"
+          v-model:page-size="page_size"
+          :total="total"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="fetch_data"
+          @current-change="fetch_data"
+      />
+    </div>
   </div>
 </template>
 
