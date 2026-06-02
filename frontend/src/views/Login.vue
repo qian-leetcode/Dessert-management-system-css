@@ -69,7 +69,7 @@ const push_from_register_data = async () => {
     ElMessage.warning('请输入用户名和密码')
     return
   }
-  if (!user_from_register.re_password && user_from_register.re_password !== user_from_register.password) {
+  if (!user_from_register.re_password || user_from_register.re_password !== user_from_register.password) {
     ElMessage.warning('请再次确认密码')
     return
   }

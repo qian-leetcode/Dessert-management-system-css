@@ -246,6 +246,11 @@ async function update_user_information(row){
 
 // 更新用户
 async function update_user(){
+  // 如果填写了密码，需要校验确认密码
+  if (user_from_register.password && (!user_from_register.re_password || user_from_register.re_password !== user_from_register.password)) {
+    ElMessage.warning('两次输入的密码不一致')
+    return
+  }
   try{
     const res = await update_user_information_(user_from_register)
     if(res.data.code === 200){
