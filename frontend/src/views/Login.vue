@@ -119,7 +119,6 @@ const push_from_register_data = async () => {
 
   // console.log(user_from.value)
 }
-}
 
 // 获取职位列表
 const role_list = ref([])
