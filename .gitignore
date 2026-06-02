@@ -1,24 +1,75 @@
-# backend
+# ========== 操作系统 ==========
+.DS_Store
+Thumbs.db
 
-# 默认忽略的文件
-/shelf/
-/workspace.xml
-# 基于编辑器的 HTTP 客户端请求
-/httpRequests/
-# 已忽略包含查询文件的默认文件夹
-/queries/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# ========== IDE 和编辑器 ==========
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# frontend
-HELP.md
+# ========== 构建输出 ==========
 target/
-.mvn/wrapper/maven-wrapper.jar
+build/
+dist/
+dist-ssr
+*.tsbuildinfo
+*.timestamp-*-*.mjs
+
+# ========== Java / Maven ==========
+HELP.md
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# ========== Node.js ==========
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ========== 日志 ==========
+/logs/
+*.log
+
+# ========== 测试临时文件 ==========
+/cypress/videos/
+/cypress/screenshots/
+__screenshots__/
+
+# ========== 环境变量 & 本地配置 ==========
+.env
+.env.local
+.env.*.local
+*.local
+
+# ========== 前端缓存 ==========
+.eslintcache
+
+# ========== Python (如有) ==========
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ========== NetBeans ==========
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ========== STS (Spring Tool Suite) ==========
 .apt_generated
 .classpath
 .factorypath
@@ -27,66 +78,10 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-
-### 日志文件 ###
-/logs/
-*.log
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-.DS_Store
-dist
-dist-ssr
-coverage
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-*.tsbuildinfo
-
-.eslintcache
-
-# Cypress
-/cypress/videos/
-/cypress/screenshots/
-
-# Vitest
-__screenshots__/
-
-# Vite
-*.timestamp-*-*.mjs
+# ========== 其他 ==========
+/shelf/
+/workspace.xml
+/httpRequests/
+/queries/
+/dataSources/
+/dataSources.local.xml
