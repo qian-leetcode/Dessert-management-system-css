@@ -73,7 +73,7 @@ const push_from_register_data = async () => {
     ElMessage.warning('请再次确认密码')
     return
   }
-  if (!user_from_register.name || !user_from_register.gender || !user_from_register.phone || !user_from_register.name || !user_from_register.hire_date) {
+  if (!user_from_register.name || !user_from_register.gender || !user_from_register.phone || !user_from_register.hire_date || !user_from_register.position || !user_from_register.shift) {
     ElMessage.warning('请完善信息')
     return
   }
