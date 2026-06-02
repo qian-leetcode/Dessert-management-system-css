@@ -69,8 +69,12 @@ const push_from_register_data = async () => {
     ElMessage.warning('请输入用户名和密码')
     return
   }
-  if (!user_from_register.re_password || user_from_register.re_password !== user_from_register.password) {
+  if (!user_from_register.re_password) {
     ElMessage.warning('请再次确认密码')
+    return
+  }
+  if (user_from_register.re_password !== user_from_register.password) {
+    ElMessage.warning('两次输入的密码不一致')
     return
   }
   if (!user_from_register.name || !user_from_register.gender || !user_from_register.phone || !user_from_register.hire_date || !user_from_register.position || !user_from_register.shift) {
@@ -105,6 +109,7 @@ const push_from_register_data = async () => {
     // }
     if (res.data.code === 200) {
       ElMessage.success('注册成功')
+      regVisible.value = false
     } else {
       ElMessage.warning('注册失败')
     }
@@ -113,7 +118,7 @@ const push_from_register_data = async () => {
   }
 
   // console.log(user_from.value)
-  regVisible.value = false
+}
 }
 
 // 获取职位列表
